@@ -1,0 +1,57 @@
+version: '3.7'
+
+services:
+  restapi:
+    container_name: restapi
+    image: restapi
+    build:
+      context: ./..
+      dockerfile: ./deployment/Dockerfile
+    ports:
+      - "81:81"
+    networks:
+        - backend
+    depends_on:
+      redis:
+        condition: service_started
+      db:
+        condition: service_healthy
+    tty: true
+
+  db:
+    container_name: db
+    #db with dev data
+    #image: app-postgres12.2:0.0.1
+    # for pure postgres
+    image: postgres:13-alpine
+    #volumes:
+    #    - ./data/postgres:/docker-entrypoint-initdb.d
+    restart: always
+    environment:
+      PGDATA: /var/lib/postgresql-static/data
+      POSTGRES_DB:        postgres
+      POSTGRES_USER:      postgres
+      POSTGRES_PASSWORD:  postgres
+    ports:
+      - 5401:5432
+    networks:
+      - backend
+    tty: true
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    container_name: redis
+    image: redis:6.0
+    restart: always
+    ports:
+      - 6379:6379
+    networks:
+        - backend
+    tty: true
+
+networks:
+  backend:
