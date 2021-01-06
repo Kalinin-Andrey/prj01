@@ -7,6 +7,7 @@ require (
 	github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a // indirect
 	github.com/alicebob/miniredis v2.5.0+incompatible
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/dtcv/mysql2postgresql v0.0.0-20180128132401-658135f3b5eb // indirect
 	github.com/elliotchance/redismock v1.5.3 // indirect
 	github.com/elliotchance/redismock/v8 v8.3.3
 	github.com/go-ozzo/ozzo-routing/v2 v2.3.0

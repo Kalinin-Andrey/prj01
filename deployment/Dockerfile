@@ -20,7 +20,6 @@ FROM alpine:latest
 
 #RUN apk --no-cache add ca-certificates
 WORKDIR /bin
-RUN mkdir /bin/log
 COPY config /bin/config
 COPY --from=builder /go/bin/restapi .
 

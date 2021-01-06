@@ -3,19 +3,20 @@ version: '3.7'
 services:
 
   db:
-    container_name: postgres
+    container_name: db
     #db with dev data
     #image: app-postgres12.2:0.0.1
     # for pure postgres
     image: postgres:13-alpine
-    #volumes:
-    #    - ./data/postgres:/docker-entrypoint-initdb.d
+    volumes:
+        - postgresql-data:/var/lib/postgresql/data
+        - ./data/db:/docker-entrypoint-initdb.d
     restart: always
     environment:
-      PGDATA: /var/lib/postgresql-static/data
+      #PGDATA: /var/lib/postgresql/data
       POSTGRES_DB:        postgres
       POSTGRES_USER:      postgres
-      POSTGRES_PASSWORD:  postgres
+      POSTGRES_PASSWORD:  gjcnuhtc
     ports:
       - 5401:5432
     networks:
@@ -37,5 +38,8 @@ services:
         - backend
     tty: true
 
+volumes:
+  postgresql-data:
+    driver: local
 networks:
   backend:
