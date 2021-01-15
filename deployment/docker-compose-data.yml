@@ -14,9 +14,10 @@ services:
     restart: always
     environment:
       #PGDATA: /var/lib/postgresql/data
-      POSTGRES_DB:        postgres
+      POSTGRES_DB:        car_catalog
       POSTGRES_USER:      postgres
-      POSTGRES_PASSWORD:  gjcnuhtc
+      POSTGRES_PASSWORD:  1gjcnuhtc1!
+      POSTGRES_MULTIPLE_DATABASES: orders
     ports:
       - 5401:5432
     networks:
