@@ -1,5 +1,5 @@
 server:
-  httplisten:  "0.0.0.0:81"
+  httplisten:  "0.0.0.0:80"
 
 log:
   encoding:       "json"
@@ -8,7 +8,7 @@ log:
     - "stdout"
   level:          "debug"
   initialfields:
-    app:          "redditclone"
+    app:          "carizza"
 
 db:
   pg:

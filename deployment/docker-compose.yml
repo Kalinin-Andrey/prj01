@@ -10,7 +10,7 @@ services:
     volumes:
         - ./log:/bin/log
     ports:
-      - "81:81"
+      - "80:80"
     networks:
         - backend
     depends_on:
