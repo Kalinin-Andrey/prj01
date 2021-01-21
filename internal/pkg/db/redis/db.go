@@ -7,8 +7,8 @@ import (
 	gocache "github.com/go-redis/cache/v8"
 	"github.com/go-redis/redis/v8"
 
-	"redditclone/internal/pkg/cache"
-	"redditclone/internal/pkg/config"
+	"carizza/internal/pkg/cache"
+	"carizza/internal/pkg/config"
 )
 
 type IDB interface {

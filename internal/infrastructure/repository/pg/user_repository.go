@@ -5,8 +5,8 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 
-	"redditclone/internal/domain/user"
-	"redditclone/internal/pkg/apperror"
+	"carizza/internal/domain/user"
+	"carizza/internal/pkg/apperror"
 )
 
 // UserRepository is a repository for the user entity

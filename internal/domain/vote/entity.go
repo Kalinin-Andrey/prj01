@@ -3,7 +3,7 @@ package vote
 import (
 	"time"
 
-	"redditclone/internal/domain/user"
+	"carizza/internal/domain/user"
 )
 
 const (

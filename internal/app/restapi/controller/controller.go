@@ -2,7 +2,7 @@ package controller
 
 import (
 	routing "github.com/go-ozzo/ozzo-routing/v2"
-	"redditclone/internal/domain"
+	"carizza/internal/domain"
 	"strconv"
 )
 

@@ -4,8 +4,8 @@ import (
 	"context"
 	routing "github.com/go-ozzo/ozzo-routing/v2"
 	"net/http"
-	"redditclone/internal/pkg/log"
-	"redditclone/internal/pkg/session"
+	"carizza/internal/pkg/log"
+	"carizza/internal/pkg/session"
 	"strings"
 )
 

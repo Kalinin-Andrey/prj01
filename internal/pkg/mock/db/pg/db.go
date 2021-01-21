@@ -6,9 +6,9 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
-	"redditclone/internal/pkg/config"
-	"redditclone/internal/pkg/db/pg"
-	"redditclone/internal/pkg/log"
+	"carizza/internal/pkg/config"
+	"carizza/internal/pkg/db/pg"
+	"carizza/internal/pkg/log"
 )
 
 // New creates a new DB connection

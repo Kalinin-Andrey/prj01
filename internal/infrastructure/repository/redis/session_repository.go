@@ -10,12 +10,12 @@ import (
 	goredis "github.com/go-redis/redis/v8"
 	"github.com/pkg/errors"
 
-	"redditclone/internal/pkg/apperror"
-	"redditclone/internal/pkg/auth"
-	"redditclone/internal/pkg/db/redis"
-	"redditclone/internal/pkg/session"
+	"carizza/internal/pkg/apperror"
+	"carizza/internal/pkg/auth"
+	"carizza/internal/pkg/db/redis"
+	"carizza/internal/pkg/session"
 
-	"redditclone/internal/domain/user"
+	"carizza/internal/domain/user"
 )
 
 const (

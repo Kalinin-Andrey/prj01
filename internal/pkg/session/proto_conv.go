@@ -3,9 +3,9 @@ package session
 import (
 	"github.com/golang/protobuf/ptypes"
 
-	"redditclone/internal/pkg/proto"
+	"carizza/internal/pkg/proto"
 
-	"redditclone/internal/domain/user"
+	"carizza/internal/domain/user"
 )
 
 func SessionProto2Session(sessionProto proto.Session) (s *Session, err error) {

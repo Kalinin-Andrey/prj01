@@ -3,8 +3,8 @@ package cli
 import (
 	"context"
 	"github.com/spf13/cobra"
-	commonApp "redditclone/internal/app"
-	"redditclone/internal/pkg/config"
+	commonApp "carizza/internal/app"
+	"carizza/internal/pkg/config"
 )
 
 // App is the application for CLI app

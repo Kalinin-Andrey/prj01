@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"redditclone/internal/pkg/apperror"
+	"carizza/internal/pkg/apperror"
 	"strings"
 	"time"
 
@@ -12,8 +12,8 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	"redditclone/internal/domain/user"
-	"redditclone/internal/pkg/session"
+	"carizza/internal/domain/user"
+	"carizza/internal/pkg/session"
 )
 
 func (s *ApiTestSuite) Test00Identity_Register() {

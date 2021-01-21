@@ -6,24 +6,24 @@ import (
 	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
-	"redditclone/internal/pkg/session"
+	"carizza/internal/pkg/session"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
-	"redditclone/internal/pkg/config"
-	"redditclone/internal/pkg/jwt"
-	"redditclone/internal/pkg/log"
-	repositoryMock "redditclone/internal/pkg/mock/repository"
+	"carizza/internal/pkg/config"
+	"carizza/internal/pkg/jwt"
+	"carizza/internal/pkg/log"
+	repositoryMock "carizza/internal/pkg/mock/repository"
 
-	commonapp "redditclone/internal/app"
-	apiapp "redditclone/internal/app/restapi"
-	"redditclone/internal/domain/comment"
-	"redditclone/internal/domain/post"
-	"redditclone/internal/domain/user"
-	"redditclone/internal/domain/vote"
+	commonapp "carizza/internal/app"
+	apiapp "carizza/internal/app/restapi"
+	"carizza/internal/domain/comment"
+	"carizza/internal/domain/post"
+	"carizza/internal/domain/user"
+	"carizza/internal/domain/vote"
 )
 
 type ApiTestSuite struct {

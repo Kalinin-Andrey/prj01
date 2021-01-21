@@ -8,7 +8,7 @@ import (
 	routing "github.com/go-ozzo/ozzo-routing/v2"
 	"github.com/go-ozzo/ozzo-routing/v2/access"
 
-	"redditclone/internal/pkg/log"
+	"carizza/internal/pkg/log"
 )
 
 // Handler returns a middleware that records an access log message for every HTTP request being processed.

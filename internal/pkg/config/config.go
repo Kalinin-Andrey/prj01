@@ -88,7 +88,7 @@ func addition4Test(cfg *Configuration, logAppPostfix string) {
 	cfg.Log.OutputPaths = []string{
 		"stdout",
 	}
-	cfg.Log.InitialFields = map[string]interface{}{"app": "redditclone-test: " + logAppPostfix}
+	cfg.Log.InitialFields = map[string]interface{}{"app": "carizza-test: " + logAppPostfix}
 	cfg.Log.Level = "debug"
 	return
 }

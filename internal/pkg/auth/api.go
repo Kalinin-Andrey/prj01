@@ -7,8 +7,8 @@ import (
 	"github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 
-	"redditclone/internal/pkg/errorshandler"
-	"redditclone/internal/pkg/log"
+	"carizza/internal/pkg/errorshandler"
+	"carizza/internal/pkg/log"
 )
 
 type identity struct {

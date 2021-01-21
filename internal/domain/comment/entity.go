@@ -5,7 +5,7 @@ import (
 
 	"github.com/go-ozzo/ozzo-validation/v4"
 
-	"redditclone/internal/domain/user"
+	"carizza/internal/domain/user"
 )
 
 const (

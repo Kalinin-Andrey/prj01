@@ -3,7 +3,7 @@ package user
 import (
 	"github.com/golang/protobuf/ptypes"
 
-	"redditclone/internal/pkg/proto"
+	"carizza/internal/pkg/proto"
 )
 
 func UserProto2User(userProto proto.User) (u *User, err error) {

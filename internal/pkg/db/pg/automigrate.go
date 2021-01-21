@@ -1,8 +1,8 @@
 package pg
 
 import (
-	"redditclone/internal/domain/user"
-	"redditclone/internal/pkg/session"
+	"carizza/internal/domain/user"
+	"carizza/internal/pkg/session"
 )
 
 func (db *DB) AutoMigrateAll() {

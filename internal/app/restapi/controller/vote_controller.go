@@ -2,9 +2,9 @@ package controller
 
 import (
 	"github.com/go-ozzo/ozzo-routing/v2"
-	"redditclone/internal/domain/post"
-	"redditclone/internal/domain/vote"
-	"redditclone/internal/pkg/log"
+	"carizza/internal/domain/post"
+	"carizza/internal/domain/vote"
+	"carizza/internal/pkg/log"
 )
 
 type voteController struct {

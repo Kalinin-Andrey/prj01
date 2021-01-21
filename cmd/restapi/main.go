@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 
-	"redditclone/internal/pkg/config"
+	"carizza/internal/pkg/config"
 
-	commonApp "redditclone/internal/app"
-	"redditclone/internal/app/restapi"
+	commonApp "carizza/internal/app"
+	"carizza/internal/app/restapi"
 )
 
 func main() {

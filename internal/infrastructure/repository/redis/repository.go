@@ -1,8 +1,8 @@
 package redis
 
 import (
-	"redditclone/internal/domain"
-	"redditclone/internal/pkg/db/redis"
+	"carizza/internal/domain"
+	"carizza/internal/pkg/db/redis"
 )
 
 // IRepository is an interface of repository

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/spf13/cobra"
-	"redditclone/internal/domain"
-	"redditclone/internal/pkg/apperror"
+	"carizza/internal/domain"
+	"carizza/internal/pkg/apperror"
 )
 
 // statusCmd represents the status command

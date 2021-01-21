@@ -6,9 +6,9 @@ import (
 	"github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 
-	"redditclone/internal/domain/comment"
-	"redditclone/internal/domain/user"
-	"redditclone/internal/domain/vote"
+	"carizza/internal/domain/comment"
+	"carizza/internal/domain/user"
+	"carizza/internal/domain/vote"
 )
 
 const (

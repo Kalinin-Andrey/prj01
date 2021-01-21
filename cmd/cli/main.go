@@ -4,10 +4,10 @@ import (
 	"log"
 	"os"
 
-	"redditclone/internal/pkg/config"
+	"carizza/internal/pkg/config"
 
-	commonApp "redditclone/internal/app"
-	"redditclone/internal/app/cli"
+	commonApp "carizza/internal/app"
+	"carizza/internal/app/cli"
 )
 
 func main() {

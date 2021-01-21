@@ -5,10 +5,10 @@ import (
 
 	"github.com/stretchr/testify/mock"
 
-	"redditclone/internal/pkg/auth"
-	"redditclone/internal/pkg/session"
+	"carizza/internal/pkg/auth"
+	"carizza/internal/pkg/session"
 
-	"redditclone/internal/domain"
+	"carizza/internal/domain"
 )
 
 // SessionRepository is a mock for SessionRepository

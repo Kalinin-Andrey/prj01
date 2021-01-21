@@ -3,17 +3,17 @@ package controller
 import (
 	"github.com/pkg/errors"
 	"net/http"
-	"redditclone/internal/domain/user"
-	"redditclone/internal/domain/vote"
-	"redditclone/internal/pkg/apperror"
-	"redditclone/internal/pkg/auth"
-	"redditclone/internal/pkg/errorshandler"
+	"carizza/internal/domain/user"
+	"carizza/internal/domain/vote"
+	"carizza/internal/pkg/apperror"
+	"carizza/internal/pkg/auth"
+	"carizza/internal/pkg/errorshandler"
 
 	"github.com/go-ozzo/ozzo-routing/v2"
 
-	"redditclone/internal/pkg/log"
+	"carizza/internal/pkg/log"
 
-	"redditclone/internal/domain/post"
+	"carizza/internal/domain/post"
 )
 
 type postController struct {

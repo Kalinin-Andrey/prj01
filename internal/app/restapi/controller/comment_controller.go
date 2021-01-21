@@ -3,13 +3,13 @@ package controller
 import (
 	"github.com/go-ozzo/ozzo-routing/v2"
 	"net/http"
-	"redditclone/internal/domain/comment"
-	"redditclone/internal/domain/post"
-	"redditclone/internal/pkg/apperror"
-	"redditclone/internal/pkg/auth"
-	"redditclone/internal/pkg/errorshandler"
+	"carizza/internal/domain/comment"
+	"carizza/internal/domain/post"
+	"carizza/internal/pkg/apperror"
+	"carizza/internal/pkg/auth"
+	"carizza/internal/pkg/errorshandler"
 
-	"redditclone/internal/pkg/log"
+	"carizza/internal/pkg/log"
 )
 
 type commentController struct {

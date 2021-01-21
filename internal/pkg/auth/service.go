@@ -7,12 +7,12 @@ import (
 	"crypto/sha256"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/pbkdf2"
-	"redditclone/internal/pkg/session"
+	"carizza/internal/pkg/session"
 	"time"
 
-	"redditclone/internal/domain/user"
-	"redditclone/internal/pkg/errorshandler"
-	"redditclone/internal/pkg/log"
+	"carizza/internal/domain/user"
+	"carizza/internal/pkg/errorshandler"
+	"carizza/internal/pkg/log"
 )
 
 // Service encapsulates the authentication logic.

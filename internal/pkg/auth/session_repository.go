@@ -2,8 +2,8 @@ package auth
 
 import (
 	"context"
-	"redditclone/internal/domain"
-	"redditclone/internal/pkg/session"
+	"carizza/internal/domain"
+	"carizza/internal/pkg/session"
 )
 
 // SessionRepository encapsulates the logic to access session from the data source.

@@ -4,8 +4,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
 
-	"redditclone/internal/pkg/apperror"
-	"redditclone/internal/pkg/auth"
+	"carizza/internal/pkg/apperror"
+	"carizza/internal/pkg/auth"
 	"strconv"
 )
 

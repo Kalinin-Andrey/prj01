@@ -12,12 +12,12 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
-	"redditclone/internal/pkg/config"
-	"redditclone/internal/pkg/db/pg"
-	"redditclone/internal/pkg/log"
-	pgmock "redditclone/internal/pkg/mock/db/pg"
+	"carizza/internal/pkg/config"
+	"carizza/internal/pkg/db/pg"
+	"carizza/internal/pkg/log"
+	pgmock "carizza/internal/pkg/mock/db/pg"
 
-	"redditclone/internal/domain/user"
+	"carizza/internal/domain/user"
 )
 
 const pkgName = "pg"

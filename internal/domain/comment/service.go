@@ -3,8 +3,8 @@ package comment
 import (
 	"context"
 	"github.com/pkg/errors"
-	"redditclone/internal/domain"
-	"redditclone/internal/pkg/log"
+	"carizza/internal/domain"
+	"carizza/internal/pkg/log"
 )
 
 const MaxLIstLimit = 1000

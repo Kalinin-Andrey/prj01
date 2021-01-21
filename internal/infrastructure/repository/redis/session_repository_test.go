@@ -3,8 +3,8 @@ package redis
 import (
 	"context"
 	"encoding/hex"
-	"redditclone/internal/domain"
-	"redditclone/internal/pkg/session"
+	"carizza/internal/domain"
+	"carizza/internal/pkg/session"
 	"testing"
 	"time"
 
@@ -15,10 +15,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
-	dbredis "redditclone/internal/pkg/db/redis"
-	dbmockredis "redditclone/internal/pkg/mock/db/redis"
+	dbredis "carizza/internal/pkg/db/redis"
+	dbmockredis "carizza/internal/pkg/mock/db/redis"
 
-	"redditclone/internal/domain/user"
+	"carizza/internal/domain/user"
 )
 
 const sessionLifeTimeInHours = 1

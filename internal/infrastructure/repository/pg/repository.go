@@ -4,12 +4,12 @@ import (
 	"github.com/iancoleman/strcase"
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
-	"redditclone/internal/domain"
-	"redditclone/internal/domain/user"
+	"carizza/internal/domain"
+	"carizza/internal/domain/user"
 
-	"redditclone/internal/pkg/log"
+	"carizza/internal/pkg/log"
 
-	"redditclone/internal/pkg/db/pg"
+	"carizza/internal/pkg/db/pg"
 )
 
 // IRepository is an interface of repository

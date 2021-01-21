@@ -1,4 +1,4 @@
-module redditclone
+module carizza
 
 go 1.13
 

@@ -4,11 +4,11 @@ import (
 	"context"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/mongo"
-	"redditclone/internal/domain"
-	"redditclone/internal/domain/comment"
-	"redditclone/internal/domain/vote"
-	"redditclone/internal/pkg/apperror"
-	"redditclone/internal/pkg/log"
+	"carizza/internal/domain"
+	"carizza/internal/domain/comment"
+	"carizza/internal/domain/vote"
+	"carizza/internal/pkg/apperror"
+	"carizza/internal/pkg/log"
 )
 
 const MaxLIstLimit = 1000

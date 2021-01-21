@@ -3,7 +3,7 @@ package restapi
 import (
 	"log"
 	"net/http"
-	"redditclone/internal/pkg/auth"
+	"carizza/internal/pkg/auth"
 	"time"
 
 	"github.com/go-ozzo/ozzo-routing/v2"
@@ -12,12 +12,12 @@ import (
 	"github.com/go-ozzo/ozzo-routing/v2/file"
 	"github.com/go-ozzo/ozzo-routing/v2/slash"
 
-	"redditclone/internal/pkg/accesslog"
-	"redditclone/internal/pkg/config"
-	"redditclone/internal/pkg/errorshandler"
+	"carizza/internal/pkg/accesslog"
+	"carizza/internal/pkg/config"
+	"carizza/internal/pkg/errorshandler"
 
-	commonApp "redditclone/internal/app"
-	"redditclone/internal/app/restapi/controller"
+	commonApp "carizza/internal/app"
+	"carizza/internal/app/restapi/controller"
 )
 
 // Version of API

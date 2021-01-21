@@ -3,22 +3,22 @@ package app
 import (
 	"github.com/pkg/errors"
 	golog "log"
-	"redditclone/internal/pkg/apperror"
-	"redditclone/internal/pkg/config"
-	"redditclone/internal/pkg/log"
+	"carizza/internal/pkg/apperror"
+	"carizza/internal/pkg/config"
+	"carizza/internal/pkg/log"
 
-	"redditclone/internal/pkg/auth"
-	"redditclone/internal/pkg/cache"
-	"redditclone/internal/pkg/db/pg"
-	"redditclone/internal/pkg/db/redis"
-	"redditclone/internal/pkg/jwt"
+	"carizza/internal/pkg/auth"
+	"carizza/internal/pkg/cache"
+	"carizza/internal/pkg/db/pg"
+	"carizza/internal/pkg/db/redis"
+	"carizza/internal/pkg/jwt"
 
-	"redditclone/internal/domain/comment"
-	"redditclone/internal/domain/post"
-	"redditclone/internal/domain/user"
-	"redditclone/internal/domain/vote"
-	pgrep "redditclone/internal/infrastructure/repository/pg"
-	redisrep "redditclone/internal/infrastructure/repository/redis"
+	"carizza/internal/domain/comment"
+	"carizza/internal/domain/post"
+	"carizza/internal/domain/user"
+	"carizza/internal/domain/vote"
+	pgrep "carizza/internal/infrastructure/repository/pg"
+	redisrep "carizza/internal/infrastructure/repository/redis"
 )
 
 // App struct is the common part of all applications

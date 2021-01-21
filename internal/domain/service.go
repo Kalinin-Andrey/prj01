@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"redditclone/internal/pkg/log"
+	"carizza/internal/pkg/log"
 )
 
 const MaxLIstLimit = 1000

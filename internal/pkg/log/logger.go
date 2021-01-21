@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	"redditclone/internal/pkg/config"
+	"carizza/internal/pkg/config"
 )
 
 // ILogger interface

@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/mock"
 
-	"redditclone/internal/domain"
-	"redditclone/internal/domain/user"
+	"carizza/internal/domain"
+	"carizza/internal/domain/user"
 )
 
 // UserRepository is a mock for UserRepository

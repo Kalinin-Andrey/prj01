@@ -5,9 +5,9 @@ import (
 	"encoding"
 	"time"
 
-	"redditclone/internal/pkg/proto"
+	"carizza/internal/pkg/proto"
 
-	"redditclone/internal/domain/user"
+	"carizza/internal/domain/user"
 )
 
 const (

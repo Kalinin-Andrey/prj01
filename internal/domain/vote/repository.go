@@ -2,7 +2,7 @@ package vote
 
 import (
 	"context"
-	"redditclone/internal/domain"
+	"carizza/internal/domain"
 )
 
 // Repository encapsulates the logic to access albums from the data source.

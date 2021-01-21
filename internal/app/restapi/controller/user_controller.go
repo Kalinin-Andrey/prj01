@@ -3,12 +3,12 @@ package controller
 import (
 	"github.com/go-ozzo/ozzo-routing/v2"
 	"github.com/pkg/errors"
-	"redditclone/internal/pkg/apperror"
-	"redditclone/internal/pkg/errorshandler"
+	"carizza/internal/pkg/apperror"
+	"carizza/internal/pkg/errorshandler"
 	"strconv"
 
-	"redditclone/internal/domain/user"
-	"redditclone/internal/pkg/log"
+	"carizza/internal/domain/user"
+	"carizza/internal/pkg/log"
 )
 
 type userController struct {
