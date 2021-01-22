@@ -23,8 +23,10 @@ type Configuration struct {
 }
 
 type DB struct {
-	Pg    Pg
-	Redis Redis
+	Identity    Pg
+	CarCatalog	Pg
+	Order		Pg
+	Redis		Redis
 }
 
 // Log is config for a logger
@@ -109,7 +111,7 @@ func Get4UnitTest(logAppPostfix string) *Configuration {
 			Encoding: "json",
 		},
 		DB: DB{
-			Pg: Pg{
+			Identity: Pg{
 				Dialect:       "postgres",
 				DSN:           "host=localhost port=5401 dbname=postgres user=postgres password=postgres sslmode=disable",
 				IsLogMode:     true,

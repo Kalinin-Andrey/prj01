@@ -18,7 +18,15 @@ var _ user.Repository = (*UserRepository)(nil)
 
 // New creates a new UserRepository
 func NewUserRepository(repository *repository) (*UserRepository, error) {
-	return &UserRepository{repository: *repository}, nil
+	r := &UserRepository{repository: *repository}
+	r.autoMigrate()
+	return r, nil
+}
+
+func (r UserRepository) autoMigrate() {
+	if r.db.IsAutoMigrate() {
+		r.db.DB().AutoMigrate(&user.User{})
+	}
 }
 
 // Get reads the album with the specified ID from the database.

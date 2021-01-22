@@ -10,16 +10,22 @@ import (
 
 // IDB is the interface for a DB connection
 type IDB interface {
-	DB() *gorm.DB
+	DB()			*gorm.DB
+	IsAutoMigrate() bool
 }
 
 // DB is the struct for a DB connection
 type DB struct {
-	D *gorm.DB
+	D             *gorm.DB
+	isAutoMigrate bool
 }
 
 func (db *DB) DB() *gorm.DB {
 	return db.D
+}
+
+func (db *DB) IsAutoMigrate() bool {
+	return db.isAutoMigrate
 }
 
 var _ IDB = (*DB)(nil)
@@ -36,10 +42,9 @@ func New(conf config.Pg, logger log.ILogger) (*DB, error) {
 	// Enable auto preload embeded entities
 	db = db.Set("gorm:auto_preload", true)
 
-	dbobj := &DB{D: db}
-
-	if conf.IsAutoMigrate {
-		dbobj.AutoMigrateAll()
+	dbobj := &DB{
+		D:             db,
+		isAutoMigrate: conf.IsAutoMigrate,
 	}
 
 	return dbobj, nil

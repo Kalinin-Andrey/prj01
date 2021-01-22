@@ -11,9 +11,19 @@ log:
     app:          "carizza"
 
 db:
-  pg:
+  identity:
+    dialect:        "postgres"
+    dsn:            "host=db port=5432 dbname=identity user=postgres password=1gjcnuhtc1! sslmode=disable"
+    islogmode:      True
+    isautomigrate:  True
+  carcatalog:
     dialect:        "postgres"
     dsn:            "host=db port=5432 dbname=car_catalog user=postgres password=1gjcnuhtc1! sslmode=disable"
+    islogmode:      True
+    isautomigrate:  True
+  order:
+    dialect:        "postgres"
+    dsn:            "host=db port=5432 dbname=orders user=postgres password=1gjcnuhtc1! sslmode=disable"
     islogmode:      True
     isautomigrate:  True
   redis:

@@ -88,7 +88,7 @@ func (app *App) buildHandler() *routing.Router {
 func (app *App) Run() error {
 	go func() {
 		defer func() {
-			if err := app.DB.DB().Close(); err != nil {
+			if err := app.Stop(); err != nil {
 				app.Logger.Error(err)
 			}
 

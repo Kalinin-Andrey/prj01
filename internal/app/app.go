@@ -25,11 +25,13 @@ import (
 type App struct {
 	Cfg     config.Configuration
 	Logger  log.ILogger
-	DB      pg.IDB
-	Redis   redis.IDB
-	Domain  Domain
-	Auth    Auth
-	Cache   cache.Service
+	IdentityDB      pg.IDB
+	CarCatalogDB	pg.IDB
+	OrderDB     	pg.IDB
+	Redis   		redis.IDB
+	Domain  		Domain
+	Auth    		Auth
+	Cache   		cache.Service
 }
 
 type Auth struct {
@@ -73,7 +75,17 @@ func New(cfg config.Configuration) *App {
 		golog.Fatal(err)
 	}
 
-	pgDB, err := pg.New(cfg.DB.Pg, logger)
+	IdentityDB, err := pg.New(cfg.DB.Identity, logger)
+	if err != nil {
+		golog.Fatal(err)
+	}
+
+	CarCatalogDB, err := pg.New(cfg.DB.CarCatalog, logger)
+	if err != nil {
+		golog.Fatal(err)
+	}
+
+	OrderDB, err := pg.New(cfg.DB.Order, logger)
 	if err != nil {
 		golog.Fatal(err)
 	}
@@ -86,7 +98,9 @@ func New(cfg config.Configuration) *App {
 	app := &App{
 		Cfg:     cfg,
 		Logger:  logger,
-		DB:      pgDB,
+		IdentityDB:     IdentityDB,
+		CarCatalogDB:	CarCatalogDB,
+		OrderDB:      	OrderDB,
 		Redis:   rDB,
 	}
 
@@ -109,9 +123,9 @@ func (app *App) Init() (err error) {
 func (app *App) SetupRepositories() (err error) {
 	var ok bool
 
-	app.Domain.User.Repository, ok = app.getPgRepo(user.EntityName).(user.Repository)
+	app.Domain.User.Repository, ok = app.getPgRepo(app.IdentityDB, user.EntityName).(user.Repository)
 	if !ok {
-		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", user.EntityName, user.EntityName, app.getPgRepo(user.EntityName))
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", user.EntityName, user.EntityName, app.getPgRepo(app.IdentityDB, user.EntityName))
 	}
 
 	if app.Auth.SessionRepository, err = redisrep.NewSessionRepository(app.Redis, app.Cfg.SessionLifeTime, app.Domain.User.Repository); err != nil {
@@ -137,10 +151,10 @@ func (app *App) Run() error {
 	return nil
 }
 
-func (app *App) getPgRepo(entityName string) (repo pgrep.IRepository) {
+func (app *App) getPgRepo(dbase pg.IDB, entityName string) (repo pgrep.IRepository) {
 	var err error
 
-	if repo, err = pgrep.GetRepository(app.Logger, app.DB, entityName); err != nil {
+	if repo, err = pgrep.GetRepository(app.Logger, dbase, entityName); err != nil {
 		golog.Fatalf("Can not get db repository for entity %q, error happened: %v", entityName, err)
 	}
 	return repo
@@ -148,13 +162,15 @@ func (app *App) getPgRepo(entityName string) (repo pgrep.IRepository) {
 
 func (app *App) Stop() error {
 	errRedis := app.Redis.Close()
-	errPg := app.DB.DB().Close()
+	errPg01 := app.IdentityDB.DB().Close()
+	errPg02 := app.CarCatalogDB.DB().Close()
+	errPg03 := app.OrderDB.DB().Close()
 
 	switch {
-	case errPg != nil:
-		return errors.Wrapf(apperror.ErrInternal, "pg error: %v", errPg)
+	case errPg01 != nil || errPg02 != nil || errPg03 != nil:
+		return errors.Wrapf(apperror.ErrInternal, "pg close error: %v", errPg01)
 	case errRedis != nil:
-		return errors.Wrapf(apperror.ErrInternal, "redis error: %v", errRedis)
+		return errors.Wrapf(apperror.ErrInternal, "redis close error: %v", errRedis)
 	}
 
 	return nil
