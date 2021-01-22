@@ -1,37 +1,37 @@
 package app
 
 import (
-	"github.com/pkg/errors"
 	golog "log"
-	"carizza/internal/pkg/apperror"
-	"carizza/internal/pkg/config"
-	"carizza/internal/pkg/log"
 
+	"github.com/pkg/errors"
+
+	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/auth"
 	"carizza/internal/pkg/cache"
+	"carizza/internal/pkg/config"
 	"carizza/internal/pkg/db/pg"
 	"carizza/internal/pkg/db/redis"
 	"carizza/internal/pkg/jwt"
+	"carizza/internal/pkg/log"
 
-	"carizza/internal/domain/comment"
-	"carizza/internal/domain/post"
+	"carizza/internal/domain/ctype"
+	"carizza/internal/domain/model"
 	"carizza/internal/domain/user"
-	"carizza/internal/domain/vote"
 	pgrep "carizza/internal/infrastructure/repository/pg"
 	redisrep "carizza/internal/infrastructure/repository/redis"
 )
 
 // App struct is the common part of all applications
 type App struct {
-	Cfg     config.Configuration
-	Logger  log.ILogger
-	IdentityDB      pg.IDB
-	CarCatalogDB	pg.IDB
-	OrderDB     	pg.IDB
-	Redis   		redis.IDB
-	Domain  		Domain
-	Auth    		Auth
-	Cache   		cache.Service
+	Cfg          config.Configuration
+	Logger       log.ILogger
+	IdentityDB   pg.IDB
+	CarCatalogDB pg.IDB
+	OrderDB      pg.IDB
+	Redis        redis.IDB
+	Domain       Domain
+	Auth         Auth
+	Cache        cache.Service
 }
 
 type Auth struct {
@@ -42,10 +42,9 @@ type Auth struct {
 
 // Domain is a Domain Layer Entry Point
 type Domain struct {
-	User    DomainUser
-	Post    DomainPost
-	Vote    DomainVote
-	Comment DomainComment
+	User  DomainUser
+	Type  DomainType
+	Model DomainModel
 }
 
 type DomainUser struct {
@@ -53,19 +52,14 @@ type DomainUser struct {
 	Service    user.IService
 }
 
-type DomainPost struct {
-	Repository post.Repository
-	Service    post.IService
+type DomainType struct {
+	Repository ctype.Repository
+	Service    ctype.IService
 }
 
-type DomainVote struct {
-	Repository vote.Repository
-	Service    vote.IService
-}
-
-type DomainComment struct {
-	Repository comment.Repository
-	Service    comment.IService
+type DomainModel struct {
+	Repository model.Repository
+	Service    model.IService
 }
 
 // New func is a constructor for the App
@@ -96,12 +90,12 @@ func New(cfg config.Configuration) *App {
 	}
 
 	app := &App{
-		Cfg:     cfg,
-		Logger:  logger,
-		IdentityDB:     IdentityDB,
-		CarCatalogDB:	CarCatalogDB,
-		OrderDB:      	OrderDB,
-		Redis:   rDB,
+		Cfg:          cfg,
+		Logger:       logger,
+		IdentityDB:   IdentityDB,
+		CarCatalogDB: CarCatalogDB,
+		OrderDB:      OrderDB,
+		Redis:        rDB,
 	}
 
 	err = app.Init()
@@ -128,6 +122,11 @@ func (app *App) SetupRepositories() (err error) {
 		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", user.EntityName, user.EntityName, app.getPgRepo(app.IdentityDB, user.EntityName))
 	}
 
+	app.Domain.Model.Repository, ok = app.getPgRepo(app.CarCatalogDB, model.EntityName).(model.Repository)
+	if !ok {
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", user.EntityName, user.EntityName, app.getPgRepo(app.CarCatalogDB, model.EntityName))
+	}
+
 	if app.Auth.SessionRepository, err = redisrep.NewSessionRepository(app.Redis, app.Cfg.SessionLifeTime, app.Domain.User.Repository); err != nil {
 		return errors.Errorf("Can not get new SessionRepository err: %v", err)
 	}
@@ -140,7 +139,7 @@ func (app *App) SetupRepositories() (err error) {
 
 func (app *App) SetupServices() {
 	app.Domain.User.Service = user.NewService(app.Logger, app.Domain.User.Repository)
-	//app.Domain.Post.Service = post.NewService(app.Logger, app.Domain.Post.Repository, app.Domain.Comment.Repository, app.Domain.Vote.Repository)
+	app.Domain.Model.Service = model.NewService(app.Logger, app.Domain.Model.Repository)
 	//app.Domain.Vote.Service = vote.NewService(app.Logger, app.Domain.Vote.Repository)
 	//app.Domain.Comment.Service = comment.NewService(app.Logger, app.Domain.Comment.Repository)
 	app.Auth.Service = auth.NewService(app.Cfg.JWTSigningKey, app.Cfg.JWTExpiration, app.Domain.User.Service, app.Logger, app.Auth.SessionRepository, app.Auth.TokenRepository)

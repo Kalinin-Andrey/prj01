@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"github.com/go-ozzo/ozzo-routing/v2"
-	"github.com/pkg/errors"
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/errorshandler"
+	"github.com/go-ozzo/ozzo-routing/v2"
+	"github.com/pkg/errors"
 	"strconv"
 
 	"carizza/internal/domain/user"
@@ -12,15 +12,17 @@ import (
 )
 
 type userController struct {
+	Controller
 	Service user.IService
-	Logger  log.ILogger
 }
 
 // RegisterHandlers sets up the routing of the HTTP handlers.
 func RegisterUserHandlers(r *routing.RouteGroup, service user.IService, logger log.ILogger, authHandler routing.Handler) {
 	c := userController{
+		Controller: Controller{
+			Logger: logger,
+		},
 		Service: service,
-		Logger:  logger,
 	}
 
 	r.Get(`/user/<id:\d+>`, c.get)

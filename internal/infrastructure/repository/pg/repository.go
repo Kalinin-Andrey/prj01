@@ -1,15 +1,15 @@
 package pg
 
 import (
+	"carizza/internal/domain"
+	"carizza/internal/domain/model"
+	"carizza/internal/domain/user"
 	"github.com/iancoleman/strcase"
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
-	"carizza/internal/domain"
-	"carizza/internal/domain/user"
-
-	"carizza/internal/pkg/log"
 
 	"carizza/internal/pkg/db/pg"
+	"carizza/internal/pkg/log"
 )
 
 // IRepository is an interface of repository
@@ -34,6 +34,8 @@ func GetRepository(logger log.ILogger, dbase pg.IDB, entity string) (repo IRepos
 	switch entity {
 	case user.EntityName:
 		repo, err = NewUserRepository(r)
+	case model.EntityName:
+		repo, err = NewModelRepository(r)
 	default:
 		err = errors.Errorf("Repository for entity %q not found", entity)
 	}
@@ -49,26 +51,42 @@ func (r *repository) SetDefaultConditions(defaultConditions domain.DBQueryCondit
 }
 
 func (r repository) dbWithDefaults() *gorm.DB {
-	db := r.db.DB()
+	return r.applyConditions(r.db.DB(), r.Conditions)
+}
 
-	if r.Conditions.Where != nil {
-		m := r.keysToSnakeCase(r.Conditions.Where)
+func (r repository) applyConditions(db *gorm.DB, conditions domain.DBQueryConditions) *gorm.DB {
+
+	if conditions.Where != nil {
+		m := r.keysToSnakeCase(conditions.Where)
 		db = db.Where(m)
 	}
 
-	if r.Conditions.SortOrder != nil {
-		m := r.keysToSnakeCase(r.Conditions.SortOrder)
+	if conditions.SortOrder != nil {
+		m := r.keysToSnakeCaseStr(conditions.SortOrder)
 		db = db.Order(m)
 	}
 
-	if r.Conditions.Limit != 0 {
-		db = db.Limit(r.Conditions.Limit)
+	if conditions.Limit != 0 {
+		db = db.Limit(conditions.Limit)
+	}
+
+	if conditions.Offset != 0 {
+		db = db.Limit(conditions.Offset)
 	}
 
 	return db
 }
 
 func (r repository) keysToSnakeCase(in map[string]interface{}) map[string]interface{} {
+	out := make(map[string]interface{}, len(in))
+
+	for key, val := range in {
+		out[strcase.ToSnake(key)] = val
+	}
+	return out
+}
+
+func (r repository) keysToSnakeCaseStr(in map[string]string) map[string]interface{} {
 	out := make(map[string]interface{}, len(in))
 
 	for key, val := range in {
