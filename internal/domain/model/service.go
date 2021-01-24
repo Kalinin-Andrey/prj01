@@ -14,7 +14,7 @@ const MaxLIstLimit = 1000
 // IService encapsulates usecase logic for user.
 type IService interface {
 	NewEntity() *Model
-	Get(ctx context.Context, id string) (*Model, error)
+	Get(ctx context.Context, id uint) (*Model, error)
 	Query(ctx context.Context, query domain.DBQueryConditions) ([]Model, error)
 }
 
@@ -43,7 +43,7 @@ func (s service) NewEntity() *Model {
 }
 
 // Get returns the entity with the specified ID.
-func (s service) Get(ctx context.Context, id string) (*Model, error) {
+func (s service) Get(ctx context.Context, id uint) (*Model, error) {
 	entity, err := s.repository.Get(ctx, id)
 	if err != nil {
 		return nil, err

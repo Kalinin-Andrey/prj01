@@ -21,7 +21,7 @@ type postController struct {
 // RegisterHandlers sets up the routing of the HTTP handlers.
 //	GET /api/models/ - список всех моделей
 //	GET /api/model/{MODEL_ID} - детали поста с комментами
-func RegisterPostHandlers(r *routing.RouteGroup, service model.IService, logger log.ILogger, authHandler routing.Handler) {
+func RegisterModelHandlers(r *routing.RouteGroup, service model.IService, logger log.ILogger, authHandler routing.Handler) {
 	c := postController{
 		Controller: Controller{
 			Logger: logger,
@@ -35,13 +35,16 @@ func RegisterPostHandlers(r *routing.RouteGroup, service model.IService, logger 
 
 // get method is for getting a one entity by ID
 func (c postController) get(ctx *routing.Context) error {
-	id := ctx.Param("id")
+	id, err := c.parseUint(ctx, "id")
+	if err != nil {
+		errorshandler.BadRequest("ID is required to be uint")
+	}
 
 	entity, err := c.Service.Get(ctx.Request.Context(), id)
 	if err != nil {
 		if err == apperror.ErrNotFound {
 			c.Logger.With(ctx.Request.Context()).Info(err)
-			return errorshandler.NotFound("")
+			return errorshandler.NotFound("not found")
 		}
 		c.Logger.With(ctx.Request.Context()).Error(err)
 		return errorshandler.InternalServerError("")

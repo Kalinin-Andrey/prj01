@@ -111,8 +111,6 @@ func (app *App) Run() error {
 func (app *App) RegisterHandlers(rg *routing.RouteGroup, authMiddleware routing.Handler) {
 
 	//controller.RegisterUserHandlers(rg, app.Domain.User.Service, app.Logger, authMiddleware)
-	controller.RegisterPostHandlers(rg, app.Domain.Post.Service, app.Domain.User.Service, app.Logger, authMiddleware)
-	controller.RegisterCommentHandlers(rg, app.Domain.Comment.Service, app.Domain.Post.Service, app.Logger, authMiddleware)
-	controller.RegisterVoteHandlers(rg, app.Domain.Vote.Service, app.Domain.Post.Service, app.Logger, authMiddleware)
+	controller.RegisterModelHandlers(rg, app.Domain.Model.Service, app.Logger, authMiddleware)
 
 }
