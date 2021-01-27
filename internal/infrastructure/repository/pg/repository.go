@@ -2,11 +2,13 @@ package pg
 
 import (
 	"carizza/internal/domain"
+	"carizza/internal/domain/mark"
 	"carizza/internal/domain/model"
 	"carizza/internal/domain/user"
 	"github.com/iancoleman/strcase"
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
+	"strings"
 
 	"carizza/internal/pkg/db/pg"
 	"carizza/internal/pkg/log"
@@ -22,7 +24,7 @@ type repository struct {
 	Conditions domain.DBQueryConditions
 }
 
-const DefaultLimit = 100
+const DefaultLimit = 1000
 
 // GetRepository return a repository
 func GetRepository(logger log.ILogger, dbase pg.IDB, entity string) (repo IRepository, err error) {
@@ -34,6 +36,8 @@ func GetRepository(logger log.ILogger, dbase pg.IDB, entity string) (repo IRepos
 	switch entity {
 	case user.EntityName:
 		repo, err = NewUserRepository(r)
+	case mark.EntityName:
+		repo, err = NewMarkRepository(r)
 	case model.EntityName:
 		repo, err = NewModelRepository(r)
 	default:
@@ -51,10 +55,15 @@ func (r *repository) SetDefaultConditions(defaultConditions domain.DBQueryCondit
 }
 
 func (r repository) dbWithDefaults() *gorm.DB {
-	return r.applyConditions(r.db.DB(), r.Conditions)
+	db, _ := r.applyConditions(r.db.DB(), r.Conditions)
+	return db
 }
 
-func (r repository) applyConditions(db *gorm.DB, conditions domain.DBQueryConditions) *gorm.DB {
+func (r repository) applyConditions(db *gorm.DB, conditions domain.DBQueryConditions) (*gorm.DB, error) {
+
+	if err := conditions.Validate(); err != nil {
+		return nil, err
+	}
 
 	if conditions.Where != nil {
 		m := r.keysToSnakeCase(conditions.Where)
@@ -63,7 +72,12 @@ func (r repository) applyConditions(db *gorm.DB, conditions domain.DBQueryCondit
 
 	if conditions.SortOrder != nil {
 		m := r.keysToSnakeCaseStr(conditions.SortOrder)
-		db = db.Order(m)
+		s := strings.Builder{}
+
+		for k, v := range m {
+			s.WriteString(k + " " + v + ", ")
+		}
+		db = db.Order(strings.Trim(s.String(), ", "))
 	}
 
 	if conditions.Limit != 0 {
@@ -74,7 +88,7 @@ func (r repository) applyConditions(db *gorm.DB, conditions domain.DBQueryCondit
 		db = db.Limit(conditions.Offset)
 	}
 
-	return db
+	return db, nil
 }
 
 func (r repository) keysToSnakeCase(in map[string]interface{}) map[string]interface{} {
@@ -86,8 +100,8 @@ func (r repository) keysToSnakeCase(in map[string]interface{}) map[string]interf
 	return out
 }
 
-func (r repository) keysToSnakeCaseStr(in map[string]string) map[string]interface{} {
-	out := make(map[string]interface{}, len(in))
+func (r repository) keysToSnakeCaseStr(in map[string]string) map[string]string {
+	out := make(map[string]string, len(in))
 
 	for key, val := range in {
 		out[strcase.ToSnake(key)] = val

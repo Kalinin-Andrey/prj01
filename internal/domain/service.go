@@ -12,7 +12,7 @@ const (
 	SortOrderDesc = "desc"
 )
 
-var SortOrders = []string{"", SortOrderAsc, SortOrderDesc}
+var SortOrders = []interface{}{"", SortOrderAsc, SortOrderDesc}
 
 type Service struct {
 	logger log.ILogger
@@ -27,6 +27,6 @@ type DBQueryConditions struct {
 
 func (e DBQueryConditions) Validate() error {
 	return validation.ValidateStruct(&e,
-		validation.Field(&e.SortOrder, validation.Each(validation.In(SortOrders))),
+		validation.Field(&e.SortOrder, validation.Each(validation.In(SortOrders...))),
 	)
 }

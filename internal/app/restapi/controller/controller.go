@@ -15,8 +15,17 @@ type Controller struct {
 
 var matchedParams = []string{}
 
-func (c Controller) parseUint(ctx *routing.Context, paramName string) (uint, error) {
+func (c Controller) parseUintParam(ctx *routing.Context, paramName string) (uint, error) {
 	paramVal, err := strconv.ParseUint(ctx.Param(paramName), 10, 64)
+	if err != nil {
+		c.Logger.With(ctx.Request.Context()).Info(err)
+		return 0, err
+	}
+	return uint(paramVal), nil
+}
+
+func (c Controller) parseUintQueryParam(ctx *routing.Context, paramName string) (uint, error) {
+	paramVal, err := strconv.ParseUint(ctx.Query(paramName), 10, 64)
 	if err != nil {
 		c.Logger.With(ctx.Request.Context()).Info(err)
 		return 0, err

@@ -1,6 +1,7 @@
 package app
 
 import (
+	"carizza/internal/domain/mark"
 	golog "log"
 
 	"github.com/pkg/errors"
@@ -42,8 +43,10 @@ type Auth struct {
 
 // Domain is a Domain Layer Entry Point
 type Domain struct {
-	User  DomainUser
+	User DomainUser
+	//	Catalog
 	Type  DomainType
+	Mark  DomainMark
 	Model DomainModel
 }
 
@@ -55,6 +58,11 @@ type DomainUser struct {
 type DomainType struct {
 	Repository ctype.Repository
 	Service    ctype.IService
+}
+
+type DomainMark struct {
+	Repository mark.Repository
+	Service    mark.IService
 }
 
 type DomainModel struct {
@@ -122,9 +130,14 @@ func (app *App) SetupRepositories() (err error) {
 		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", user.EntityName, user.EntityName, app.getPgRepo(app.IdentityDB, user.EntityName))
 	}
 
+	app.Domain.Mark.Repository, ok = app.getPgRepo(app.CarCatalogDB, mark.EntityName).(mark.Repository)
+	if !ok {
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", mark.EntityName, mark.EntityName, app.getPgRepo(app.CarCatalogDB, mark.EntityName))
+	}
+
 	app.Domain.Model.Repository, ok = app.getPgRepo(app.CarCatalogDB, model.EntityName).(model.Repository)
 	if !ok {
-		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", user.EntityName, user.EntityName, app.getPgRepo(app.CarCatalogDB, model.EntityName))
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", model.EntityName, model.EntityName, app.getPgRepo(app.CarCatalogDB, model.EntityName))
 	}
 
 	if app.Auth.SessionRepository, err = redisrep.NewSessionRepository(app.Redis, app.Cfg.SessionLifeTime, app.Domain.User.Repository); err != nil {
@@ -139,6 +152,7 @@ func (app *App) SetupRepositories() (err error) {
 
 func (app *App) SetupServices() {
 	app.Domain.User.Service = user.NewService(app.Logger, app.Domain.User.Repository)
+	app.Domain.Mark.Service = mark.NewService(app.Logger, app.Domain.Mark.Repository)
 	app.Domain.Model.Service = model.NewService(app.Logger, app.Domain.Model.Repository)
 	//app.Domain.Vote.Service = vote.NewService(app.Logger, app.Domain.Vote.Repository)
 	//app.Domain.Comment.Service = comment.NewService(app.Logger, app.Domain.Comment.Repository)

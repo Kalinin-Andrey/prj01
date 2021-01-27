@@ -6,31 +6,31 @@ import (
 
 	"github.com/jinzhu/gorm"
 
-	"carizza/internal/domain/model"
+	"carizza/internal/domain/mark"
 	"carizza/internal/pkg/apperror"
 )
 
-// UserRepository is a repository for the model entity
-type ModelRepository struct {
+// UserRepository is a repository for the mark entity
+type MarkRepository struct {
 	repository
 }
 
-var _ model.Repository = (*ModelRepository)(nil)
+var _ mark.Repository = (*MarkRepository)(nil)
 
-// New creates a new ModelRepository
-func NewModelRepository(repository *repository) (*ModelRepository, error) {
-	return &ModelRepository{repository: *repository}, nil
+// New creates a new MarkRepository
+func NewMarkRepository(repository *repository) (*MarkRepository, error) {
+	return &MarkRepository{repository: *repository}, nil
 }
 
-func (r ModelRepository) autoMigrate() {
+func (r MarkRepository) autoMigrate() {
 	if r.db.IsAutoMigrate() {
-		r.db.DB().AutoMigrate(&model.Model{})
+		r.db.DB().AutoMigrate(&mark.Mark{})
 	}
 }
 
 // Get reads the album with the specified ID from the database.
-func (r ModelRepository) Get(ctx context.Context, id uint) (*model.Model, error) {
-	entity := &model.Model{}
+func (r MarkRepository) Get(ctx context.Context, id uint) (*mark.Mark, error) {
+	entity := &mark.Mark{}
 
 	err := r.dbWithDefaults().First(entity, id).Error
 	if err != nil {
@@ -41,7 +41,7 @@ func (r ModelRepository) Get(ctx context.Context, id uint) (*model.Model, error)
 	return entity, err
 }
 
-func (r ModelRepository) First(ctx context.Context, entity *model.Model) (*model.Model, error) {
+func (r MarkRepository) First(ctx context.Context, entity *mark.Mark) (*mark.Mark, error) {
 	err := r.dbWithDefaults().Where(entity).First(entity).Error
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
@@ -52,8 +52,8 @@ func (r ModelRepository) First(ctx context.Context, entity *model.Model) (*model
 }
 
 // Query retrieves the album records with the specified offset and limit from the database.
-func (r ModelRepository) Query(ctx context.Context, cond domain.DBQueryConditions) ([]model.Model, error) {
-	items := []model.Model{}
+func (r MarkRepository) Query(ctx context.Context, cond domain.DBQueryConditions) ([]mark.Mark, error) {
+	items := []mark.Mark{}
 	db, err := r.applyConditions(r.dbWithDefaults(), cond)
 	if err != nil {
 		return nil, err

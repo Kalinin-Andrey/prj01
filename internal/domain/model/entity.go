@@ -7,7 +7,7 @@ const (
 
 // Post is the user entity
 type Model struct {
-	ID      uint   `gorm:"primaryKey,column:id_car_model" json:"id"`
+	ID      uint   `gorm:"column:id_car_model" json:"id"`
 	MarkID  uint   `gorm:"column:id_car_mark" json:"markId"`
 	Name    string `gorm:"type:varchar(255)"`
 	NameRus string `gorm:"type:varchar(255)"`

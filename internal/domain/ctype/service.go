@@ -39,7 +39,7 @@ func (s service) defaultConditions() domain.DBQueryConditions {
 }
 
 func (s service) NewEntity() *Type {
-	return &Type{}
+	return New()
 }
 
 // Get returns the entity with the specified ID.

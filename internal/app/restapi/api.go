@@ -1,9 +1,9 @@
 package restapi
 
 import (
+	"carizza/internal/pkg/auth"
 	"log"
 	"net/http"
-	"carizza/internal/pkg/auth"
 	"time"
 
 	"github.com/go-ozzo/ozzo-routing/v2"
@@ -110,7 +110,7 @@ func (app *App) Run() error {
 // RegisterHandlers sets up the routing of the HTTP handlers.
 func (app *App) RegisterHandlers(rg *routing.RouteGroup, authMiddleware routing.Handler) {
 
-	//controller.RegisterUserHandlers(rg, app.Domain.User.Service, app.Logger, authMiddleware)
+	controller.RegisterMarkHandlers(rg, app.Domain.Mark.Service, app.Logger, authMiddleware)
 	controller.RegisterModelHandlers(rg, app.Domain.Model.Service, app.Logger, authMiddleware)
 
 }
