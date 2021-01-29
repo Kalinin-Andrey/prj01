@@ -2,8 +2,11 @@ package pg
 
 import (
 	"carizza/internal/domain"
+	"carizza/internal/domain/generation"
 	"carizza/internal/domain/mark"
 	"carizza/internal/domain/model"
+	"carizza/internal/domain/modification"
+	"carizza/internal/domain/serie"
 	"carizza/internal/domain/user"
 	"github.com/iancoleman/strcase"
 	"github.com/jinzhu/gorm"
@@ -40,6 +43,12 @@ func GetRepository(logger log.ILogger, dbase pg.IDB, entity string) (repo IRepos
 		repo, err = NewMarkRepository(r)
 	case model.EntityName:
 		repo, err = NewModelRepository(r)
+	case generation.EntityName:
+		repo, err = NewGenerationRepository(r)
+	case serie.EntityName:
+		repo, err = NewSerieRepository(r)
+	case modification.EntityName:
+		repo, err = NewModificationRepository(r)
 	default:
 		err = errors.Errorf("Repository for entity %q not found", entity)
 	}

@@ -112,5 +112,8 @@ func (app *App) RegisterHandlers(rg *routing.RouteGroup, authMiddleware routing.
 
 	controller.RegisterMarkHandlers(rg, app.Domain.Mark.Service, app.Logger, authMiddleware)
 	controller.RegisterModelHandlers(rg, app.Domain.Model.Service, app.Logger, authMiddleware)
+	controller.RegisterGenerationHandlers(rg, app.Domain.Generation.Service, app.Logger, authMiddleware)
+	controller.RegisterSerieHandlers(rg, app.Domain.Serie.Service, app.Logger, authMiddleware)
+	controller.RegisterModificationHandlers(rg, app.Domain.Modification.Service, app.Logger, authMiddleware)
 
 }

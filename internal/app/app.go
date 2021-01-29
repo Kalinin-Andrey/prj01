@@ -1,7 +1,10 @@
 package app
 
 import (
+	"carizza/internal/domain/generation"
 	"carizza/internal/domain/mark"
+	"carizza/internal/domain/modification"
+	"carizza/internal/domain/serie"
 	golog "log"
 
 	"github.com/pkg/errors"
@@ -48,6 +51,9 @@ type Domain struct {
 	Type  DomainType
 	Mark  DomainMark
 	Model DomainModel
+	Generation DomainGeneration
+	Serie DomainSerie
+	Modification DomainModification
 }
 
 type DomainUser struct {
@@ -68,6 +74,21 @@ type DomainMark struct {
 type DomainModel struct {
 	Repository model.Repository
 	Service    model.IService
+}
+
+type DomainGeneration struct {
+	Repository generation.Repository
+	Service    generation.IService
+}
+
+type DomainSerie struct {
+	Repository serie.Repository
+	Service    serie.IService
+}
+
+type DomainModification struct {
+	Repository modification.Repository
+	Service    modification.IService
 }
 
 // New func is a constructor for the App
@@ -140,6 +161,21 @@ func (app *App) SetupRepositories() (err error) {
 		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", model.EntityName, model.EntityName, app.getPgRepo(app.CarCatalogDB, model.EntityName))
 	}
 
+	app.Domain.Generation.Repository, ok = app.getPgRepo(app.CarCatalogDB, generation.EntityName).(generation.Repository)
+	if !ok {
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", generation.EntityName, generation.EntityName, app.getPgRepo(app.CarCatalogDB, generation.EntityName))
+	}
+
+	app.Domain.Serie.Repository, ok = app.getPgRepo(app.CarCatalogDB, serie.EntityName).(serie.Repository)
+	if !ok {
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", serie.EntityName, serie.EntityName, app.getPgRepo(app.CarCatalogDB, serie.EntityName))
+	}
+
+	app.Domain.Modification.Repository, ok = app.getPgRepo(app.CarCatalogDB, modification.EntityName).(modification.Repository)
+	if !ok {
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", modification.EntityName, modification.EntityName, app.getPgRepo(app.CarCatalogDB, modification.EntityName))
+	}
+
 	if app.Auth.SessionRepository, err = redisrep.NewSessionRepository(app.Redis, app.Cfg.SessionLifeTime, app.Domain.User.Repository); err != nil {
 		return errors.Errorf("Can not get new SessionRepository err: %v", err)
 	}
@@ -154,8 +190,9 @@ func (app *App) SetupServices() {
 	app.Domain.User.Service = user.NewService(app.Logger, app.Domain.User.Repository)
 	app.Domain.Mark.Service = mark.NewService(app.Logger, app.Domain.Mark.Repository)
 	app.Domain.Model.Service = model.NewService(app.Logger, app.Domain.Model.Repository)
-	//app.Domain.Vote.Service = vote.NewService(app.Logger, app.Domain.Vote.Repository)
-	//app.Domain.Comment.Service = comment.NewService(app.Logger, app.Domain.Comment.Repository)
+	app.Domain.Generation.Service = generation.NewService(app.Logger, app.Domain.Generation.Repository)
+	app.Domain.Serie.Service = serie.NewService(app.Logger, app.Domain.Serie.Repository)
+	app.Domain.Modification.Service = modification.NewService(app.Logger, app.Domain.Modification.Repository)
 	app.Auth.Service = auth.NewService(app.Cfg.JWTSigningKey, app.Cfg.JWTExpiration, app.Domain.User.Service, app.Logger, app.Auth.SessionRepository, app.Auth.TokenRepository)
 }
 
