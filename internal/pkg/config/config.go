@@ -24,9 +24,9 @@ type Configuration struct {
 
 type DB struct {
 	Identity    Pg
-	CarCatalog	Pg
-	Order		Pg
-	Redis		Redis
+	CarCatalog  Pg
+	Maintenance Pg
+	Redis       Redis
 }
 
 // Log is config for a logger

@@ -116,4 +116,7 @@ func (app *App) RegisterHandlers(rg *routing.RouteGroup, authMiddleware routing.
 	controller.RegisterSerieHandlers(rg, app.Domain.Serie.Service, app.Logger, authMiddleware)
 	controller.RegisterModificationHandlers(rg, app.Domain.Modification.Service, app.Logger, authMiddleware)
 
+	controller.RegisterMaintenanceHandlers(rg, app.Domain.Maintenance.Service, app.Logger, authMiddleware)
+	controller.RegisterOrderHandlers(rg, app.Domain.Order.Service, app.Logger, authMiddleware)
+
 }

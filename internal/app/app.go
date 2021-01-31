@@ -4,7 +4,9 @@ import (
 	"carizza/internal/domain/generation"
 	"carizza/internal/domain/mark"
 	"carizza/internal/domain/modification"
+	"carizza/internal/domain/order"
 	"carizza/internal/domain/serie"
+	"carizza/internal/domain/maintenance"
 	golog "log"
 
 	"github.com/pkg/errors"
@@ -27,15 +29,15 @@ import (
 
 // App struct is the common part of all applications
 type App struct {
-	Cfg          config.Configuration
-	Logger       log.ILogger
-	IdentityDB   pg.IDB
-	CarCatalogDB pg.IDB
-	OrderDB      pg.IDB
-	Redis        redis.IDB
-	Domain       Domain
-	Auth         Auth
-	Cache        cache.Service
+	Cfg           config.Configuration
+	Logger        log.ILogger
+	IdentityDB    pg.IDB
+	CarCatalogDB  pg.IDB
+	MaintenanceDB pg.IDB
+	Redis         redis.IDB
+	Domain        Domain
+	Auth          Auth
+	Cache         cache.Service
 }
 
 type Auth struct {
@@ -54,6 +56,9 @@ type Domain struct {
 	Generation DomainGeneration
 	Serie DomainSerie
 	Modification DomainModification
+	//	Maintenance
+	Maintenance DomainMaintenance
+	Order DomainOrder
 }
 
 type DomainUser struct {
@@ -91,6 +96,16 @@ type DomainModification struct {
 	Service    modification.IService
 }
 
+type DomainMaintenance struct {
+	Repository maintenance.Repository
+	Service    maintenance.IService
+}
+
+type DomainOrder struct {
+	Repository order.Repository
+	Service    order.IService
+}
+
 // New func is a constructor for the App
 func New(cfg config.Configuration) *App {
 	logger, err := log.New(cfg.Log)
@@ -108,7 +123,7 @@ func New(cfg config.Configuration) *App {
 		golog.Fatal(err)
 	}
 
-	OrderDB, err := pg.New(cfg.DB.Order, logger)
+	MaintenanceDB, err := pg.New(cfg.DB.Maintenance, logger)
 	if err != nil {
 		golog.Fatal(err)
 	}
@@ -119,12 +134,12 @@ func New(cfg config.Configuration) *App {
 	}
 
 	app := &App{
-		Cfg:          cfg,
-		Logger:       logger,
-		IdentityDB:   IdentityDB,
-		CarCatalogDB: CarCatalogDB,
-		OrderDB:      OrderDB,
-		Redis:        rDB,
+		Cfg:           cfg,
+		Logger:        logger,
+		IdentityDB:    IdentityDB,
+		CarCatalogDB:  CarCatalogDB,
+		MaintenanceDB: MaintenanceDB,
+		Redis:         rDB,
 	}
 
 	err = app.Init()
@@ -176,6 +191,16 @@ func (app *App) SetupRepositories() (err error) {
 		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", modification.EntityName, modification.EntityName, app.getPgRepo(app.CarCatalogDB, modification.EntityName))
 	}
 
+	app.Domain.Maintenance.Repository, ok = app.getPgRepo(app.MaintenanceDB, maintenance.EntityName).(maintenance.Repository)
+	if !ok {
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", maintenance.EntityName, maintenance.EntityName, app.getPgRepo(app.CarCatalogDB, maintenance.EntityName))
+	}
+
+	app.Domain.Order.Repository, ok = app.getPgRepo(app.MaintenanceDB, order.EntityName).(order.Repository)
+	if !ok {
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", order.EntityName, order.EntityName, app.getPgRepo(app.CarCatalogDB, order.EntityName))
+	}
+
 	if app.Auth.SessionRepository, err = redisrep.NewSessionRepository(app.Redis, app.Cfg.SessionLifeTime, app.Domain.User.Repository); err != nil {
 		return errors.Errorf("Can not get new SessionRepository err: %v", err)
 	}
@@ -188,12 +213,16 @@ func (app *App) SetupRepositories() (err error) {
 
 func (app *App) SetupServices() {
 	app.Domain.User.Service = user.NewService(app.Logger, app.Domain.User.Repository)
+	app.Auth.Service = auth.NewService(app.Cfg.JWTSigningKey, app.Cfg.JWTExpiration, app.Domain.User.Service, app.Logger, app.Auth.SessionRepository, app.Auth.TokenRepository)
+
 	app.Domain.Mark.Service = mark.NewService(app.Logger, app.Domain.Mark.Repository)
 	app.Domain.Model.Service = model.NewService(app.Logger, app.Domain.Model.Repository)
 	app.Domain.Generation.Service = generation.NewService(app.Logger, app.Domain.Generation.Repository)
 	app.Domain.Serie.Service = serie.NewService(app.Logger, app.Domain.Serie.Repository)
 	app.Domain.Modification.Service = modification.NewService(app.Logger, app.Domain.Modification.Repository)
-	app.Auth.Service = auth.NewService(app.Cfg.JWTSigningKey, app.Cfg.JWTExpiration, app.Domain.User.Service, app.Logger, app.Auth.SessionRepository, app.Auth.TokenRepository)
+
+	app.Domain.Maintenance.Service = maintenance.NewService(app.Logger, app.Domain.Maintenance.Repository)
+	app.Domain.Order.Service = order.NewService(app.Logger, app.Domain.Order.Repository)
 }
 
 // Run is func to run the App
@@ -214,7 +243,7 @@ func (app *App) Stop() error {
 	errRedis := app.Redis.Close()
 	errPg01 := app.IdentityDB.DB().Close()
 	errPg02 := app.CarCatalogDB.DB().Close()
-	errPg03 := app.OrderDB.DB().Close()
+	errPg03 := app.MaintenanceDB.DB().Close()
 
 	switch {
 	case errPg01 != nil || errPg02 != nil || errPg03 != nil:

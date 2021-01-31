@@ -6,7 +6,9 @@ import (
 	"carizza/internal/domain/mark"
 	"carizza/internal/domain/model"
 	"carizza/internal/domain/modification"
+	"carizza/internal/domain/order"
 	"carizza/internal/domain/serie"
+	"carizza/internal/domain/maintenance"
 	"carizza/internal/domain/user"
 	"github.com/iancoleman/strcase"
 	"github.com/jinzhu/gorm"
@@ -49,6 +51,10 @@ func GetRepository(logger log.ILogger, dbase pg.IDB, entity string) (repo IRepos
 		repo, err = NewSerieRepository(r)
 	case modification.EntityName:
 		repo, err = NewModificationRepository(r)
+	case maintenance.EntityName:
+		repo, err = NewMaintenanceRepository(r)
+	case order.EntityName:
+		repo, err = NewOrderRepository(r)
 	default:
 		err = errors.Errorf("Repository for entity %q not found", entity)
 	}

@@ -21,9 +21,9 @@ db:
     dsn:            "host=db port=5432 dbname=car_catalog user=postgres password=1gjcnuhtc1! sslmode=disable"
     islogmode:      True
     isautomigrate:  True
-  order:
+  service:
     dialect:        "postgres"
-    dsn:            "host=db port=5432 dbname=orders user=postgres password=1gjcnuhtc1! sslmode=disable"
+    dsn:            "host=db port=5432 dbname=maintenance user=postgres password=1gjcnuhtc1! sslmode=disable"
     islogmode:      True
     isautomigrate:  True
   redis:
