@@ -1,12 +1,17 @@
 package app
 
 import (
+	"carizza/internal/domain/address"
+	"carizza/internal/domain/car"
+	"carizza/internal/domain/client"
 	"carizza/internal/domain/generation"
 	"carizza/internal/domain/mark"
 	"carizza/internal/domain/modification"
 	"carizza/internal/domain/order"
 	"carizza/internal/domain/serie"
 	"carizza/internal/domain/maintenance"
+	"carizza/internal/domain/supply"
+	"carizza/internal/domain/work"
 	golog "log"
 
 	"github.com/pkg/errors"
@@ -49,16 +54,23 @@ type Auth struct {
 // Domain is a Domain Layer Entry Point
 type Domain struct {
 	User DomainUser
-	//	Catalog
+	//	CarCatalog
 	Type  DomainType
 	Mark  DomainMark
 	Model DomainModel
 	Generation DomainGeneration
 	Serie DomainSerie
 	Modification DomainModification
-	//	Maintenance
+	//	MaintenanceCatalog
 	Maintenance DomainMaintenance
+	Work DomainWork
+	Supply DomainSupply
+	//	Order
 	Order DomainOrder
+	//	Client
+	Client DomainClient
+	Address DomainAddress
+	Car DomainCar
 }
 
 type DomainUser struct {
@@ -101,9 +113,34 @@ type DomainMaintenance struct {
 	Service    maintenance.IService
 }
 
+type DomainWork struct {
+	Repository work.Repository
+	Service    work.IService
+}
+
+type DomainSupply struct {
+	Repository supply.Repository
+	Service    supply.IService
+}
+
 type DomainOrder struct {
 	Repository order.Repository
 	Service    order.IService
+}
+
+type DomainClient struct {
+	Repository client.Repository
+	Service    client.IService
+}
+
+type DomainAddress struct {
+	Repository address.Repository
+	Service    address.IService
+}
+
+type DomainCar struct {
+	Repository car.Repository
+	Service    car.IService
 }
 
 // New func is a constructor for the App
@@ -165,7 +202,7 @@ func (app *App) SetupRepositories() (err error) {
 	if !ok {
 		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", user.EntityName, user.EntityName, app.getPgRepo(app.IdentityDB, user.EntityName))
 	}
-
+	//	CarCatalog
 	app.Domain.Mark.Repository, ok = app.getPgRepo(app.CarCatalogDB, mark.EntityName).(mark.Repository)
 	if !ok {
 		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", mark.EntityName, mark.EntityName, app.getPgRepo(app.CarCatalogDB, mark.EntityName))
@@ -190,15 +227,40 @@ func (app *App) SetupRepositories() (err error) {
 	if !ok {
 		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", modification.EntityName, modification.EntityName, app.getPgRepo(app.CarCatalogDB, modification.EntityName))
 	}
-
+	//	MaintenanceCatalog
 	app.Domain.Maintenance.Repository, ok = app.getPgRepo(app.MaintenanceDB, maintenance.EntityName).(maintenance.Repository)
 	if !ok {
-		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", maintenance.EntityName, maintenance.EntityName, app.getPgRepo(app.CarCatalogDB, maintenance.EntityName))
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", maintenance.EntityName, maintenance.EntityName, app.getPgRepo(app.MaintenanceDB, maintenance.EntityName))
 	}
 
+	app.Domain.Work.Repository, ok = app.getPgRepo(app.MaintenanceDB, work.EntityName).(work.Repository)
+	if !ok {
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", work.EntityName, work.EntityName, app.getPgRepo(app.MaintenanceDB, work.EntityName))
+	}
+
+	app.Domain.Supply.Repository, ok = app.getPgRepo(app.MaintenanceDB, supply.EntityName).(supply.Repository)
+	if !ok {
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", supply.EntityName, supply.EntityName, app.getPgRepo(app.MaintenanceDB, supply.EntityName))
+	}
+	//	Order
 	app.Domain.Order.Repository, ok = app.getPgRepo(app.MaintenanceDB, order.EntityName).(order.Repository)
 	if !ok {
-		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", order.EntityName, order.EntityName, app.getPgRepo(app.CarCatalogDB, order.EntityName))
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", order.EntityName, order.EntityName, app.getPgRepo(app.MaintenanceDB, order.EntityName))
+	}
+	//	Client
+	app.Domain.Client.Repository, ok = app.getPgRepo(app.MaintenanceDB, client.EntityName).(client.Repository)
+	if !ok {
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", client.EntityName, client.EntityName, app.getPgRepo(app.MaintenanceDB, client.EntityName))
+	}
+
+	app.Domain.Address.Repository, ok = app.getPgRepo(app.MaintenanceDB, address.EntityName).(address.Repository)
+	if !ok {
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", address.EntityName, address.EntityName, app.getPgRepo(app.MaintenanceDB, address.EntityName))
+	}
+
+	app.Domain.Car.Repository, ok = app.getPgRepo(app.MaintenanceDB, car.EntityName).(car.Repository)
+	if !ok {
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", car.EntityName, car.EntityName, app.getPgRepo(app.MaintenanceDB, car.EntityName))
 	}
 
 	if app.Auth.SessionRepository, err = redisrep.NewSessionRepository(app.Redis, app.Cfg.SessionLifeTime, app.Domain.User.Repository); err != nil {
@@ -214,15 +276,22 @@ func (app *App) SetupRepositories() (err error) {
 func (app *App) SetupServices() {
 	app.Domain.User.Service = user.NewService(app.Logger, app.Domain.User.Repository)
 	app.Auth.Service = auth.NewService(app.Cfg.JWTSigningKey, app.Cfg.JWTExpiration, app.Domain.User.Service, app.Logger, app.Auth.SessionRepository, app.Auth.TokenRepository)
-
+	//	CarCatalog
 	app.Domain.Mark.Service = mark.NewService(app.Logger, app.Domain.Mark.Repository)
 	app.Domain.Model.Service = model.NewService(app.Logger, app.Domain.Model.Repository)
 	app.Domain.Generation.Service = generation.NewService(app.Logger, app.Domain.Generation.Repository)
 	app.Domain.Serie.Service = serie.NewService(app.Logger, app.Domain.Serie.Repository)
 	app.Domain.Modification.Service = modification.NewService(app.Logger, app.Domain.Modification.Repository)
-
+	//	MaintenanceCatalog
 	app.Domain.Maintenance.Service = maintenance.NewService(app.Logger, app.Domain.Maintenance.Repository)
+	app.Domain.Work.Service = work.NewService(app.Logger, app.Domain.Work.Repository)
+	app.Domain.Supply.Service = supply.NewService(app.Logger, app.Domain.Supply.Repository)
+	//	Order
 	app.Domain.Order.Service = order.NewService(app.Logger, app.Domain.Order.Repository)
+	//	Client
+	app.Domain.Client.Service = client.NewService(app.Logger, app.Domain.Client.Repository)
+	app.Domain.Address.Service = address.NewService(app.Logger, app.Domain.Address.Repository)
+	app.Domain.Car.Service = car.NewService(app.Logger, app.Domain.Car.Repository)
 }
 
 // Run is func to run the App

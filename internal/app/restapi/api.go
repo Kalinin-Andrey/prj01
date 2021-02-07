@@ -110,11 +110,12 @@ func (app *App) Run() error {
 // RegisterHandlers sets up the routing of the HTTP handlers.
 func (app *App) RegisterHandlers(rg *routing.RouteGroup, authMiddleware routing.Handler) {
 
-	controller.RegisterMarkHandlers(rg, app.Domain.Mark.Service, app.Logger, authMiddleware)
-	controller.RegisterModelHandlers(rg, app.Domain.Model.Service, app.Logger, authMiddleware)
-	controller.RegisterGenerationHandlers(rg, app.Domain.Generation.Service, app.Logger, authMiddleware)
-	controller.RegisterSerieHandlers(rg, app.Domain.Serie.Service, app.Logger, authMiddleware)
-	controller.RegisterModificationHandlers(rg, app.Domain.Modification.Service, app.Logger, authMiddleware)
+	rgCarCatalog := rg.Group("/car-catalog")
+	controller.RegisterMarkHandlers(rgCarCatalog, app.Domain.Mark.Service, app.Logger, authMiddleware)
+	controller.RegisterModelHandlers(rgCarCatalog, app.Domain.Model.Service, app.Logger, authMiddleware)
+	controller.RegisterGenerationHandlers(rgCarCatalog, app.Domain.Generation.Service, app.Logger, authMiddleware)
+	controller.RegisterSerieHandlers(rgCarCatalog, app.Domain.Serie.Service, app.Logger, authMiddleware)
+	controller.RegisterModificationHandlers(rgCarCatalog, app.Domain.Modification.Service, app.Logger, authMiddleware)
 
 	controller.RegisterMaintenanceHandlers(rg, app.Domain.Maintenance.Service, app.Logger, authMiddleware)
 	controller.RegisterOrderHandlers(rg, app.Domain.Order.Service, app.Logger, authMiddleware)

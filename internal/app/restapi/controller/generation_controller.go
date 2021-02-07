@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"errors"
+
 	"github.com/go-ozzo/ozzo-routing/v2"
 
 	"carizza/internal/pkg/apperror"
@@ -29,6 +31,7 @@ func RegisterGenerationHandlers(r *routing.RouteGroup, service generation.IServi
 
 	r.Get("/generations", c.list)
 	r.Get(`/generation/<id>`, c.get)
+	r.Get(`/model/<id>/generations`, c.list)
 }
 
 // get method is for getting a one entity by ID
@@ -60,7 +63,10 @@ func (c generationController) list(ctx *routing.Context) error {
 		},
 	}
 
-	modelId, err := c.parseUintQueryParam(ctx, "modelId")
+	modelId, err := c.parseUintParam(ctx, "modelId")
+	if errors.Is(err, apperror.ErrNotFound) {
+		modelId, err = c.parseUintQueryParam(ctx, "modelId")
+	}
 	if err == nil && modelId > 0 {
 		cond.Where = map[string]interface{}{
 			"id_car_model": modelId,

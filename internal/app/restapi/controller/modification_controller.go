@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"errors"
+
 	"github.com/go-ozzo/ozzo-routing/v2"
 
 	"carizza/internal/pkg/apperror"
@@ -29,6 +31,7 @@ func RegisterModificationHandlers(r *routing.RouteGroup, service modification.IS
 
 	r.Get("/modifications", c.list)
 	r.Get(`/modification/<id>`, c.get)
+	r.Get(`/serie/<id>/modifications`, c.list)
 }
 
 // get method is for getting a one entity by ID
@@ -60,7 +63,10 @@ func (c modificationController) list(ctx *routing.Context) error {
 		},
 	}
 
-	serieId, err := c.parseUintQueryParam(ctx, "serieId")
+	serieId, err := c.parseUintParam(ctx, "serieId")
+	if errors.Is(err, apperror.ErrNotFound) {
+		serieId, err = c.parseUintQueryParam(ctx, "serieId")
+	}
 	if err == nil && serieId > 0 {
 		cond.Where = map[string]interface{}{
 			"id_car_serie": serieId,

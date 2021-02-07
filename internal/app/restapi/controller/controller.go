@@ -2,6 +2,7 @@ package controller
 
 import (
 	"carizza/internal/domain"
+	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/log"
 	routing "github.com/go-ozzo/ozzo-routing/v2"
 	"strconv"
@@ -16,7 +17,12 @@ type Controller struct {
 var matchedParams = []string{}
 
 func (c Controller) parseUintParam(ctx *routing.Context, paramName string) (uint, error) {
-	paramVal, err := strconv.ParseUint(ctx.Param(paramName), 10, 64)
+	str := ctx.Param(paramName)
+	if str == "" {
+		return 0, apperror.ErrNotFound
+	}
+
+	paramVal, err := strconv.ParseUint(str, 10, 64)
 	if err != nil {
 		c.Logger.With(ctx.Request.Context()).Info(err)
 		return 0, err
@@ -25,7 +31,12 @@ func (c Controller) parseUintParam(ctx *routing.Context, paramName string) (uint
 }
 
 func (c Controller) parseUintQueryParam(ctx *routing.Context, paramName string) (uint, error) {
-	paramVal, err := strconv.ParseUint(ctx.Query(paramName), 10, 64)
+	str := ctx.Query(paramName)
+	if str == "" {
+		return 0, apperror.ErrNotFound
+	}
+
+	paramVal, err := strconv.ParseUint(str, 10, 64)
 	if err != nil {
 		c.Logger.With(ctx.Request.Context()).Info(err)
 		return 0, err

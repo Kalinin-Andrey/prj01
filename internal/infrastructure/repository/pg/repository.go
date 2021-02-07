@@ -2,6 +2,9 @@ package pg
 
 import (
 	"carizza/internal/domain"
+	"carizza/internal/domain/address"
+	"carizza/internal/domain/car"
+	"carizza/internal/domain/client"
 	"carizza/internal/domain/generation"
 	"carizza/internal/domain/mark"
 	"carizza/internal/domain/model"
@@ -9,7 +12,9 @@ import (
 	"carizza/internal/domain/order"
 	"carizza/internal/domain/serie"
 	"carizza/internal/domain/maintenance"
+	"carizza/internal/domain/supply"
 	"carizza/internal/domain/user"
+	"carizza/internal/domain/work"
 	"github.com/iancoleman/strcase"
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
@@ -51,10 +56,21 @@ func GetRepository(logger log.ILogger, dbase pg.IDB, entity string) (repo IRepos
 		repo, err = NewSerieRepository(r)
 	case modification.EntityName:
 		repo, err = NewModificationRepository(r)
+
 	case maintenance.EntityName:
 		repo, err = NewMaintenanceRepository(r)
+	case work.EntityName:
+		repo, err = NewWorkRepository(r)
+	case supply.EntityName:
+		repo, err = NewSupplyRepository(r)
 	case order.EntityName:
 		repo, err = NewOrderRepository(r)
+	case car.EntityName:
+		repo, err = NewCarRepository(r)
+	case address.EntityName:
+		repo, err = NewAddressRepository(r)
+	case client.EntityName:
+		repo, err = NewClientRepository(r)
 	default:
 		err = errors.Errorf("Repository for entity %q not found", entity)
 	}

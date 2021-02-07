@@ -5,8 +5,8 @@ import(
 )
 
 const (
-	EntityName = "service"
-	TableName  = "service"
+	EntityName = "maintenance"
+	TableName  = "maintenance"
 )
 
 // Maintenance is the service entity
