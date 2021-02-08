@@ -60,13 +60,6 @@ func (c maintenanceController) list(ctx *routing.Context) error {
 		},
 	}
 
-	markId, err := c.parseUintQueryParam(ctx, "markId")
-	if err == nil && markId > 0 {
-		cond.Where = map[string]interface{}{
-			"id_car_mark": markId,
-		}
-	}
-
 	items, err := c.Service.Query(ctx.Request.Context(), cond)
 	if err != nil {
 		if err == apperror.ErrNotFound {

@@ -8,34 +8,34 @@ import (
 	"carizza/internal/pkg/log"
 
 	"carizza/internal/domain"
-	"carizza/internal/domain/order"
+	"carizza/internal/domain/client"
 )
 
-type orderController struct {
+type clientController struct {
 	Controller
-	Service order.IService
+	Service client.IService
 }
 
 // RegisterHandlers sets up the routing of the HTTP handlers.
-//	GET /api/orders/ - список всех моделей
-//	GET /api/order/<id> - детали модели
-func RegisterOrderHandlers(r *routing.RouteGroup, service order.IService, logger log.ILogger, authHandler routing.Handler) {
-	c := orderController{
+//	GET /api/clients/ - список всех работ
+//	GET /api/client/<id> - детали модели
+func RegisterClientHandlers(r *routing.RouteGroup, service client.IService, logger log.ILogger, authHandler routing.Handler) {
+	c := clientController{
 		Controller: Controller{
 			Logger: logger,
 		},
 		Service: service,
 	}
 
-	r.Get("/orders", c.list)
-	r.Get(`/order/<id>`, c.get)
+	r.Get("/clients", c.list)
+	r.Get(`/client/<id>`, c.get)
 }
 
 // get method is for getting a one entity by ID
-func (c orderController) get(ctx *routing.Context) error {
+func (c clientController) get(ctx *routing.Context) error {
 	id, err := c.parseUintParam(ctx, "id")
 	if err != nil {
-		errorshandler.BadRequest("ID is required to be uint")
+		return errorshandler.BadRequest("ID is required to be uint")
 	}
 
 	entity, err := c.Service.Get(ctx.Request.Context(), id)
@@ -53,7 +53,7 @@ func (c orderController) get(ctx *routing.Context) error {
 }
 
 // list method is for a getting a list of all entities
-func (c orderController) list(ctx *routing.Context) error {
+func (c clientController) list(ctx *routing.Context) error {
 	cond := domain.DBQueryConditions{
 		SortOrder: map[string]string{
 			"name": "asc",

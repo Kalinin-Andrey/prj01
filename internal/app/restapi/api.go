@@ -116,8 +116,15 @@ func (app *App) RegisterHandlers(rg *routing.RouteGroup, authMiddleware routing.
 	controller.RegisterGenerationHandlers(rgCarCatalog, app.Domain.Generation.Service, app.Logger, authMiddleware)
 	controller.RegisterSerieHandlers(rgCarCatalog, app.Domain.Serie.Service, app.Logger, authMiddleware)
 	controller.RegisterModificationHandlers(rgCarCatalog, app.Domain.Modification.Service, app.Logger, authMiddleware)
-
+	//	MaintenanceCatalog
 	controller.RegisterMaintenanceHandlers(rg, app.Domain.Maintenance.Service, app.Logger, authMiddleware)
+	controller.RegisterWorkHandlers(rg, app.Domain.Work.Service, app.Logger, authMiddleware)
+	controller.RegisterSupplyHandlers(rg, app.Domain.Supply.Service, app.Logger, authMiddleware)
+	//	Order
 	controller.RegisterOrderHandlers(rg, app.Domain.Order.Service, app.Logger, authMiddleware)
+	//	Client
+	controller.RegisterClientHandlers(rg, app.Domain.Client.Service, app.Logger, authMiddleware)
+	controller.RegisterAddressHandlers(rg, app.Domain.Address.Service, app.Logger, authMiddleware)
+	controller.RegisterCarHandlers(rg, app.Domain.Car.Service, app.Logger, authMiddleware)
 
 }
