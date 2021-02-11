@@ -7,11 +7,13 @@ const (
 
 // Post is the user entity
 type Modification struct {
-	ID      uint   `gorm:"column:id_car_modification" json:"id"`
-	MarkID  uint   `gorm:"column:id_car_mark" json:"markId"`
-	Name    string `gorm:"type:varchar(255)"`
-	NameRus string `gorm:"type:varchar(255)"`
-	TypeID  uint   `gorm:"column:id_car_type" json:"type"`
+	ID                  uint   `gorm:"column:id_car_modification"`
+	ModelID             uint   `gorm:"column:id_car_model"`
+	SerieID             uint   `gorm:"column:id_car_serie"`
+	Name                string `gorm:"type:varchar(255)"`
+	StartProductionYear uint
+	EndProductionYear   uint
+	TypeID              uint `gorm:"column:id_car_type"`
 }
 
 func (e Modification) TableName() string {

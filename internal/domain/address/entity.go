@@ -1,5 +1,7 @@
 package address
 
+import "time"
+
 const (
 	EntityName = "address"
 	TableName  = "address"
@@ -7,11 +9,12 @@ const (
 
 // Address is the user entity
 type Address struct {
-	ID      uint   `gorm:"column:id" json:"id"`
-	MarkID  uint   `gorm:"column:id_car_mark" json:"markId"`
-	Name    string `gorm:"type:varchar(255)"`
-	NameRus string `gorm:"type:varchar(255)"`
-	TypeID  uint   `gorm:"column:id_car_type" json:"type"`
+	ID        uint   `gorm:"primaryKey"`
+	ClientID  uint   `gorm:"type:integer;index"`
+	Value     string `gorm:"type:varchar(255)"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time `gorm:"index"`
 }
 
 func (e Address) TableName() string {

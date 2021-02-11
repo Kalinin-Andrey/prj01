@@ -7,10 +7,10 @@ const (
 
 // Mark is the mark entity
 type Mark struct {
-	ID      uint   `gorm:"column:id_car_mark" json:"id"`
+	ID      uint   `gorm:"column:id_car_mark"`
 	Name    string `gorm:"type:varchar(255)"`
 	NameRus string `gorm:"type:varchar(255)"`
-	TypeID  uint   `gorm:"column:id_car_type" json:"type"`
+	TypeID  uint   `gorm:"column:id_car_type"`
 }
 
 func (e Mark) TableName() string {

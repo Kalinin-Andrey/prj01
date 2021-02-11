@@ -41,6 +41,7 @@ func (r OrderRepository) Get(ctx context.Context, id uint) (*order.Order, error)
 			return entity, apperror.ErrNotFound
 		}
 	}
+	r.setupEntityPeriod(entity)
 	return entity, err
 }
 
@@ -51,6 +52,7 @@ func (r OrderRepository) First(ctx context.Context, entity *order.Order) (*order
 			return entity, apperror.ErrNotFound
 		}
 	}
+	r.setupEntityPeriod(entity)
 	return entity, err
 }
 
@@ -68,5 +70,19 @@ func (r OrderRepository) Query(ctx context.Context, cond domain.DBQueryCondition
 			return items, apperror.ErrNotFound
 		}
 	}
+	r.setupEntityPeriods(&items)
 	return items, err
+}
+
+func (r OrderRepository) setupEntityPeriods(items *[]order.Order) {
+	n := make([]order.Order, 0, len(*items))
+	for _, item := range *items {
+		r.setupEntityPeriod(&item)
+		n = append(n, item)
+	}
+	*items = n
+}
+
+func (r OrderRepository) setupEntityPeriod(item *order.Order) {
+	(*item).Period = order.Periods[item.PeriodID]
 }

@@ -1,7 +1,9 @@
 package maintenance
 
-import(
+import (
 	"time"
+
+	"carizza/internal/domain/work"
 )
 
 const (
@@ -9,13 +11,15 @@ const (
 	TableName  = "maintenance"
 )
 
-// Maintenance is the service entity
+// Maintenance entity
 type Maintenance struct {
-	ID        uint   `gorm:"PRIMARY_KEY" json:"id"`
-	Name      string `gorm:"type:varchar(255);UNIQUE;INDEX" json:"name"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time `gorm:"INDEX"`
+	ID          uint         `gorm:"primaryKey"`
+	Name        string       `gorm:"type:varchar(255);unique;index"`
+	Description string       `gorm:"type:text;"`
+	Works       []*work.Work `gorm:"many2many:maintenance2work;"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   *time.Time `gorm:"index"`
 }
 
 func (e Maintenance) TableName() string {

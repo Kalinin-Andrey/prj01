@@ -23,7 +23,7 @@ type Data struct {
 
 // Session is the session entity
 type Session struct {
-	ID     uint            `gorm:"PRIMARY_KEY" json:"id"`
+	ID     uint            `gorm:"primaryKey" json:"id"`
 	UserID uint            `sql:"type:int NOT NULL REFERENCES \"user\"(id)" json:"userId"`
 	User   user.User       `gorm:"FOREIGNKEY:UserID;association_autoupdate:false" json:"author"`
 	Data   Data            `gorm:"-"`
@@ -32,7 +32,7 @@ type Session struct {
 
 	CreatedAt time.Time  `json:"created"`
 	UpdatedAt time.Time  `json:"updated"`
-	DeletedAt *time.Time `gorm:"INDEX" json:"deleted"`
+	DeletedAt *time.Time `gorm:"index" json:"deleted"`
 }
 
 var _ encoding.BinaryMarshaler = (*Session)(nil)

@@ -39,6 +39,7 @@ func (r GenerationRepository) Get(ctx context.Context, id uint) (*generation.Gen
 			return entity, apperror.ErrNotFound
 		}
 	}
+	r.setupEntityLabel(entity)
 	return entity, err
 }
 
@@ -49,6 +50,7 @@ func (r GenerationRepository) First(ctx context.Context, entity *generation.Gene
 			return entity, apperror.ErrNotFound
 		}
 	}
+	r.setupEntityLabel(entity)
 	return entity, err
 }
 
@@ -66,5 +68,19 @@ func (r GenerationRepository) Query(ctx context.Context, cond domain.DBQueryCond
 			return items, apperror.ErrNotFound
 		}
 	}
+	r.setupEntityLabels(&items)
 	return items, err
+}
+
+func (r GenerationRepository) setupEntityLabels(items *[]generation.Generation) {
+	n := make([]generation.Generation, 0, len(*items))
+	for _, item := range *items {
+		r.setupEntityLabel(&item)
+		n = append(n, item)
+	}
+	*items = n
+}
+
+func (r GenerationRepository) setupEntityLabel(item *generation.Generation) {
+	(*item).Label = (*item).Name + " (" + (*item).YearBegin + " - " + (*item).YearEnd + ")"
 }

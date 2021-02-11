@@ -1,5 +1,11 @@
 package work
 
+import (
+	"time"
+
+	"carizza/internal/domain/supply"
+)
+
 const (
 	EntityName = "work"
 	TableName  = "work"
@@ -7,11 +13,13 @@ const (
 
 // Post is the user entity
 type Work struct {
-	ID      uint   `gorm:"column:id_car_work" json:"id"`
-	MarkID  uint   `gorm:"column:id_car_mark" json:"markId"`
-	Name    string `gorm:"type:varchar(255)"`
-	NameRus string `gorm:"type:varchar(255)"`
-	TypeID  uint   `gorm:"column:id_car_type" json:"type"`
+	ID          uint             `gorm:"primaryKey"`
+	Name        string           `gorm:"type:varchar(255);unique;index"`
+	Description string           `gorm:"type:text;"`
+	Supplies    []*supply.Supply `gorm:"many2many:work2supply;"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   *time.Time `gorm:"index"`
 }
 
 func (e Work) TableName() string {

@@ -14,12 +14,12 @@ const (
 
 // User is the user entity
 type User struct {
-	ID        uint   `gorm:"PRIMARY_KEY" json:"id"`
-	Name      string `gorm:"type:varchar(100);UNIQUE;INDEX" json:"username"`
+	ID        uint   `gorm:"primaryKey"`
+	Name      string `gorm:"type:varchar(100);unique;index" json:"username"`
 	Passhash  string `gorm:"type:bytea" json:"-"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt *time.Time `gorm:"INDEX"`
+	DeletedAt *time.Time `gorm:"index"`
 }
 
 func (e User) TableName() string {

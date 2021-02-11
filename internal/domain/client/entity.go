@@ -1,6 +1,8 @@
 package client
 
-import(
+import (
+	"carizza/internal/domain/address"
+	"carizza/internal/domain/car"
 	"time"
 )
 
@@ -11,11 +13,14 @@ const (
 
 // Client is the service entity
 type Client struct {
-	ID        uint   `gorm:"PRIMARY_KEY" json:"id"`
-	Name      string `gorm:"type:varchar(100);UNIQUE;INDEX" json:"username"`
+	ID        uint   `gorm:"primaryKey"`
+	Name      string `gorm:"type:varchar(255);unique;index"`
+	Phone     uint   `gorm:"type:integer;unique;index"`
+	Cars      []*car.Car
+	Addresses []*address.Address
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt *time.Time `gorm:"INDEX"`
+	DeletedAt *time.Time `gorm:"index"`
 }
 
 func (e Client) TableName() string {

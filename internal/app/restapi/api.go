@@ -109,7 +109,7 @@ func (app *App) Run() error {
 
 // RegisterHandlers sets up the routing of the HTTP handlers.
 func (app *App) RegisterHandlers(rg *routing.RouteGroup, authMiddleware routing.Handler) {
-
+	//	CarCatalog
 	rgCarCatalog := rg.Group("/car-catalog")
 	controller.RegisterMarkHandlers(rgCarCatalog, app.Domain.Mark.Service, app.Logger, authMiddleware)
 	controller.RegisterModelHandlers(rgCarCatalog, app.Domain.Model.Service, app.Logger, authMiddleware)
