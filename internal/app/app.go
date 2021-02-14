@@ -5,11 +5,11 @@ import (
 	"carizza/internal/domain/car"
 	"carizza/internal/domain/client"
 	"carizza/internal/domain/generation"
+	"carizza/internal/domain/maintenance"
 	"carizza/internal/domain/mark"
 	"carizza/internal/domain/modification"
 	"carizza/internal/domain/order"
 	"carizza/internal/domain/serie"
-	"carizza/internal/domain/maintenance"
 	"carizza/internal/domain/supply"
 	"carizza/internal/domain/work"
 	golog "log"
@@ -55,22 +55,22 @@ type Auth struct {
 type Domain struct {
 	User DomainUser
 	//	CarCatalog
-	Type  DomainType
-	Mark  DomainMark
-	Model DomainModel
-	Generation DomainGeneration
-	Serie DomainSerie
+	Type         DomainType
+	Mark         DomainMark
+	Model        DomainModel
+	Generation   DomainGeneration
+	Serie        DomainSerie
 	Modification DomainModification
 	//	MaintenanceCatalog
 	Maintenance DomainMaintenance
-	Work DomainWork
-	Supply DomainSupply
+	Work        DomainWork
+	Supply      DomainSupply
 	//	Order
 	Order DomainOrder
 	//	Client
-	Client DomainClient
+	Client  DomainClient
 	Address DomainAddress
-	Car DomainCar
+	Car     DomainCar
 }
 
 type DomainUser struct {
@@ -228,9 +228,9 @@ func (app *App) SetupRepositories() (err error) {
 		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", modification.EntityName, modification.EntityName, app.getPgRepo(app.CarCatalogDB, modification.EntityName))
 	}
 	//	MaintenanceCatalog
-	app.Domain.Maintenance.Repository, ok = app.getPgRepo(app.MaintenanceDB, maintenance.EntityName).(maintenance.Repository)
+	app.Domain.Supply.Repository, ok = app.getPgRepo(app.MaintenanceDB, supply.EntityName).(supply.Repository)
 	if !ok {
-		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", maintenance.EntityName, maintenance.EntityName, app.getPgRepo(app.MaintenanceDB, maintenance.EntityName))
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", supply.EntityName, supply.EntityName, app.getPgRepo(app.MaintenanceDB, supply.EntityName))
 	}
 
 	app.Domain.Work.Repository, ok = app.getPgRepo(app.MaintenanceDB, work.EntityName).(work.Repository)
@@ -238,14 +238,9 @@ func (app *App) SetupRepositories() (err error) {
 		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", work.EntityName, work.EntityName, app.getPgRepo(app.MaintenanceDB, work.EntityName))
 	}
 
-	app.Domain.Supply.Repository, ok = app.getPgRepo(app.MaintenanceDB, supply.EntityName).(supply.Repository)
+	app.Domain.Maintenance.Repository, ok = app.getPgRepo(app.MaintenanceDB, maintenance.EntityName).(maintenance.Repository)
 	if !ok {
-		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", supply.EntityName, supply.EntityName, app.getPgRepo(app.MaintenanceDB, supply.EntityName))
-	}
-	//	Order
-	app.Domain.Order.Repository, ok = app.getPgRepo(app.MaintenanceDB, order.EntityName).(order.Repository)
-	if !ok {
-		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", order.EntityName, order.EntityName, app.getPgRepo(app.MaintenanceDB, order.EntityName))
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", maintenance.EntityName, maintenance.EntityName, app.getPgRepo(app.MaintenanceDB, maintenance.EntityName))
 	}
 	//	Client
 	app.Domain.Client.Repository, ok = app.getPgRepo(app.MaintenanceDB, client.EntityName).(client.Repository)
@@ -261,6 +256,11 @@ func (app *App) SetupRepositories() (err error) {
 	app.Domain.Car.Repository, ok = app.getPgRepo(app.MaintenanceDB, car.EntityName).(car.Repository)
 	if !ok {
 		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", car.EntityName, car.EntityName, app.getPgRepo(app.MaintenanceDB, car.EntityName))
+	}
+	//	Order
+	app.Domain.Order.Repository, ok = app.getPgRepo(app.MaintenanceDB, order.EntityName).(order.Repository)
+	if !ok {
+		return errors.Errorf("Can not cast DB repository for entity %q to %vRepository. Repo: %v", order.EntityName, order.EntityName, app.getPgRepo(app.MaintenanceDB, order.EntityName))
 	}
 
 	if app.Auth.SessionRepository, err = redisrep.NewSessionRepository(app.Redis, app.Cfg.SessionLifeTime, app.Domain.User.Repository); err != nil {

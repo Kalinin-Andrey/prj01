@@ -27,7 +27,10 @@ func NewMaintenanceRepository(repository *repository) (*MaintenanceRepository, e
 
 func (r MaintenanceRepository) autoMigrate() {
 	if r.db.IsAutoMigrate() {
-		r.db.DB().AutoMigrate(&maintenance.Maintenance{})
+		r.db.DB().AutoMigrate(
+			&maintenance.Maintenance{},
+			//&maintenance2work.Maintenance2Work{},
+		)
 	}
 }
 

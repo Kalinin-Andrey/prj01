@@ -3,7 +3,7 @@ package user
 import (
 	"time"
 
-	"github.com/go-ozzo/ozzo-validation/v4"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 )
 
@@ -15,8 +15,8 @@ const (
 // User is the user entity
 type User struct {
 	ID        uint   `gorm:"primaryKey"`
-	Name      string `gorm:"type:varchar(100);unique;index" json:"username"`
-	Passhash  string `gorm:"type:bytea" json:"-"`
+	Name      string `gorm:"type:varchar(100) not null;unique;index" json:"username"`
+	Passhash  string `gorm:"type:bytea not null" json:"-"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time `gorm:"index"`

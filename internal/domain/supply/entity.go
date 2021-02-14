@@ -12,7 +12,7 @@ const (
 // Supply is the user entity
 type Supply struct {
 	ID          uint   `gorm:"primaryKey"`
-	Name        string `gorm:"type:varchar(255);unique;index"`
+	Name        string `gorm:"type:varchar(255) not null;unique;index"`
 	Description string `gorm:"type:text;"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time

@@ -14,8 +14,8 @@ const (
 // Client is the service entity
 type Client struct {
 	ID        uint   `gorm:"primaryKey"`
-	Name      string `gorm:"type:varchar(255);unique;index"`
-	Phone     uint   `gorm:"type:integer;unique;index"`
+	Name      string `gorm:"type:varchar(255) not null;unique;index"`
+	Phone     uint   `gorm:"type:smallint not null;unique;index"`
 	Cars      []*car.Car
 	Addresses []*address.Address
 	CreatedAt time.Time

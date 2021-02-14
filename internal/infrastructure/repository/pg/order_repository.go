@@ -9,6 +9,9 @@ import (
 
 	"carizza/internal/domain"
 	"carizza/internal/domain/order"
+	"carizza/internal/domain/order/ordered_maintenance"
+	"carizza/internal/domain/order/ordered_supply"
+	"carizza/internal/domain/order/ordered_work"
 )
 
 // OrderRepository is a repository for the service entity
@@ -27,7 +30,12 @@ func NewOrderRepository(repository *repository) (*OrderRepository, error) {
 
 func (r OrderRepository) autoMigrate() {
 	if r.db.IsAutoMigrate() {
-		r.db.DB().AutoMigrate(&order.Order{})
+		r.db.DB().AutoMigrate(
+			&order.Order{},
+			&ordered_maintenance.OrderedMaintenance{},
+			&ordered_work.OrderedWork{},
+			&ordered_supply.OrderedSupply{},
+		)
 	}
 }
 

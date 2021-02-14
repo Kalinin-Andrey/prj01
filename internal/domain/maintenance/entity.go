@@ -14,9 +14,9 @@ const (
 // Maintenance entity
 type Maintenance struct {
 	ID          uint         `gorm:"primaryKey"`
-	Name        string       `gorm:"type:varchar(255);unique;index"`
+	Name        string       `gorm:"type:varchar(255) not null;unique;index"`
 	Description string       `gorm:"type:text;"`
-	Works       []*work.Work `gorm:"many2many:maintenance2work;"`
+	Works       []*work.Work `gorm:"many2many:maintenance2work"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   *time.Time `gorm:"index"`

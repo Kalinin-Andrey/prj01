@@ -27,7 +27,10 @@ func NewWorkRepository(repository *repository) (*WorkRepository, error) {
 
 func (r WorkRepository) autoMigrate() {
 	if r.db.IsAutoMigrate() {
-		r.db.DB().AutoMigrate(&work.Work{})
+		r.db.DB().AutoMigrate(
+			&work.Work{},
+			//&work2supply.Work2Supply{},
+		)
 	}
 }
 
