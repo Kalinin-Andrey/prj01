@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"github.com/go-ozzo/ozzo-routing/v2"
-
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/errorshandler"
 	"carizza/internal/pkg/log"
@@ -10,6 +8,8 @@ import (
 	"carizza/internal/domain"
 	"carizza/internal/domain/ctype"
 	"carizza/internal/domain/mark"
+
+	routing "github.com/go-ozzo/ozzo-routing/v2"
 )
 
 type markController struct {
@@ -49,7 +49,6 @@ func (c markController) get(ctx *routing.Context) error {
 		return errorshandler.InternalServerError("")
 	}
 
-	ctx.Response.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	return ctx.Write(entity)
 }
 
@@ -72,6 +71,5 @@ func (c markController) list(ctx *routing.Context) error {
 		c.Logger.With(ctx.Request.Context()).Error(err)
 		return errorshandler.InternalServerError("")
 	}
-	ctx.Response.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	return ctx.Write(items)
 }

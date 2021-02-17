@@ -1,7 +1,9 @@
 package controller
 
 import (
-	"github.com/go-ozzo/ozzo-routing/v2"
+	"net/http"
+
+	routing "github.com/go-ozzo/ozzo-routing/v2"
 
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/errorshandler"
@@ -29,6 +31,13 @@ func RegisterMaintenanceHandlers(r *routing.RouteGroup, service maintenance.ISer
 
 	r.Get("/maintenances", c.list)
 	r.Get(`/maintenance/<id>`, c.get)
+
+	r.Use(authHandler)
+
+	r.Post("/posts", c.create)
+	//r.Put("/posts", c.update)
+	//r.Delete(`/post/<id>`, c.delete)
+
 }
 
 // get method is for getting a one entity by ID
@@ -48,7 +57,6 @@ func (c maintenanceController) get(ctx *routing.Context) error {
 		return errorshandler.InternalServerError("")
 	}
 
-	ctx.Response.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	return ctx.Write(entity)
 }
 
@@ -69,6 +77,24 @@ func (c maintenanceController) list(ctx *routing.Context) error {
 		c.Logger.With(ctx.Request.Context()).Error(err)
 		return errorshandler.InternalServerError("")
 	}
-	ctx.Response.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	return ctx.Write(items)
+}
+
+func (c maintenanceController) create(ctx *routing.Context) error {
+	entity := c.Service.NewEntity()
+	if err := ctx.Read(entity); err != nil {
+		c.Logger.With(ctx.Request.Context()).Info(err)
+		return errorshandler.BadRequest(err.Error())
+	}
+
+	if err := entity.Validate(); err != nil {
+		return errorshandler.BadRequest(err.Error())
+	}
+
+	if err := c.Service.Create(ctx.Request.Context(), entity); err != nil {
+		c.Logger.With(ctx.Request.Context()).Info(err)
+		return errorshandler.BadRequest(err.Error())
+	}
+
+	return ctx.WriteWithStatus(entity, http.StatusCreated)
 }

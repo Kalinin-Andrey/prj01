@@ -11,7 +11,15 @@ type Repository interface {
 	SetDefaultConditions(conditions domain.DBQueryConditions)
 	// Get returns the album with the specified album ID.
 	Get(ctx context.Context, id uint) (*Maintenance, error)
-	// Query returns the list of albums with the given offset and limit.
+	// Query retrieves records with the specified conditions, offset and limit from the database.
 	Query(ctx context.Context, cond domain.DBQueryConditions) ([]Maintenance, error)
 	First(ctx context.Context, entity *Maintenance) (*Maintenance, error)
+	// Create saves a new Maintenance record in the database.
+	Create(ctx context.Context, entity *Maintenance) error
+	// Update saves a changed Maintenance record in the database.
+	Update(ctx context.Context, entity *Maintenance) error
+	// Save update value in database, if the value doesn't have primary key, will insert it
+	Save(ctx context.Context, entity *Maintenance) error
+	// Delete (soft) deletes a Maintenance record in the database.
+	Delete(ctx context.Context, entity *Maintenance) error
 }

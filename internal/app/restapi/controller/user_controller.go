@@ -3,9 +3,10 @@ package controller
 import (
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/errorshandler"
-	"github.com/go-ozzo/ozzo-routing/v2"
-	"github.com/pkg/errors"
 	"strconv"
+
+	routing "github.com/go-ozzo/ozzo-routing/v2"
+	"github.com/pkg/errors"
 
 	"carizza/internal/domain/user"
 	"carizza/internal/pkg/log"
@@ -46,7 +47,6 @@ func (c userController) get(ctx *routing.Context) error {
 		c.Logger.With(ctx.Request.Context()).Error(err)
 		return errorshandler.InternalServerError("")
 	}
-	ctx.Response.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	return ctx.Write(entity)
 }
 
@@ -62,6 +62,5 @@ func (c userController) get(ctx *routing.Context) error {
 		c.Logger.With(ctx.Request.Context()).Error(err)
 		return errorshandler.InternalServerError("")
 	}
-	ctx.Response.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	return ctx.Write(items)
 }*/

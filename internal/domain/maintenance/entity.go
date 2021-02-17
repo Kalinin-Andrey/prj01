@@ -30,3 +30,7 @@ func (e Maintenance) TableName() string {
 func New() *Maintenance {
 	return &Maintenance{}
 }
+
+func (e Maintenance) Validate() error {
+	return nil
+}

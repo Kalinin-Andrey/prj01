@@ -6,14 +6,16 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-ozzo/ozzo-routing/v2"
 	"github.com/go-ozzo/ozzo-routing/v2/content"
+
+	routing "github.com/go-ozzo/ozzo-routing/v2"
 	"github.com/go-ozzo/ozzo-routing/v2/cors"
 	"github.com/go-ozzo/ozzo-routing/v2/file"
 	"github.com/go-ozzo/ozzo-routing/v2/slash"
 
 	"carizza/internal/pkg/accesslog"
 	"carizza/internal/pkg/config"
+	pkgcontent "carizza/internal/pkg/content"
 	"carizza/internal/pkg/errorshandler"
 
 	commonApp "carizza/internal/app"
@@ -53,7 +55,6 @@ func (app *App) buildHandler() *routing.Router {
 		accesslog.Handler(app.Logger),
 		slash.Remover(http.StatusMovedPermanently),
 		errorshandler.Handler(app.Logger),
-		content.TypeNegotiator(content.JSON),
 		cors.Handler(cors.AllowAll),
 	)
 	//router.NotFound(file.Content("website/index.html"))
@@ -70,16 +71,20 @@ func (app *App) buildHandler() *routing.Router {
 		"/static/": "/website/static/",
 	}))
 
-	rg := router.Group("/api")
+	api := router.Group("/api")
+	api.Use(
+		content.TypeNegotiator(content.JSON),
+		pkgcontent.SetHeader("Content-Type", "application/json; charset=UTF-8"),
+	)
 
 	authMiddleware := auth.Middleware(app.Logger, app.Auth.Service)
 
-	auth.RegisterHandlers(rg.Group(""),
+	auth.RegisterHandlers(api.Group(""),
 		app.Auth.Service,
 		app.Logger,
 	)
 
-	app.RegisterHandlers(rg, authMiddleware)
+	app.RegisterHandlers(api, authMiddleware)
 
 	return router
 }

@@ -3,6 +3,8 @@ package pg
 import (
 	"context"
 
+	"github.com/pkg/errors"
+
 	"github.com/jinzhu/gorm"
 
 	"carizza/internal/pkg/apperror"
@@ -57,7 +59,7 @@ func (r MaintenanceRepository) First(ctx context.Context, entity *maintenance.Ma
 	return entity, err
 }
 
-// Query retrieves the album records with the specified offset and limit from the database.
+// Query retrieves records with the specified conditions, offset and limit from the database.
 func (r MaintenanceRepository) Query(ctx context.Context, cond domain.DBQueryConditions) ([]maintenance.Maintenance, error) {
 	items := []maintenance.Maintenance{}
 	db, err := r.applyConditions(r.dbWithDefaults(), cond)
@@ -72,4 +74,36 @@ func (r MaintenanceRepository) Query(ctx context.Context, cond domain.DBQueryCon
 		}
 	}
 	return items, err
+}
+
+// Create saves a new Maintenance record in the database.
+func (r MaintenanceRepository) Create(ctx context.Context, entity *maintenance.Maintenance) error {
+
+	if !r.db.DB().NewRecord(entity) {
+		return errors.New("entity is not new")
+	}
+	return r.db.DB().Create(entity).Error
+}
+
+// Update saves a changed Maintenance record in the database.
+func (r MaintenanceRepository) Update(ctx context.Context, entity *maintenance.Maintenance) error {
+
+	if r.db.DB().NewRecord(entity) {
+		return errors.New("entity is new")
+	}
+	return r.Save(ctx, entity)
+}
+
+// Save update value in database, if the value doesn't have primary key, will insert it
+func (r MaintenanceRepository) Save(ctx context.Context, entity *maintenance.Maintenance) error {
+	return r.db.DB().Save(entity).Error
+}
+
+// Delete (soft) deletes a Maintenance record in the database.
+func (r MaintenanceRepository) Delete(ctx context.Context, entity *maintenance.Maintenance) error {
+
+	if r.db.DB().NewRecord(entity) {
+		return errors.New("entity is new")
+	}
+	return r.db.DB().Delete(entity).Error
 }

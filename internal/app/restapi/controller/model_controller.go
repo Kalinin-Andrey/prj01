@@ -4,13 +4,14 @@ import (
 	"errors"
 
 	"carizza/internal/domain"
-	"github.com/go-ozzo/ozzo-routing/v2"
 
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/errorshandler"
 	"carizza/internal/pkg/log"
 
 	"carizza/internal/domain/model"
+
+	routing "github.com/go-ozzo/ozzo-routing/v2"
 )
 
 type modelController struct {
@@ -51,7 +52,6 @@ func (c modelController) get(ctx *routing.Context) error {
 		return errorshandler.InternalServerError("")
 	}
 
-	ctx.Response.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	return ctx.Write(entity)
 }
 
@@ -82,6 +82,5 @@ func (c modelController) list(ctx *routing.Context) error {
 		c.Logger.With(ctx.Request.Context()).Error(err)
 		return errorshandler.InternalServerError("")
 	}
-	ctx.Response.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	return ctx.Write(items)
 }

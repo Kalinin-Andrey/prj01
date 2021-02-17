@@ -16,6 +16,10 @@ type IService interface {
 	NewEntity() *Maintenance
 	Get(ctx context.Context, id uint) (*Maintenance, error)
 	Query(ctx context.Context, query domain.DBQueryConditions) ([]Maintenance, error)
+	Create(ctx context.Context, entity *Maintenance) error
+	Update(ctx context.Context, entity *Maintenance) error
+	Save(ctx context.Context, entity *Maintenance) error
+	Delete(ctx context.Context, entity *Maintenance) error
 }
 
 type service struct {
@@ -58,4 +62,24 @@ func (s service) Query(ctx context.Context, query domain.DBQueryConditions) ([]M
 		return nil, errors.Wrapf(err, "Can not find a list of Maintenance by query: %v", query)
 	}
 	return items, nil
+}
+
+// Create saves a new Maintenance record in the database.
+func (s service) Create(ctx context.Context, entity *Maintenance) error {
+	return s.repository.Create(ctx, entity)
+}
+
+// Update saves an existing Maintenance record in the database.
+func (s service) Update(ctx context.Context, entity *Maintenance) error {
+	return s.repository.Update(ctx, entity)
+}
+
+// Save saves a Maintenance record in the database.
+func (s service) Save(ctx context.Context, entity *Maintenance) error {
+	return s.repository.Save(ctx, entity)
+}
+
+// Delete (soft) deletes a Maintenance record in the database.
+func (s service) Delete(ctx context.Context, entity *Maintenance) error {
+	return s.repository.Save(ctx, entity)
 }
