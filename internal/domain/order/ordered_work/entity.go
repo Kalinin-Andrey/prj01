@@ -11,12 +11,12 @@ const (
 
 // OrderedWork is the service entity
 type OrderedWork struct {
-	ID                   uint `gorm:"primaryKey"`
-	OrderedMaintenanceID uint `sql:"type:int not null REFERENCES \"ordered_maintenance\"(id)" gorm:"index"`
-	WorkID               uint `sql:"type:int not null REFERENCES \"work\"(id)"`
-	CreatedAt            time.Time
-	UpdatedAt            time.Time
-	DeletedAt            *time.Time `gorm:"index"`
+	ID                   uint       `gorm:"primaryKey" json:"id"`
+	OrderedMaintenanceID uint       `sql:"type:int not null REFERENCES \"ordered_maintenance\"(id)" gorm:"index" json:"orderedMaintenanceID"`
+	WorkID               uint       `sql:"type:int not null REFERENCES \"work\"(id)" json:"workID"`
+	CreatedAt            time.Time  `json:"createdAt"`
+	UpdatedAt            time.Time  `json:"updatedAt"`
+	DeletedAt            *time.Time `gorm:"index" json:"deletedAt,omitempty"`
 }
 
 func (e OrderedWork) TableName() string {
