@@ -7,13 +7,13 @@ const (
 
 // Post is the user entity
 type Generation struct {
-	ID        uint   `gorm:"column:id_car_generation"`
-	ModelID   uint   `gorm:"column:id_car_model"`
-	Name      string `gorm:"type:varchar(255)"`
-	Label     string `gorm:"-"`
-	YearBegin string `gorm:"type:varchar(255)"`
-	YearEnd   string `gorm:"type:varchar(255)"`
-	TypeID    uint   `gorm:"column:id_car_type"`
+	ID        uint   `gorm:"column:id_car_generation" json:"id"`
+	ModelID   uint   `gorm:"column:id_car_model" json:"modelId"`
+	Name      string `gorm:"type:varchar(255)" json:"name"`
+	Label     string `gorm:"-" json:"label"`
+	YearBegin string `gorm:"type:varchar(255)" json:"yearBegin"`
+	YearEnd   string `gorm:"type:varchar(255)" json:"yearEnd"`
+	TypeID    uint   `gorm:"column:id_car_type" json:"typeId"`
 }
 
 func (e Generation) TableName() string {

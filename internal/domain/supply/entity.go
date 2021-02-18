@@ -11,12 +11,12 @@ const (
 
 // Supply is the user entity
 type Supply struct {
-	ID          uint   `gorm:"primaryKey"`
-	Name        string `gorm:"type:varchar(255) not null;unique;index"`
-	Description string `gorm:"type:text;"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	DeletedAt   *time.Time `gorm:"index"`
+	ID          uint       `gorm:"primaryKey" json:"id"`
+	Name        string     `gorm:"type:varchar(255) not null;unique;index" json:"name"`
+	Description string     `gorm:"type:text;" json:"description"`
+	CreatedAt   time.Time  `json:"createdAt"`
+	UpdatedAt   time.Time  `json:"updatedAt"`
+	DeletedAt   *time.Time `gorm:"index" json:"deletedAt,omitempty"`
 }
 
 func (e Supply) TableName() string {

@@ -59,7 +59,7 @@ func (r MaintenanceRepository) First(ctx context.Context, entity *maintenance.Ma
 	return entity, err
 }
 
-// Query retrieves records with the specified conditions, offset and limit from the database.
+// Query retrieves records with the specified offset and limit from the database.
 func (r MaintenanceRepository) Query(ctx context.Context, cond domain.DBQueryConditions) ([]maintenance.Maintenance, error) {
 	items := []maintenance.Maintenance{}
 	db, err := r.applyConditions(r.dbWithDefaults(), cond)

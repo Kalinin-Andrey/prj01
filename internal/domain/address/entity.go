@@ -9,12 +9,12 @@ const (
 
 // Address is the user entity
 type Address struct {
-	ID        uint   `gorm:"primaryKey"`
-	ClientID  uint   `sql:"type:int not null REFERENCES \"client\"(id)" gorm:"index"`
-	Value     string `gorm:"type:varchar(255) not null"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time `gorm:"index"`
+	ID        uint       `gorm:"primaryKey" json:"id"`
+	ClientID  uint       `sql:"type:int not null REFERENCES \"client\"(id)" gorm:"index" json:"clientId"`
+	Value     string     `gorm:"type:varchar(255) not null" json:"value"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
+	DeletedAt *time.Time `gorm:"index" json:"deletedAt,omitempty"`
 }
 
 func (e Address) TableName() string {

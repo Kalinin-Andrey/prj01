@@ -13,13 +13,13 @@ const (
 
 // Maintenance entity
 type Maintenance struct {
-	ID          uint         `gorm:"primaryKey"`
-	Name        string       `gorm:"type:varchar(255) not null;unique;index"`
-	Description string       `gorm:"type:text;"`
-	Works       []*work.Work `gorm:"many2many:maintenance2work"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	DeletedAt   *time.Time `gorm:"index"`
+	ID          uint         `gorm:"primaryKey" json:"id"`
+	Name        string       `gorm:"type:varchar(255) not null;unique;index" json:"name"`
+	Description string       `gorm:"type:text;" json:"description"`
+	Works       []*work.Work `gorm:"many2many:maintenance2work" json:"works,omitempty"`
+	CreatedAt   time.Time    `json:"createdAt"`
+	UpdatedAt   time.Time    `json:"updatedAt"`
+	DeletedAt   *time.Time   `gorm:"index" json:"deletedAt,omitempty"`
 }
 
 func (e Maintenance) TableName() string {

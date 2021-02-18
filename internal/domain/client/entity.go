@@ -13,14 +13,14 @@ const (
 
 // Client is the service entity
 type Client struct {
-	ID        uint   `gorm:"primaryKey"`
-	Name      string `gorm:"type:varchar(255) not null;unique;index"`
-	Phone     uint   `gorm:"type:smallint not null;unique;index"`
-	Cars      []*car.Car
-	Addresses []*address.Address
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time `gorm:"index"`
+	ID        uint               `gorm:"primaryKey" json:"id"`
+	Name      string             `gorm:"type:varchar(255) not null;unique;index" json:"name"`
+	Phone     uint               `gorm:"type:smallint not null;unique;index" json:"phone"`
+	Cars      []*car.Car         `json:"cars,omitempty"`
+	Addresses []*address.Address `json:"addresses,omitempty"`
+	CreatedAt time.Time          `json:"createdAt"`
+	UpdatedAt time.Time          `json:"updatedAt"`
+	DeletedAt *time.Time         `gorm:"index" json:"deletedAt,omitempty"`
 }
 
 func (e Client) TableName() string {

@@ -12,13 +12,13 @@ const (
 
 // Post is the user entity
 type Work struct {
-	ID          uint             `gorm:"primaryKey"`
-	Name        string           `gorm:"type:varchar(255) not null;unique;index"`
-	Description string           `gorm:"type:text;"`
-	Supplies    []*supply.Supply `gorm:"many2many:work2supply"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	DeletedAt   *time.Time `gorm:"index"`
+	ID          uint             `gorm:"primaryKey" json:"id"`
+	Name        string           `gorm:"type:varchar(255) not null;unique;index" json:"name"`
+	Description string           `gorm:"type:text;" json:"description"`
+	Supplies    []*supply.Supply `gorm:"many2many:work2supply" json:"supplies,omitempty"`
+	CreatedAt   time.Time        `json:"createdAt"`
+	UpdatedAt   time.Time        `json:"updatedAt"`
+	DeletedAt   *time.Time       `gorm:"index" json:"deletedAt,omitempty"`
 }
 
 func (e Work) TableName() string {
