@@ -19,7 +19,7 @@ type IService interface {
 	Create(ctx context.Context, entity *Maintenance) error
 	Update(ctx context.Context, entity *Maintenance) error
 	Save(ctx context.Context, entity *Maintenance) error
-	Delete(ctx context.Context, entity *Maintenance) error
+	Delete(ctx context.Context, id uint) error
 }
 
 type service struct {
@@ -80,6 +80,6 @@ func (s service) Save(ctx context.Context, entity *Maintenance) error {
 }
 
 // Delete (soft) deletes a Maintenance record in the database.
-func (s service) Delete(ctx context.Context, entity *Maintenance) error {
-	return s.repository.Save(ctx, entity)
+func (s service) Delete(ctx context.Context, id uint) error {
+	return s.repository.Delete(ctx, id)
 }

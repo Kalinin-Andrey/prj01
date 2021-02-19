@@ -69,7 +69,7 @@ func (r MaintenanceRepository) Query(ctx context.Context, cond domain.DBQueryCon
 
 	err = db.Find(&items).Error
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if gorm.IsRecordNotFoundError(err) {
 			return items, apperror.ErrNotFound
 		}
 	}
@@ -100,10 +100,13 @@ func (r MaintenanceRepository) Save(ctx context.Context, entity *maintenance.Mai
 }
 
 // Delete (soft) deletes a Maintenance record in the database.
-func (r MaintenanceRepository) Delete(ctx context.Context, entity *maintenance.Maintenance) error {
+func (r MaintenanceRepository) Delete(ctx context.Context, id uint) error {
 
-	if r.db.DB().NewRecord(entity) {
-		return errors.New("entity is new")
+	err := r.db.DB().Unscoped().Delete(&maintenance.Maintenance{}, id).Error
+	if err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return apperror.ErrNotFound
+		}
 	}
-	return r.db.DB().Delete(entity).Error
+	return err
 }

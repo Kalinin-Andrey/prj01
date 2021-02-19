@@ -13,7 +13,7 @@ const (
 type Supply struct {
 	ID          uint       `gorm:"primaryKey" json:"id"`
 	Name        string     `gorm:"type:varchar(255) not null;unique;index" json:"name"`
-	Description string     `gorm:"type:text;" json:"description"`
+	Description *string    `gorm:"type:text;" json:"description"`
 	CreatedAt   time.Time  `json:"createdAt"`
 	UpdatedAt   time.Time  `json:"updatedAt"`
 	DeletedAt   *time.Time `gorm:"index" json:"deletedAt,omitempty"`

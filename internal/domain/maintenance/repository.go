@@ -21,5 +21,5 @@ type Repository interface {
 	// Save update value in database, if the value doesn't have primary key, will insert it
 	Save(ctx context.Context, entity *Maintenance) error
 	// Delete (soft) deletes a Maintenance record in the database.
-	Delete(ctx context.Context, entity *Maintenance) error
+	Delete(ctx context.Context, id uint) error
 }

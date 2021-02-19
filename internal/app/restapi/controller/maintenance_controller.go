@@ -19,8 +19,11 @@ type maintenanceController struct {
 }
 
 // RegisterHandlers sets up the routing of the HTTP handlers.
-//	GET /api/maintenances/ - список всех моделей
-//	GET /api/maintenance/{ID} - детали модели
+//	GET /api/maintenances/ - список всех услуг
+//	GET /api/maintenance/<ID> - детали услуги
+//	POST /api/maintenance - создание услуги
+//	PUT /api/maintenance/<ID> - обновление услуги
+//	DELETE /api/maintenance/<ID> - удаление услуги
 func RegisterMaintenanceHandlers(r *routing.RouteGroup, service maintenance.IService, logger log.ILogger, authHandler routing.Handler) {
 	c := maintenanceController{
 		Controller: Controller{
@@ -34,9 +37,9 @@ func RegisterMaintenanceHandlers(r *routing.RouteGroup, service maintenance.ISer
 
 	r.Use(authHandler)
 
-	r.Post("/posts", c.create)
-	//r.Put("/posts", c.update)
-	//r.Delete(`/post/<id>`, c.delete)
+	r.Post("/maintenance", c.create)
+	r.Put("/maintenance/<id>", c.update)
+	r.Delete(`/maintenance/<id>`, c.delete)
 
 }
 
@@ -97,4 +100,55 @@ func (c maintenanceController) create(ctx *routing.Context) error {
 	}
 
 	return ctx.WriteWithStatus(entity, http.StatusCreated)
+}
+
+func (c maintenanceController) update(ctx *routing.Context) error {
+	id, err := c.parseUintParam(ctx, "id")
+	if err != nil {
+		errorshandler.BadRequest("ID is required to be uint.")
+	}
+
+	entity := c.Service.NewEntity()
+	if err := ctx.Read(entity); err != nil {
+		c.Logger.With(ctx.Request.Context()).Info(err)
+		return errorshandler.BadRequest(err.Error())
+	}
+
+	if id != entity.ID {
+		errorshandler.BadRequest("ID in URI and body must be equal.")
+	}
+
+	if err := entity.Validate(); err != nil {
+		return errorshandler.BadRequest(err.Error())
+	}
+
+	if err := c.Service.Update(ctx.Request.Context(), entity); err != nil {
+		if err == apperror.ErrNotFound {
+			c.Logger.With(ctx.Request.Context()).Info(err)
+			return errorshandler.NotFound("")
+		}
+		c.Logger.With(ctx.Request.Context()).Error(err)
+		return errorshandler.InternalServerError("")
+	}
+
+	return ctx.WriteWithStatus(errorshandler.SuccessMessage(), http.StatusOK)
+}
+
+func (c maintenanceController) delete(ctx *routing.Context) error {
+	id, err := c.parseUintParam(ctx, "id")
+	if err != nil {
+		errorshandler.BadRequest("ID is required to be uint.")
+	}
+
+	if err := c.Service.Delete(ctx.Request.Context(), id); err != nil {
+		if err == apperror.ErrNotFound {
+			c.Logger.With(ctx.Request.Context()).Info(err)
+			return errorshandler.NotFound("")
+		}
+		c.Logger.With(ctx.Request.Context()).Error(err)
+		return errorshandler.InternalServerError("")
+	}
+
+	ctx.Response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	return ctx.WriteWithStatus(errorshandler.SuccessMessage(), http.StatusOK)
 }
