@@ -36,6 +36,25 @@ func (r MaintenanceRepository) autoMigrate() {
 	}
 }
 
+func (r MaintenanceRepository) applyConditions(db *gorm.DB, conditions domain.DBQueryConditions) (*gorm.DB, error) {
+	var err error
+
+	db, err = r.repository.applyConditions(db, conditions)
+	if err != nil {
+		return nil, err
+	}
+
+	if conditions.Where != nil {
+		where, ok := conditions.Where.(maintenance.Maintenance)
+		if !ok {
+			return nil, errors.Errorf("Can not cast conditions.Where to entity %q. conditions.Where: %v", maintenance.EntityName, conditions.Where)
+		}
+
+		db = db.Where(where)
+	}
+	return db, nil
+}
+
 // Get reads the album with the specified ID from the database.
 func (r MaintenanceRepository) Get(ctx context.Context, id uint) (*maintenance.Maintenance, error) {
 	entity := &maintenance.Maintenance{}

@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"carizza/internal/domain"
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/log"
-	routing "github.com/go-ozzo/ozzo-routing/v2"
 	"strconv"
+
+	routing "github.com/go-ozzo/ozzo-routing/v2"
 )
 
 type IService interface{}
@@ -15,6 +15,17 @@ type Controller struct {
 }
 
 var matchedParams = []string{}
+
+func (c Controller) parseQueryParams(ctx *routing.Context, out interface{}) error {
+	var v map[string]string
+
+	for key, vals := range ctx.Request.URL.Query() {
+		if len(vals) > 0 {
+			v[key] = vals[0]
+		}
+	}
+
+}
 
 func (c Controller) parseUintParam(ctx *routing.Context, paramName string) (uint, error) {
 	str := ctx.Param(paramName)
@@ -42,19 +53,4 @@ func (c Controller) parseUintQueryParam(ctx *routing.Context, paramName string) 
 		return 0, err
 	}
 	return uint(paramVal), nil
-}
-
-func (c Controller) ExtractQueryFromRoutingContext(ctx *routing.Context) domain.DBQueryConditions {
-	query := map[string]interface{}{}
-
-	for _, paramName := range matchedParams {
-
-		if paramVal := ctx.Param(paramName); paramVal != "" {
-			query[paramName] = paramVal
-		}
-	}
-
-	return domain.DBQueryConditions{
-		Where: query,
-	}
 }

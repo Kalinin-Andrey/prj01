@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"github.com/go-ozzo/ozzo-validation/v4"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 
 	"carizza/internal/pkg/log"
 )
@@ -19,7 +19,7 @@ type Service struct {
 }
 
 type DBQueryConditions struct {
-	Where     map[string]interface{}
+	Where     interface{}
 	SortOrder map[string]string
 	Limit     uint
 	Offset    uint
