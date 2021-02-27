@@ -15,8 +15,8 @@ import (
 
 	"carizza/internal/pkg/accesslog"
 	"carizza/internal/pkg/config"
-	pkgcontent "carizza/internal/pkg/content"
 	"carizza/internal/pkg/errorshandler"
+	pkgcontent "carizza/pkg/ozzo_handler"
 
 	commonApp "carizza/internal/app"
 	"carizza/internal/app/restapi/controller"

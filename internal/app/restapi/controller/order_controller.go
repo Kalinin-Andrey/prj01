@@ -4,6 +4,7 @@ import (
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/errorshandler"
 	"carizza/internal/pkg/log"
+	ozzo_handler "carizza/pkg/ozzo_handler"
 
 	"carizza/internal/domain"
 	"carizza/internal/domain/order"
@@ -12,7 +13,7 @@ import (
 )
 
 type orderController struct {
-	Controller
+	Logger  log.ILogger
 	Service order.IService
 }
 
@@ -21,9 +22,7 @@ type orderController struct {
 //	GET /api/order/<id> - детали модели
 func RegisterOrderHandlers(r *routing.RouteGroup, service order.IService, logger log.ILogger, authHandler routing.Handler) {
 	c := orderController{
-		Controller: Controller{
-			Logger: logger,
-		},
+		Logger:  logger,
 		Service: service,
 	}
 
@@ -33,7 +32,7 @@ func RegisterOrderHandlers(r *routing.RouteGroup, service order.IService, logger
 
 // get method is for getting a one entity by ID
 func (c orderController) get(ctx *routing.Context) error {
-	id, err := c.parseUintParam(ctx, "id")
+	id, err := ozzo_handler.ParseUintParam(ctx, "id")
 	if err != nil {
 		errorshandler.BadRequest("ID is required to be uint")
 	}

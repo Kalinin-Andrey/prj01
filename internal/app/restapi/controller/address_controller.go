@@ -6,6 +6,7 @@ import (
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/errorshandler"
 	"carizza/internal/pkg/log"
+	ozzo_handler "carizza/pkg/ozzo_handler"
 
 	"carizza/internal/domain"
 	"carizza/internal/domain/address"
@@ -14,7 +15,7 @@ import (
 )
 
 type addressController struct {
-	Controller
+	Logger  log.ILogger
 	Service address.IService
 }
 
@@ -24,9 +25,7 @@ type addressController struct {
 //	GET /client/<clientId>/addresses - список работ для услуги
 func RegisterAddressHandlers(r *routing.RouteGroup, service address.IService, logger log.ILogger, authHandler routing.Handler) {
 	c := addressController{
-		Controller: Controller{
-			Logger: logger,
-		},
+		Logger:  logger,
 		Service: service,
 	}
 
@@ -37,7 +36,7 @@ func RegisterAddressHandlers(r *routing.RouteGroup, service address.IService, lo
 
 // get method is for getting a one entity by ID
 func (c addressController) get(ctx *routing.Context) error {
-	id, err := c.parseUintParam(ctx, "id")
+	id, err := ozzo_handler.ParseUintParam(ctx, "id")
 	if err != nil {
 		return errorshandler.BadRequest("ID is required to be uint")
 	}
@@ -63,9 +62,9 @@ func (c addressController) list(ctx *routing.Context) error {
 		},
 	}
 
-	clientId, err := c.parseUintParam(ctx, "clientId")
+	clientId, err := ozzo_handler.ParseUintParam(ctx, "clientId")
 	if errors.Is(err, apperror.ErrNotFound) {
-		clientId, err = c.parseUintQueryParam(ctx, "clientId")
+		clientId, err = ozzo_handler.ParseUintQueryParam(ctx, "clientId")
 	}
 	if err == nil && clientId > 0 {
 		cond.Where = map[string]interface{}{

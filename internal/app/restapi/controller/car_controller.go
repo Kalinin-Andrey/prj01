@@ -1,6 +1,7 @@
 package controller
 
 import (
+	ozzo_handler "carizza/pkg/ozzo_handler"
 	"errors"
 
 	"carizza/internal/pkg/apperror"
@@ -14,7 +15,7 @@ import (
 )
 
 type carController struct {
-	Controller
+	Logger  log.ILogger
 	Service car.IService
 }
 
@@ -24,9 +25,7 @@ type carController struct {
 //	GET /client/<clientId>/cars - список работ для услуги
 func RegisterCarHandlers(r *routing.RouteGroup, service car.IService, logger log.ILogger, authHandler routing.Handler) {
 	c := carController{
-		Controller: Controller{
-			Logger: logger,
-		},
+		Logger:  logger,
 		Service: service,
 	}
 
@@ -37,7 +36,7 @@ func RegisterCarHandlers(r *routing.RouteGroup, service car.IService, logger log
 
 // get method is for getting a one entity by ID
 func (c carController) get(ctx *routing.Context) error {
-	id, err := c.parseUintParam(ctx, "id")
+	id, err := ozzo_handler.ParseUintParam(ctx, "id")
 	if err != nil {
 		return errorshandler.BadRequest("ID is required to be uint")
 	}
@@ -63,9 +62,9 @@ func (c carController) list(ctx *routing.Context) error {
 		},
 	}
 
-	clientId, err := c.parseUintParam(ctx, "clientId")
+	clientId, err := ozzo_handler.ParseUintParam(ctx, "clientId")
 	if errors.Is(err, apperror.ErrNotFound) {
-		clientId, err = c.parseUintQueryParam(ctx, "clientId")
+		clientId, err = ozzo_handler.ParseUintQueryParam(ctx, "clientId")
 	}
 	if err == nil && clientId > 0 {
 		cond.Where = map[string]interface{}{

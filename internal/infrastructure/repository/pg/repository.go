@@ -6,19 +6,20 @@ import (
 	"carizza/internal/domain/car"
 	"carizza/internal/domain/client"
 	"carizza/internal/domain/generation"
+	"carizza/internal/domain/maintenance"
 	"carizza/internal/domain/mark"
 	"carizza/internal/domain/model"
 	"carizza/internal/domain/modification"
 	"carizza/internal/domain/order"
 	"carizza/internal/domain/serie"
-	"carizza/internal/domain/maintenance"
 	"carizza/internal/domain/supply"
 	"carizza/internal/domain/user"
 	"carizza/internal/domain/work"
+	"strings"
+
 	"github.com/iancoleman/strcase"
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
-	"strings"
 
 	"carizza/internal/pkg/db/pg"
 	"carizza/internal/pkg/log"
@@ -97,8 +98,7 @@ func (r repository) applyConditions(db *gorm.DB, conditions domain.DBQueryCondit
 	}
 
 	if conditions.Where != nil {
-		m := r.keysToSnakeCase(conditions.Where)
-		db = db.Where(m)
+		db = db.Where(conditions.Where)
 	}
 
 	if conditions.SortOrder != nil {

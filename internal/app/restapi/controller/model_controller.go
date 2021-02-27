@@ -1,9 +1,8 @@
 package controller
 
 import (
-	"errors"
-
 	"carizza/internal/domain"
+	ozzo_handler "carizza/pkg/ozzo_handler"
 
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/errorshandler"
@@ -15,7 +14,7 @@ import (
 )
 
 type modelController struct {
-	Controller
+	Logger  log.ILogger
 	Service model.IService
 }
 
@@ -24,9 +23,7 @@ type modelController struct {
 //	GET /api/model/{ID} - детали модели
 func RegisterModelHandlers(r *routing.RouteGroup, service model.IService, logger log.ILogger, authHandler routing.Handler) {
 	c := modelController{
-		Controller: Controller{
-			Logger: logger,
-		},
+		Logger:  logger,
 		Service: service,
 	}
 
@@ -37,7 +34,7 @@ func RegisterModelHandlers(r *routing.RouteGroup, service model.IService, logger
 
 // get method is for getting a one entity by ID
 func (c modelController) get(ctx *routing.Context) error {
-	id, err := c.parseUintParam(ctx, "id")
+	id, err := ozzo_handler.ParseUintParam(ctx, "id")
 	if err != nil {
 		return errorshandler.BadRequest("ID is required to be uint")
 	}
@@ -63,14 +60,14 @@ func (c modelController) list(ctx *routing.Context) error {
 		},
 	}
 
-	markId, err := c.parseUintParam(ctx, "markId")
-	if errors.Is(err, apperror.ErrNotFound) {
-		markId, err = c.parseUintQueryParam(ctx, "markId")
-	}
-	if err == nil && markId > 0 {
-		cond.Where = map[string]interface{}{
-			"id_car_mark": markId,
+	if len(ctx.Request.URL.Query()) > 0 {
+		where := c.Service.NewEntity()
+		err := ozzo_handler.ParseQueryParams(ctx, where)
+		if err != nil {
+			c.Logger.With(ctx.Request.Context()).Info(err)
+			return errorshandler.BadRequest("")
 		}
+		cond.Where = where
 	}
 
 	items, err := c.Service.Query(ctx.Request.Context(), cond)

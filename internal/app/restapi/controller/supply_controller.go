@@ -1,6 +1,7 @@
 package controller
 
 import (
+	ozzo_handler "carizza/pkg/ozzo_handler"
 	"errors"
 
 	"carizza/internal/pkg/apperror"
@@ -14,7 +15,7 @@ import (
 )
 
 type supplyController struct {
-	Controller
+	Logger  log.ILogger
 	Service supply.IService
 }
 
@@ -24,9 +25,7 @@ type supplyController struct {
 //	GET /work/<workId>/supplies - список работ для услуги
 func RegisterSupplyHandlers(r *routing.RouteGroup, service supply.IService, logger log.ILogger, authHandler routing.Handler) {
 	c := supplyController{
-		Controller: Controller{
-			Logger: logger,
-		},
+		Logger:  logger,
 		Service: service,
 	}
 
@@ -37,7 +36,7 @@ func RegisterSupplyHandlers(r *routing.RouteGroup, service supply.IService, logg
 
 // get method is for getting a one entity by ID
 func (c supplyController) get(ctx *routing.Context) error {
-	id, err := c.parseUintParam(ctx, "id")
+	id, err := ozzo_handler.ParseUintParam(ctx, "id")
 	if err != nil {
 		return errorshandler.BadRequest("ID is required to be uint")
 	}
@@ -63,9 +62,9 @@ func (c supplyController) list(ctx *routing.Context) error {
 		},
 	}
 
-	workId, err := c.parseUintParam(ctx, "workId")
+	workId, err := ozzo_handler.ParseUintParam(ctx, "workId")
 	if errors.Is(err, apperror.ErrNotFound) {
-		workId, err = c.parseUintQueryParam(ctx, "workId")
+		workId, err = ozzo_handler.ParseUintQueryParam(ctx, "workId")
 	}
 	if err == nil && workId > 0 {
 		cond.Where = map[string]interface{}{

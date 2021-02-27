@@ -8,13 +8,14 @@ import (
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/errorshandler"
 	"carizza/internal/pkg/log"
+	ozzo_handler "carizza/pkg/ozzo_handler"
 
 	"carizza/internal/domain"
 	"carizza/internal/domain/maintenance"
 )
 
 type maintenanceController struct {
-	Controller
+	Logger  log.ILogger
 	Service maintenance.IService
 }
 
@@ -26,9 +27,7 @@ type maintenanceController struct {
 //	DELETE /api/maintenance/<ID> - удаление услуги
 func RegisterMaintenanceHandlers(r *routing.RouteGroup, service maintenance.IService, logger log.ILogger, authHandler routing.Handler) {
 	c := maintenanceController{
-		Controller: Controller{
-			Logger: logger,
-		},
+		Logger:  logger,
 		Service: service,
 	}
 
@@ -45,7 +44,7 @@ func RegisterMaintenanceHandlers(r *routing.RouteGroup, service maintenance.ISer
 
 // get method is for getting a one entity by ID
 func (c maintenanceController) get(ctx *routing.Context) error {
-	id, err := c.parseUintParam(ctx, "id")
+	id, err := ozzo_handler.ParseUintParam(ctx, "id")
 	if err != nil {
 		errorshandler.BadRequest("ID is required to be uint")
 	}
@@ -103,7 +102,7 @@ func (c maintenanceController) create(ctx *routing.Context) error {
 }
 
 func (c maintenanceController) update(ctx *routing.Context) error {
-	id, err := c.parseUintParam(ctx, "id")
+	id, err := ozzo_handler.ParseUintParam(ctx, "id")
 	if err != nil {
 		errorshandler.BadRequest("ID is required to be uint.")
 	}
@@ -135,7 +134,7 @@ func (c maintenanceController) update(ctx *routing.Context) error {
 }
 
 func (c maintenanceController) delete(ctx *routing.Context) error {
-	id, err := c.parseUintParam(ctx, "id")
+	id, err := ozzo_handler.ParseUintParam(ctx, "id")
 	if err != nil {
 		errorshandler.BadRequest("ID is required to be uint.")
 	}

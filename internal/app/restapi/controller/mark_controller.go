@@ -4,6 +4,7 @@ import (
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/errorshandler"
 	"carizza/internal/pkg/log"
+	ozzo_handler "carizza/pkg/ozzo_handler"
 
 	"carizza/internal/domain"
 	"carizza/internal/domain/ctype"
@@ -13,7 +14,7 @@ import (
 )
 
 type markController struct {
-	Controller
+	Logger  log.ILogger
 	Service mark.IService
 }
 
@@ -22,9 +23,7 @@ type markController struct {
 //	GET /api/mark/{ID} - детали марки
 func RegisterMarkHandlers(r *routing.RouteGroup, service mark.IService, logger log.ILogger, authHandler routing.Handler) {
 	c := markController{
-		Controller: Controller{
-			Logger: logger,
-		},
+		Logger:  logger,
 		Service: service,
 	}
 
@@ -34,7 +33,7 @@ func RegisterMarkHandlers(r *routing.RouteGroup, service mark.IService, logger l
 
 // get method is for getting a one entity by ID
 func (c markController) get(ctx *routing.Context) error {
-	id, err := c.parseUintParam(ctx, "id")
+	id, err := ozzo_handler.ParseUintParam(ctx, "id")
 	if err != nil {
 		errorshandler.BadRequest("ID is required to be uint")
 	}
@@ -54,10 +53,10 @@ func (c markController) get(ctx *routing.Context) error {
 
 // list method is for a getting a list of all entities
 func (c markController) list(ctx *routing.Context) error {
+	e := c.Service.NewEntity()
+	e.TypeID = ctype.TypeIDCar
 	cond := domain.DBQueryConditions{
-		Where: map[string]interface{}{
-			"id_car_type": ctype.TypeIDCar,
-		},
+		Where: e,
 		SortOrder: map[string]string{
 			"name": domain.SortOrderAsc,
 		},

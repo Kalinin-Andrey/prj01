@@ -1,28 +1,24 @@
 package controller
 
 import (
+	"carizza/internal/domain/user"
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/errorshandler"
-	"strconv"
+	"carizza/internal/pkg/log"
+	ozzo_handler "carizza/pkg/ozzo_handler"
 
 	routing "github.com/go-ozzo/ozzo-routing/v2"
-	"github.com/pkg/errors"
-
-	"carizza/internal/domain/user"
-	"carizza/internal/pkg/log"
 )
 
 type userController struct {
-	Controller
+	Logger  log.ILogger
 	Service user.IService
 }
 
 // RegisterHandlers sets up the routing of the HTTP handlers.
 func RegisterUserHandlers(r *routing.RouteGroup, service user.IService, logger log.ILogger, authHandler routing.Handler) {
 	c := userController{
-		Controller: Controller{
-			Logger: logger,
-		},
+		Logger:  logger,
 		Service: service,
 	}
 
@@ -33,11 +29,11 @@ func RegisterUserHandlers(r *routing.RouteGroup, service user.IService, logger l
 
 // get method is for a getting a one enmtity by ID
 func (c userController) get(ctx *routing.Context) error {
-	id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	id, err := ozzo_handler.ParseUintParam(ctx, "id")
 	if err != nil {
-		c.Logger.With(ctx.Request.Context()).Info(errors.Wrapf(err, "Can not parse uint64 from %q", ctx.Param("id")))
-		return errorshandler.BadRequest("id mast be a uint")
+		return errorshandler.BadRequest("ID is required to be uint")
 	}
+
 	entity, err := c.Service.Get(ctx.Request.Context(), uint(id))
 	if err != nil {
 		if err == apperror.ErrNotFound {

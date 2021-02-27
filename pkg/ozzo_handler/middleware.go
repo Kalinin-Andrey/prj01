@@ -1,5 +1,5 @@
 // Package accesslog provides a middleware that records every RESTful API call in a log message.
-package content
+package ozzo_handler
 
 import (
 	routing "github.com/go-ozzo/ozzo-routing/v2"
