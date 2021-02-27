@@ -8,8 +8,6 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-
-	"carizza/internal/pkg/config"
 )
 
 // ILogger interface
@@ -72,8 +70,16 @@ var defaultZapConfig = zap.Config{
 	},
 }
 
+// Config for a logger
+type Config struct {
+	Encoding      string
+	OutputPaths   []string
+	Level         string
+	InitialFields map[string]interface{}
+}
+
 // New creates a new logger
-func New(conf config.Log) (*Logger, error) {
+func New(conf Config) (*Logger, error) {
 	cfg, err := configToZapConfig(conf)
 	if err != nil {
 		return nil, errors.Wrapf(err, "Can not convert conf to zap conf;\nconf: %v", conf)
@@ -90,7 +96,7 @@ func New(conf config.Log) (*Logger, error) {
 	return logger, nil
 }
 
-func configToZapConfig(conf config.Log) (zap.Config, error) {
+func configToZapConfig(conf Config) (zap.Config, error) {
 	cfg := defaultZapConfig
 	cfg.OutputPaths = conf.OutputPaths
 	cfg.Encoding = conf.Encoding

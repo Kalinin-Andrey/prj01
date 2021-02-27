@@ -2,7 +2,7 @@ package redis
 
 import (
 	"carizza/internal/domain"
-	"carizza/internal/pkg/db/redis"
+	"carizza/pkg/db/redis"
 )
 
 // IRepository is an interface of repository

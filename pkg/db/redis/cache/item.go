@@ -27,6 +27,3 @@ type Item struct {
 	// SkipLocalCache skips local cache as if it is not set.
 	SkipLocalCache bool
 }
-
-type Repository interface {
-}

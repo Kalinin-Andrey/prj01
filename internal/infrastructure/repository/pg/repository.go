@@ -21,8 +21,8 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 
-	"carizza/internal/pkg/db/pg"
-	"carizza/internal/pkg/log"
+	"carizza/pkg/db/pg"
+	"carizza/pkg/log"
 )
 
 // IRepository is an interface of repository

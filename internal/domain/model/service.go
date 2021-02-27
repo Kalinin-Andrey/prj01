@@ -6,7 +6,7 @@ import (
 	"github.com/pkg/errors"
 
 	"carizza/internal/domain"
-	"carizza/internal/pkg/log"
+	"carizza/pkg/log"
 )
 
 const MaxLIstLimit = 1000

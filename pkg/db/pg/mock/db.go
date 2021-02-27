@@ -1,18 +1,18 @@
-package pg
+package mock
 
 import (
 	"database/sql"
+
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
-	"carizza/internal/pkg/config"
-	"carizza/internal/pkg/db/pg"
-	"carizza/internal/pkg/log"
+	"carizza/pkg/db/pg"
+	"carizza/pkg/log"
 )
 
 // New creates a new DB connection
-func New(conf config.Pg, logger log.ILogger) (*pg.DB, *sqlmock.Sqlmock, error) {
+func New(conf pg.Config, logger log.ILogger) (*pg.DB, *sqlmock.Sqlmock, error) {
 	var mock sqlmock.Sqlmock
 	var dbm *sql.DB
 	var err error

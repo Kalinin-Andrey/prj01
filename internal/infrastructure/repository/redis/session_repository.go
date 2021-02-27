@@ -12,8 +12,8 @@ import (
 
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/auth"
-	"carizza/internal/pkg/db/redis"
 	"carizza/internal/pkg/session"
+	"carizza/pkg/db/redis"
 
 	"carizza/internal/domain/user"
 )

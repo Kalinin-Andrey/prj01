@@ -3,7 +3,7 @@ package domain
 import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 
-	"carizza/internal/pkg/log"
+	"carizza/pkg/log"
 )
 
 const (

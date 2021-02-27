@@ -18,12 +18,12 @@ import (
 
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/auth"
-	"carizza/internal/pkg/cache"
 	"carizza/internal/pkg/config"
-	"carizza/internal/pkg/db/pg"
-	"carizza/internal/pkg/db/redis"
 	"carizza/internal/pkg/jwt"
-	"carizza/internal/pkg/log"
+	"carizza/pkg/db/pg"
+	"carizza/pkg/db/redis"
+	"carizza/pkg/db/redis/cache"
+	"carizza/pkg/log"
 
 	"carizza/internal/domain/ctype"
 	"carizza/internal/domain/model"

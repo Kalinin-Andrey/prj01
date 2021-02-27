@@ -1,11 +1,11 @@
-package redis
+package mock
 
 import (
 	"github.com/alicebob/miniredis"
 	"github.com/elliotchance/redismock/v8"
 	"github.com/go-redis/redis/v8"
 
-	redisdb "carizza/internal/pkg/db/redis"
+	redisdb "carizza/pkg/db/redis"
 )
 
 // New creates a new mock client

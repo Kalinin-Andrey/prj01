@@ -4,13 +4,12 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
-	"carizza/internal/pkg/config"
-	"carizza/internal/pkg/log"
+	"carizza/pkg/log"
 )
 
 // IDB is the interface for a DB connection
 type IDB interface {
-	DB()			*gorm.DB
+	DB() *gorm.DB
 	IsAutoMigrate() bool
 }
 
@@ -30,8 +29,16 @@ func (db *DB) IsAutoMigrate() bool {
 
 var _ IDB = (*DB)(nil)
 
+// Config for a DB connection
+type Config struct {
+	Dialect       string
+	DSN           string
+	IsLogMode     bool
+	IsAutoMigrate bool
+}
+
 // New creates a new DB connection
-func New(conf config.Pg, logger log.ILogger) (*DB, error) {
+func New(conf Config, logger log.ILogger) (*DB, error) {
 	db, err := gorm.Open(conf.Dialect, conf.DSN)
 	if err != nil {
 		return nil, err

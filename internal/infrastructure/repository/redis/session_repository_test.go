@@ -1,10 +1,11 @@
 package redis
 
 import (
-	"context"
-	"encoding/hex"
 	"carizza/internal/domain"
 	"carizza/internal/pkg/session"
+	mock2 "carizza/pkg/db/redis/mock"
+	"context"
+	"encoding/hex"
 	"testing"
 	"time"
 
@@ -15,8 +16,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
-	dbredis "carizza/internal/pkg/db/redis"
-	dbmockredis "carizza/internal/pkg/mock/db/redis"
+	dbredis "carizza/pkg/db/redis"
 
 	"carizza/internal/domain/user"
 )
@@ -80,7 +80,7 @@ func (s *SessionRepositoryTestSuite) SetupTest() {
 	require := require.New(s.T())
 	s.session.Data = session.Data{}
 
-	db, s.mock, err = dbmockredis.New()
+	db, s.mock, err = mock2.New()
 	require.NoError(err)
 
 	s.repository, err = NewSessionRepository(db, sessionLifeTimeInHours, &userRepoMock{user: s.user})

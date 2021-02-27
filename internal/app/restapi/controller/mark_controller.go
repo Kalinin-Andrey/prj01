@@ -2,9 +2,9 @@ package controller
 
 import (
 	"carizza/internal/pkg/apperror"
-	"carizza/internal/pkg/errorshandler"
-	"carizza/internal/pkg/log"
+	"carizza/pkg/log"
 	ozzo_handler "carizza/pkg/ozzo_handler"
+	"carizza/pkg/ozzo_handler/errorshandler"
 
 	"carizza/internal/domain"
 	"carizza/internal/domain/ctype"

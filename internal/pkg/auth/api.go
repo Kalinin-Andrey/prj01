@@ -3,12 +3,12 @@ package auth
 import (
 	"net/http"
 
-	"github.com/go-ozzo/ozzo-routing/v2"
-	"github.com/go-ozzo/ozzo-validation/v4"
+	routing "github.com/go-ozzo/ozzo-routing/v2"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 
-	"carizza/internal/pkg/errorshandler"
-	"carizza/internal/pkg/log"
+	"carizza/pkg/log"
+	"carizza/pkg/ozzo_handler/errorshandler"
 )
 
 type identity struct {

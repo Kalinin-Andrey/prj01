@@ -1,12 +1,13 @@
 package auth
 
 import (
-	"context"
-	routing "github.com/go-ozzo/ozzo-routing/v2"
-	"net/http"
-	"carizza/internal/pkg/log"
 	"carizza/internal/pkg/session"
+	"carizza/pkg/log"
+	"context"
+	"net/http"
 	"strings"
+
+	routing "github.com/go-ozzo/ozzo-routing/v2"
 )
 
 // Middleware returns a JWT-based authentication middleware.

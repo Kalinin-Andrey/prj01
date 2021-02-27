@@ -1,6 +1,7 @@
 package pg
 
 import (
+	"carizza/pkg/db/pg/mock"
 	"context"
 	"encoding/hex"
 	"fmt"
@@ -13,9 +14,8 @@ import (
 	"github.com/stretchr/testify/suite"
 
 	"carizza/internal/pkg/config"
-	"carizza/internal/pkg/db/pg"
-	"carizza/internal/pkg/log"
-	pgmock "carizza/internal/pkg/mock/db/pg"
+	"carizza/pkg/db/pg"
+	"carizza/pkg/log"
 
 	"carizza/internal/domain/user"
 )
@@ -60,7 +60,7 @@ func (s *UserRepositoryTestSuite) SetupTest() {
 	require := require.New(s.T())
 	s.ctx = context.Background()
 
-	pgDB, PgMock, err = pgmock.New(s.cfg.DB.Pg, s.logger)
+	pgDB, PgMock, err = mock.New(s.cfg.DB.Pg, s.logger)
 	require.NoError(err)
 	s.mock = *PgMock
 

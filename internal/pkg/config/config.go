@@ -1,7 +1,11 @@
 package config
 
 import (
+	"carizza/pkg/db/pg"
+	"carizza/pkg/db/redis"
+	"carizza/pkg/log"
 	"flag"
+
 	"github.com/pkg/errors"
 
 	"github.com/spf13/viper"
@@ -12,7 +16,7 @@ type Configuration struct {
 	Server struct {
 		HTTPListen string
 	}
-	Log Log
+	Log log.Config
 	DB  DB
 	// JWT signing key. required.
 	JWTSigningKey string
@@ -23,33 +27,10 @@ type Configuration struct {
 }
 
 type DB struct {
-	Identity    Pg
-	CarCatalog  Pg
-	Maintenance Pg
-	Redis       Redis
-}
-
-// Log is config for a logger
-type Log struct {
-	Encoding      string
-	OutputPaths   []string
-	Level         string
-	InitialFields map[string]interface{}
-}
-
-// Pg is config for a DB connection
-type Pg struct {
-	Dialect       string
-	DSN           string
-	IsLogMode     bool
-	IsAutoMigrate bool
-}
-
-type Redis struct {
-	Addrs    []string
-	Login    string
-	Password string
-	DBName   int
+	Identity    pg.Config
+	CarCatalog  pg.Config
+	Maintenance pg.Config
+	Redis       redis.Config
 }
 
 // defaultPathToConfig is the default path to the app config
@@ -107,17 +88,17 @@ func Get4Test(logAppPostfix string) (*Configuration, error) {
 
 func Get4UnitTest(logAppPostfix string) *Configuration {
 	cfg := &Configuration{
-		Log: Log{
+		Log: log.Config{
 			Encoding: "json",
 		},
 		DB: DB{
-			Identity: Pg{
+			Identity: pg.Config{
 				Dialect:       "postgres",
 				DSN:           "host=localhost port=5401 dbname=postgres user=postgres password=postgres sslmode=disable",
 				IsLogMode:     true,
 				IsAutoMigrate: true,
 			},
-			Redis: Redis{},
+			Redis: redis.Config{},
 		},
 		JWTSigningKey:   "test",
 		JWTExpiration:   1,

@@ -1,11 +1,12 @@
 package user
 
 import (
-	"context"
-	"github.com/pkg/errors"
 	"carizza/internal/domain"
+	"context"
 
-	"carizza/internal/pkg/log"
+	"github.com/pkg/errors"
+
+	"carizza/pkg/log"
 )
 
 const MaxLIstLimit = 1000

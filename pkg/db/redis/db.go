@@ -7,8 +7,7 @@ import (
 	gocache "github.com/go-redis/cache/v8"
 	"github.com/go-redis/redis/v8"
 
-	"carizza/internal/pkg/cache"
-	"carizza/internal/pkg/config"
+	"carizza/pkg/db/redis/cache"
 )
 
 type IDB interface {
@@ -27,8 +26,15 @@ type DB struct {
 var _ IDB = (*DB)(nil)
 var _ cache.DB = (*DB)(nil)
 
+type Config struct {
+	Addrs    []string
+	Login    string
+	Password string
+	DBName   int
+}
+
 // New creates a new DB connection
-func New(conf config.Redis) (*DB, error) {
+func New(conf Config) (*DB, error) {
 	client := redis.NewUniversalClient(&redis.UniversalOptions{
 		Addrs:    conf.Addrs,
 		Username: conf.Login,

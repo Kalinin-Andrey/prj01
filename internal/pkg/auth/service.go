@@ -2,17 +2,18 @@ package auth
 
 import (
 	"bytes"
+	"carizza/internal/pkg/session"
 	"context"
 	"crypto/rand"
 	"crypto/sha256"
-	"github.com/pkg/errors"
-	"golang.org/x/crypto/pbkdf2"
-	"carizza/internal/pkg/session"
 	"time"
 
+	"github.com/pkg/errors"
+	"golang.org/x/crypto/pbkdf2"
+
 	"carizza/internal/domain/user"
-	"carizza/internal/pkg/errorshandler"
-	"carizza/internal/pkg/log"
+	"carizza/pkg/log"
+	"carizza/pkg/ozzo_handler/errorshandler"
 )
 
 // Service encapsulates the authentication logic.
