@@ -1,12 +1,13 @@
 package pg
 
 import (
-	"carizza/pkg/db/pg/mock"
 	"context"
 	"encoding/hex"
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/minipkg/go-app-common/db/pg/mock"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
@@ -14,8 +15,9 @@ import (
 	"github.com/stretchr/testify/suite"
 
 	"carizza/internal/pkg/config"
-	"carizza/pkg/db/pg"
-	"carizza/pkg/log"
+
+	"github.com/minipkg/go-app-common/db/pg"
+	"github.com/minipkg/go-app-common/log"
 
 	"carizza/internal/domain/user"
 )

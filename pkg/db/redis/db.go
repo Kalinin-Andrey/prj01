@@ -7,7 +7,7 @@ import (
 	gocache "github.com/go-redis/cache/v8"
 	"github.com/go-redis/redis/v8"
 
-	"carizza/pkg/db/redis/cache"
+	"github.com/minipkg/go-app-common/db/redis/cache"
 )
 
 type IDB interface {

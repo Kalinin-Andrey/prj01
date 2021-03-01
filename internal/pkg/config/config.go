@@ -1,10 +1,11 @@
 package config
 
 import (
-	"carizza/pkg/db/pg"
-	"carizza/pkg/db/redis"
-	"carizza/pkg/log"
 	"flag"
+
+	"github.com/minipkg/go-app-common/db/pg"
+	"github.com/minipkg/go-app-common/db/redis"
+	"github.com/minipkg/go-app-common/log"
 
 	"github.com/pkg/errors"
 

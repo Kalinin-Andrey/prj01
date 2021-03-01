@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/minipkg/go-app-common/accesslog"
+
 	"github.com/go-ozzo/ozzo-routing/v2/content"
 
 	routing "github.com/go-ozzo/ozzo-routing/v2"
@@ -13,10 +15,10 @@ import (
 	"github.com/go-ozzo/ozzo-routing/v2/file"
 	"github.com/go-ozzo/ozzo-routing/v2/slash"
 
-	"carizza/internal/pkg/accesslog"
 	"carizza/internal/pkg/config"
-	pkgcontent "carizza/pkg/ozzo_handler"
-	"carizza/pkg/ozzo_handler/errorshandler"
+
+	pkgcontent "github.com/minipkg/go-app-common/ozzo_handler"
+	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
 
 	commonApp "carizza/internal/app"
 	"carizza/internal/app/restapi/controller"

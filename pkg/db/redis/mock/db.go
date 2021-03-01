@@ -5,7 +5,7 @@ import (
 	"github.com/elliotchance/redismock/v8"
 	"github.com/go-redis/redis/v8"
 
-	redisdb "carizza/pkg/db/redis"
+	redisdb "github.com/minipkg/go-app-common/db/redis"
 )
 
 // New creates a new mock client

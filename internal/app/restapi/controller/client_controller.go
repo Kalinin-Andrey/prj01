@@ -2,9 +2,10 @@ package controller
 
 import (
 	"carizza/internal/pkg/apperror"
-	"carizza/pkg/log"
-	ozzo_handler "carizza/pkg/ozzo_handler"
-	"carizza/pkg/ozzo_handler/errorshandler"
+
+	"github.com/minipkg/go-app-common/log"
+	ozzo_handler "github.com/minipkg/go-app-common/ozzo_handler"
+	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
 
 	"carizza/internal/domain"
 	"carizza/internal/domain/client"

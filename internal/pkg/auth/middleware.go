@@ -2,10 +2,11 @@ package auth
 
 import (
 	"carizza/internal/pkg/session"
-	"carizza/pkg/log"
 	"context"
 	"net/http"
 	"strings"
+
+	"github.com/minipkg/go-app-common/log"
 
 	routing "github.com/go-ozzo/ozzo-routing/v2"
 )

@@ -13,7 +13,8 @@ import (
 	"carizza/internal/pkg/apperror"
 	"carizza/internal/pkg/auth"
 	"carizza/internal/pkg/session"
-	"carizza/pkg/db/redis"
+
+	"github.com/minipkg/go-app-common/db/redis"
 
 	"carizza/internal/domain/user"
 )

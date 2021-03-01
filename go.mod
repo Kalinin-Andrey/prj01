@@ -21,7 +21,9 @@ require (
 	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a
 	github.com/jinzhu/gorm v1.9.16
 	github.com/mattn/go-sqlite3 v2.0.1+incompatible // indirect
+	github.com/minipkg/go-app-common v0.0.0-20210301143439-da38da6b4f89
 	github.com/pkg/errors v0.9.1
+	github.com/qiangxue/go-rest-api v1.0.1 // indirect
 	github.com/spf13/cobra v1.1.1
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.6.1

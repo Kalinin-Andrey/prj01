@@ -7,8 +7,8 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
-	"carizza/pkg/db/pg"
-	"carizza/pkg/log"
+	"github.com/minipkg/go-app-common/db/pg"
+	"github.com/minipkg/go-app-common/log"
 )
 
 // New creates a new DB connection

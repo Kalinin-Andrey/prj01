@@ -4,7 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
-	"carizza/pkg/log"
+	"github.com/minipkg/go-app-common/log"
 )
 
 // IDB is the interface for a DB connection

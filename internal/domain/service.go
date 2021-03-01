@@ -3,7 +3,7 @@ package domain
 import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 
-	"carizza/pkg/log"
+	"github.com/minipkg/go-app-common/log"
 )
 
 const (

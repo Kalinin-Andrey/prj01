@@ -6,7 +6,8 @@ import (
 	"github.com/pkg/errors"
 
 	"carizza/internal/domain"
-	"carizza/pkg/log"
+
+	"github.com/minipkg/go-app-common/log"
 )
 
 const MaxLIstLimit = 1000

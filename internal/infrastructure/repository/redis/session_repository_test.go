@@ -3,11 +3,12 @@ package redis
 import (
 	"carizza/internal/domain"
 	"carizza/internal/pkg/session"
-	mock2 "carizza/pkg/db/redis/mock"
 	"context"
 	"encoding/hex"
 	"testing"
 	"time"
+
+	mock2 "github.com/minipkg/go-app-common/db/redis/mock"
 
 	"github.com/elliotchance/redismock/v8"
 	"github.com/go-redis/redis/v8"
@@ -16,7 +17,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
-	dbredis "carizza/pkg/db/redis"
+	dbredis "github.com/minipkg/go-app-common/db/redis"
 
 	"carizza/internal/domain/user"
 )

@@ -12,8 +12,9 @@ import (
 	"golang.org/x/crypto/pbkdf2"
 
 	"carizza/internal/domain/user"
-	"carizza/pkg/log"
-	"carizza/pkg/ozzo_handler/errorshandler"
+
+	"github.com/minipkg/go-app-common/log"
+	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
 )
 
 // Service encapsulates the authentication logic.

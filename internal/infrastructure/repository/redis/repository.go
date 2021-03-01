@@ -2,7 +2,8 @@ package redis
 
 import (
 	"carizza/internal/domain"
-	"carizza/pkg/db/redis"
+
+	"github.com/minipkg/go-app-common/db/redis"
 )
 
 // IRepository is an interface of repository
