@@ -2,11 +2,13 @@ package pg
 
 import (
 	"context"
+
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 
-	"carizza/internal/domain/user"
 	"carizza/internal/pkg/apperror"
+
+	"carizza/internal/domain/user"
 )
 
 // UserRepository is a repository for the user entity

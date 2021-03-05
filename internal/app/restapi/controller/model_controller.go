@@ -30,6 +30,7 @@ func RegisterModelHandlers(r *routing.RouteGroup, service model.IService, logger
 	}
 
 	r.Get("/models", c.list)
+	r.Get("/modelsp", c.listp) //	try with pagination
 	r.Get(`/model/<id>`, c.get)
 	r.Get(`/mark/<markId>/models`, c.list)
 }
@@ -56,6 +57,36 @@ func (c modelController) get(ctx *routing.Context) error {
 
 // list method is for a getting a list of all entities
 func (c modelController) list(ctx *routing.Context) error {
+	cond := domain.DBQueryConditions{
+		SortOrder: map[string]string{
+			"name": "asc",
+		},
+	}
+
+	if len(ctx.Request.URL.Query()) > 0 {
+		where := c.Service.NewEntity()
+		err := ozzo_handler.ParseQueryParams(ctx, where)
+		if err != nil {
+			c.Logger.With(ctx.Request.Context()).Info(err)
+			return errorshandler.BadRequest("")
+		}
+		cond.Where = where
+	}
+
+	items, err := c.Service.Query(ctx.Request.Context(), cond)
+	if err != nil {
+		if err == apperror.ErrNotFound {
+			c.Logger.With(ctx.Request.Context()).Info(err)
+			return errorshandler.NotFound("")
+		}
+		c.Logger.With(ctx.Request.Context()).Error(err)
+		return errorshandler.InternalServerError("")
+	}
+	return ctx.Write(items)
+}
+
+// list method is for a getting a list of all entities
+func (c modelController) listp(ctx *routing.Context) error {
 	cond := domain.DBQueryConditions{
 		SortOrder: map[string]string{
 			"name": "asc",
