@@ -9,7 +9,8 @@ import (
 	"github.com/minipkg/go-app-common/ozzo_handler"
 	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
 
-	"carizza/internal/domain"
+	"carizza/pkg/selection_condition"
+
 	"carizza/internal/domain/address"
 
 	routing "github.com/go-ozzo/ozzo-routing/v2"
@@ -57,7 +58,7 @@ func (c addressController) get(ctx *routing.Context) error {
 
 // list method is for a getting a list of all entities
 func (c addressController) list(ctx *routing.Context) error {
-	cond := domain.DBQueryConditions{
+	cond := selection_condition.SelectionCondition{
 		SortOrder: map[string]string{
 			"name": "asc",
 		},

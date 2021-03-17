@@ -1,14 +1,13 @@
 package repository
 
 import (
+	"carizza/pkg/selection_condition"
 	"context"
 
 	"github.com/stretchr/testify/mock"
 
 	"carizza/internal/pkg/auth"
 	"carizza/internal/pkg/session"
-
-	"carizza/internal/domain"
 )
 
 // SessionRepository is a mock for SessionRepository
@@ -18,7 +17,8 @@ type SessionRepository struct {
 
 var _ auth.SessionRepository = (*SessionRepository)(nil)
 
-func (m SessionRepository) SetDefaultConditions(defaultConditions domain.DBQueryConditions) {}
+func (m SessionRepository) SetDefaultConditions(defaultConditions selection_condition.SelectionCondition) {
+}
 
 func (m SessionRepository) NewEntity(a0 context.Context, a1 uint) (*session.Session, error) {
 	ret := m.Called(a0, a1)

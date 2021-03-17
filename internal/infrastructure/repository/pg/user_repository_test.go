@@ -62,7 +62,7 @@ func (s *UserRepositoryTestSuite) SetupTest() {
 	require := require.New(s.T())
 	s.ctx = context.Background()
 
-	pgDB, PgMock, err = mock.New(s.cfg.DB.Pg, s.logger)
+	pgDB, PgMock, err = mock.New(s.cfg.DB.Identity, s.logger)
 	require.NoError(err)
 	s.mock = *PgMock
 

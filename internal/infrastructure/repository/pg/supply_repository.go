@@ -5,9 +5,11 @@ import (
 
 	"github.com/jinzhu/gorm"
 
+	minipkg_gorm "carizza/pkg/db/gorm"
+	"carizza/pkg/selection_condition"
+
 	"carizza/internal/pkg/apperror"
 
-	"carizza/internal/domain"
 	"carizza/internal/domain/supply"
 )
 
@@ -55,9 +57,9 @@ func (r SupplyRepository) First(ctx context.Context, entity *supply.Supply) (*su
 }
 
 // Query retrieves the album records with the specified offset and limit from the database.
-func (r SupplyRepository) Query(ctx context.Context, cond domain.DBQueryConditions) ([]supply.Supply, error) {
+func (r SupplyRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]supply.Supply, error) {
 	items := []supply.Supply{}
-	db, err := r.applyConditions(r.dbWithDefaults(), cond)
+	db, err := minipkg_gorm.ApplyConditions(r.dbWithDefaults(), cond)
 	if err != nil {
 		return nil, err
 	}

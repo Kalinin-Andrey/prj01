@@ -6,8 +6,9 @@ import (
 	"github.com/jinzhu/gorm"
 
 	"carizza/internal/pkg/apperror"
+	minipkg_gorm "carizza/pkg/db/gorm"
+	"carizza/pkg/selection_condition"
 
-	"carizza/internal/domain"
 	"carizza/internal/domain/car"
 )
 
@@ -55,9 +56,9 @@ func (r CarRepository) First(ctx context.Context, entity *car.Car) (*car.Car, er
 }
 
 // Query retrieves the album records with the specified offset and limit from the database.
-func (r CarRepository) Query(ctx context.Context, cond domain.DBQueryConditions) ([]car.Car, error) {
+func (r CarRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]car.Car, error) {
 	items := []car.Car{}
-	db, err := r.applyConditions(r.dbWithDefaults(), cond)
+	db, err := minipkg_gorm.ApplyConditions(r.dbWithDefaults(), cond)
 	if err != nil {
 		return nil, err
 	}

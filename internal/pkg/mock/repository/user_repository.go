@@ -16,7 +16,7 @@ type UserRepository struct {
 
 var _ user.Repository = (*UserRepository)(nil)
 
-func (m UserRepository) SetDefaultConditions(conditions domain.DBQueryConditions) {}
+func (m UserRepository) SetDefaultConditions(conditions selection_condition.SelectionCondition) {}
 
 func (m UserRepository) Get(a0 context.Context, a1 uint) (*user.User, error) {
 	ret := m.Called(a0, a1)

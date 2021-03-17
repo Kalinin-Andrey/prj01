@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"carizza/internal/domain"
+	"carizza/pkg/selection_condition"
 
 	ozzo_handler "github.com/minipkg/go-app-common/ozzo_handler"
 
@@ -57,7 +57,7 @@ func (c modelController) get(ctx *routing.Context) error {
 
 // list method is for a getting a list of all entities
 func (c modelController) list(ctx *routing.Context) error {
-	cond := domain.DBQueryConditions{
+	cond := selection_condition.SelectionCondition{
 		SortOrder: map[string]string{
 			"name": "asc",
 		},
@@ -87,7 +87,7 @@ func (c modelController) list(ctx *routing.Context) error {
 
 // list method is for a getting a list of all entities
 func (c modelController) listp(ctx *routing.Context) error {
-	cond := domain.DBQueryConditions{
+	cond := selection_condition.SelectionCondition{
 		SortOrder: map[string]string{
 			"name": "asc",
 		},

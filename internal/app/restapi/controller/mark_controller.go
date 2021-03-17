@@ -2,12 +2,12 @@ package controller
 
 import (
 	"carizza/internal/pkg/apperror"
+	"carizza/pkg/selection_condition"
 
 	"github.com/minipkg/go-app-common/log"
 	ozzo_handler "github.com/minipkg/go-app-common/ozzo_handler"
 	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
 
-	"carizza/internal/domain"
 	"carizza/internal/domain/ctype"
 	"carizza/internal/domain/mark"
 
@@ -56,10 +56,10 @@ func (c markController) get(ctx *routing.Context) error {
 func (c markController) list(ctx *routing.Context) error {
 	e := c.Service.NewEntity()
 	e.TypeID = ctype.TypeIDCar
-	cond := domain.DBQueryConditions{
+	cond := selection_condition.SelectionCondition{
 		Where: e,
 		SortOrder: map[string]string{
-			"name": domain.SortOrderAsc,
+			"name": selection_condition.SortOrderAsc,
 		},
 	}
 	items, err := c.Service.Query(ctx.Request.Context(), cond)

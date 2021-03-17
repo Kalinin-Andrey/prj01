@@ -8,8 +8,9 @@ import (
 	"github.com/jinzhu/gorm"
 
 	"carizza/internal/pkg/apperror"
+	minipkg_gorm "carizza/pkg/db/gorm"
+	"carizza/pkg/selection_condition"
 
-	"carizza/internal/domain"
 	"carizza/internal/domain/maintenance"
 )
 
@@ -36,10 +37,10 @@ func (r MaintenanceRepository) autoMigrate() {
 	}
 }
 
-func (r MaintenanceRepository) applyConditions(db *gorm.DB, conditions domain.DBQueryConditions) (*gorm.DB, error) {
+func (r MaintenanceRepository) applyConditions(db *gorm.DB, conditions selection_condition.SelectionCondition) (*gorm.DB, error) {
 	var err error
 
-	db, err = r.repository.applyConditions(db, conditions)
+	db, err = minipkg_gorm.ApplyConditions(db, conditions)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +80,7 @@ func (r MaintenanceRepository) First(ctx context.Context, entity *maintenance.Ma
 }
 
 // Query retrieves records with the specified offset and limit from the database.
-func (r MaintenanceRepository) Query(ctx context.Context, cond domain.DBQueryConditions) ([]maintenance.Maintenance, error) {
+func (r MaintenanceRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]maintenance.Maintenance, error) {
 	items := []maintenance.Maintenance{}
 	db, err := r.applyConditions(r.dbWithDefaults(), cond)
 	if err != nil {

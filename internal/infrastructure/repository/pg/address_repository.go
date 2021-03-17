@@ -6,8 +6,9 @@ import (
 	"github.com/jinzhu/gorm"
 
 	"carizza/internal/pkg/apperror"
+	minipkg_gorm "carizza/pkg/db/gorm"
+	"carizza/pkg/selection_condition"
 
-	"carizza/internal/domain"
 	"carizza/internal/domain/address"
 )
 
@@ -55,9 +56,9 @@ func (r AddressRepository) First(ctx context.Context, entity *address.Address) (
 }
 
 // Query retrieves the album records with the specified offset and limit from the database.
-func (r AddressRepository) Query(ctx context.Context, cond domain.DBQueryConditions) ([]address.Address, error) {
+func (r AddressRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]address.Address, error) {
 	items := []address.Address{}
-	db, err := r.applyConditions(r.dbWithDefaults(), cond)
+	db, err := minipkg_gorm.ApplyConditions(r.dbWithDefaults(), cond)
 	if err != nil {
 		return nil, err
 	}

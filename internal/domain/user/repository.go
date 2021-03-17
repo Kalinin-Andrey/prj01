@@ -1,8 +1,8 @@
 package user
 
 import (
+	"carizza/pkg/selection_condition"
 	"context"
-	"carizza/internal/domain"
 )
 
 // Repository encapsulates the logic to access albums from the data source.
@@ -13,7 +13,7 @@ type Repository interface {
 	//Count(ctx context.Context) (uint, error)
 	// Query returns the list of albums with the given offset and limit.
 	//Query(ctx context.Context, offset, limit uint) ([]User, error)
-	SetDefaultConditions(conditions domain.DBQueryConditions)
+	SetDefaultConditions(conditions selection_condition.SelectionCondition)
 	// Create saves a new album in the storage.
 	Create(ctx context.Context, entity *User) error
 	// Update updates the album with given ID in the storage.

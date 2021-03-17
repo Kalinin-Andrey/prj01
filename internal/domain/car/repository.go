@@ -1,17 +1,16 @@
 package car
 
 import (
+	"carizza/pkg/selection_condition"
 	"context"
-
-	"carizza/internal/domain"
 )
 
 // Repository encapsulates the logic to access albums from the data source.
 type Repository interface {
-	SetDefaultConditions(conditions domain.DBQueryConditions)
+	SetDefaultConditions(conditions selection_condition.SelectionCondition)
 	// Get returns the album with the specified album ID.
 	Get(ctx context.Context, id uint) (*Car, error)
 	// Query returns the list of albums with the given offset and limit.
-	Query(ctx context.Context, cond domain.DBQueryConditions) ([]Car, error)
+	Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]Car, error)
 	First(ctx context.Context, entity *Car) (*Car, error)
 }

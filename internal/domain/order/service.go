@@ -1,11 +1,10 @@
 package order
 
 import (
+	"carizza/pkg/selection_condition"
 	"context"
 
 	"github.com/pkg/errors"
-
-	"carizza/internal/domain"
 
 	"github.com/minipkg/go-app-common/log"
 )
@@ -16,7 +15,7 @@ const MaxLIstLimit = 1000
 type IService interface {
 	NewEntity() *Order
 	Get(ctx context.Context, id uint) (*Order, error)
-	Query(ctx context.Context, query domain.DBQueryConditions) ([]Order, error)
+	Query(ctx context.Context, query selection_condition.SelectionCondition) ([]Order, error)
 }
 
 type service struct {
@@ -35,8 +34,8 @@ func NewService(logger log.ILogger, repo Repository) IService {
 }
 
 // Defaults returns defaults params
-func (s service) defaultConditions() domain.DBQueryConditions {
-	return domain.DBQueryConditions{}
+func (s service) defaultConditions() selection_condition.SelectionCondition {
+	return selection_condition.SelectionCondition{}
 }
 
 func (s service) NewEntity() *Order {
@@ -53,7 +52,7 @@ func (s service) Get(ctx context.Context, id uint) (*Order, error) {
 }
 
 // Query returns the items with the specified offset and limit.
-func (s service) Query(ctx context.Context, query domain.DBQueryConditions) ([]Order, error) {
+func (s service) Query(ctx context.Context, query selection_condition.SelectionCondition) ([]Order, error) {
 	items, err := s.repository.Query(ctx, query)
 	if err != nil {
 		return nil, errors.Wrapf(err, "Can not find a list of Order by query: %v", query)

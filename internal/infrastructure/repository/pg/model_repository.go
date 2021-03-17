@@ -1,10 +1,12 @@
 package pg
 
 import (
-	"carizza/internal/domain"
 	"context"
 
 	"github.com/jinzhu/gorm"
+
+	minipkg_gorm "carizza/pkg/db/gorm"
+	"carizza/pkg/selection_condition"
 
 	"carizza/internal/domain/model"
 	"carizza/internal/pkg/apperror"
@@ -52,9 +54,9 @@ func (r ModelRepository) First(ctx context.Context, entity *model.Model) (*model
 }
 
 // Query retrieves the album records with the specified offset and limit from the database.
-func (r ModelRepository) Query(ctx context.Context, cond domain.DBQueryConditions) ([]model.Model, error) {
+func (r ModelRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]model.Model, error) {
 	items := []model.Model{}
-	db, err := r.applyConditions(r.dbWithDefaults(), cond)
+	db, err := minipkg_gorm.ApplyConditions(r.dbWithDefaults(), cond)
 	if err != nil {
 		return nil, err
 	}

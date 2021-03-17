@@ -1,8 +1,8 @@
 package redis
 
 import (
-	"carizza/internal/domain"
 	"carizza/internal/pkg/session"
+	"carizza/pkg/selection_condition"
 	"context"
 	"encoding/hex"
 	"testing"
@@ -42,7 +42,7 @@ type userRepoMock struct {
 
 var _ user.Repository = (*userRepoMock)(nil)
 
-func (m *userRepoMock) SetDefaultConditions(conditions domain.DBQueryConditions) {
+func (m *userRepoMock) SetDefaultConditions(conditions selection_condition.SelectionCondition) {
 
 }
 

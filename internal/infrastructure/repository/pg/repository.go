@@ -1,7 +1,6 @@
 package pg
 
 import (
-	"carizza/internal/domain"
 	"carizza/internal/domain/address"
 	"carizza/internal/domain/car"
 	"carizza/internal/domain/client"
@@ -15,9 +14,8 @@ import (
 	"carizza/internal/domain/supply"
 	"carizza/internal/domain/user"
 	"carizza/internal/domain/work"
-	"strings"
-
-	"github.com/iancoleman/strcase"
+	minipkg_gorm "carizza/pkg/db/gorm"
+	"carizza/pkg/selection_condition"
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 
@@ -32,7 +30,7 @@ type IRepository interface{}
 type repository struct {
 	db         pg.IDB
 	logger     log.ILogger
-	Conditions domain.DBQueryConditions
+	Conditions selection_condition.SelectionCondition
 }
 
 const DefaultLimit = 1000
@@ -78,7 +76,7 @@ func GetRepository(logger log.ILogger, dbase pg.IDB, entity string) (repo IRepos
 	return repo, err
 }
 
-func (r *repository) SetDefaultConditions(defaultConditions domain.DBQueryConditions) {
+func (r *repository) SetDefaultConditions(defaultConditions selection_condition.SelectionCondition) {
 	r.Conditions = defaultConditions
 
 	if r.Conditions.Limit == 0 {
@@ -87,55 +85,6 @@ func (r *repository) SetDefaultConditions(defaultConditions domain.DBQueryCondit
 }
 
 func (r repository) dbWithDefaults() *gorm.DB {
-	db, _ := r.applyConditions(r.db.DB(), r.Conditions)
+	db, _ := minipkg_gorm.ApplyConditions(r.db.DB(), r.Conditions)
 	return db
-}
-
-func (r repository) applyConditions(db *gorm.DB, conditions domain.DBQueryConditions) (*gorm.DB, error) {
-
-	if err := conditions.Validate(); err != nil {
-		return nil, err
-	}
-
-	if conditions.Where != nil {
-		db = db.Where(conditions.Where)
-	}
-
-	if conditions.SortOrder != nil {
-		m := r.keysToSnakeCaseStr(conditions.SortOrder)
-		s := strings.Builder{}
-
-		for k, v := range m {
-			s.WriteString(k + " " + v + ", ")
-		}
-		db = db.Order(strings.Trim(s.String(), ", "))
-	}
-
-	if conditions.Limit != 0 {
-		db = db.Limit(conditions.Limit)
-	}
-
-	if conditions.Offset != 0 {
-		db = db.Limit(conditions.Offset)
-	}
-
-	return db, nil
-}
-
-func (r repository) keysToSnakeCase(in map[string]interface{}) map[string]interface{} {
-	out := make(map[string]interface{}, len(in))
-
-	for key, val := range in {
-		out[strcase.ToSnake(key)] = val
-	}
-	return out
-}
-
-func (r repository) keysToSnakeCaseStr(in map[string]string) map[string]string {
-	out := make(map[string]string, len(in))
-
-	for key, val := range in {
-		out[strcase.ToSnake(key)] = val
-	}
-	return out
 }

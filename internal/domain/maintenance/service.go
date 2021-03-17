@@ -1,11 +1,10 @@
 package maintenance
 
 import (
+	"carizza/pkg/selection_condition"
 	"context"
 
 	"github.com/pkg/errors"
-
-	"carizza/internal/domain"
 
 	"github.com/minipkg/go-app-common/log"
 )
@@ -16,7 +15,7 @@ const MaxLIstLimit = 1000
 type IService interface {
 	NewEntity() *Maintenance
 	Get(ctx context.Context, id uint) (*Maintenance, error)
-	Query(ctx context.Context, query domain.DBQueryConditions) ([]Maintenance, error)
+	Query(ctx context.Context, query selection_condition.SelectionCondition) ([]Maintenance, error)
 	Create(ctx context.Context, entity *Maintenance) error
 	Update(ctx context.Context, entity *Maintenance) error
 	Save(ctx context.Context, entity *Maintenance) error
@@ -39,8 +38,8 @@ func NewService(logger log.ILogger, repo Repository) IService {
 }
 
 // Defaults returns defaults params
-func (s service) defaultConditions() domain.DBQueryConditions {
-	return domain.DBQueryConditions{}
+func (s service) defaultConditions() selection_condition.SelectionCondition {
+	return selection_condition.SelectionCondition{}
 }
 
 func (s service) NewEntity() *Maintenance {
@@ -57,7 +56,7 @@ func (s service) Get(ctx context.Context, id uint) (*Maintenance, error) {
 }
 
 // Query returns the items with the specified offset and limit.
-func (s service) Query(ctx context.Context, query domain.DBQueryConditions) ([]Maintenance, error) {
+func (s service) Query(ctx context.Context, query selection_condition.SelectionCondition) ([]Maintenance, error) {
 	items, err := s.repository.Query(ctx, query)
 	if err != nil {
 		return nil, errors.Wrapf(err, "Can not find a list of Maintenance by query: %v", query)

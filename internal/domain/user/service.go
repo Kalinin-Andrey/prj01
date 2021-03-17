@@ -1,7 +1,7 @@
 package user
 
 import (
-	"carizza/internal/domain"
+	"carizza/pkg/selection_condition"
 	"context"
 
 	"github.com/pkg/errors"
@@ -41,8 +41,8 @@ func NewService(logger log.ILogger, repo Repository) IService {
 }
 
 // Defaults returns defaults params
-func (s service) defaultConditions() domain.DBQueryConditions {
-	return domain.DBQueryConditions{}
+func (s service) defaultConditions() selection_condition.SelectionCondition {
+	return selection_condition.SelectionCondition{}
 }
 
 func (s service) NewEntity() *User {

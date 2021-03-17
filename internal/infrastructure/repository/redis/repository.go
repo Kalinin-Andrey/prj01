@@ -1,7 +1,7 @@
 package redis
 
 import (
-	"carizza/internal/domain"
+	"carizza/pkg/selection_condition"
 
 	"github.com/minipkg/go-app-common/db/redis"
 )
@@ -12,12 +12,12 @@ type IRepository interface{}
 // repository persists albums in database
 type repository struct {
 	db         redis.IDB
-	Conditions domain.DBQueryConditions
+	Conditions selection_condition.SelectionCondition
 }
 
 const DefaultLimit = 100
 
-func (r *repository) SetDefaultConditions(defaultConditions domain.DBQueryConditions) {
+func (r *repository) SetDefaultConditions(defaultConditions selection_condition.SelectionCondition) {
 	r.Conditions = defaultConditions
 
 	if r.Conditions.Limit == 0 {
