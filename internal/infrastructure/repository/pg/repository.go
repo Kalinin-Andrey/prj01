@@ -78,13 +78,8 @@ func GetRepository(logger log.ILogger, dbase pg.IDB, entity string) (repo IRepos
 
 func (r *repository) SetDefaultConditions(defaultConditions selection_condition.SelectionCondition) {
 	r.Conditions = defaultConditions
-
-	if r.Conditions.Limit == 0 {
-		r.Conditions.Limit = DefaultLimit
-	}
 }
 
 func (r repository) dbWithDefaults() *gorm.DB {
-	db, _ := minipkg_gorm.ApplyConditions(r.db.DB(), r.Conditions)
-	return db
+	return minipkg_gorm.Conditions(r.db.DB(), r.Conditions)
 }

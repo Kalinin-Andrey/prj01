@@ -38,11 +38,9 @@ func (r MaintenanceRepository) autoMigrate() {
 }
 
 func (r MaintenanceRepository) applyConditions(db *gorm.DB, conditions selection_condition.SelectionCondition) (*gorm.DB, error) {
-	var err error
-
-	db, err = minipkg_gorm.ApplyConditions(db, conditions)
-	if err != nil {
-		return nil, err
+	db = minipkg_gorm.Conditions(db, conditions)
+	if db.Error != nil {
+		return nil, db.Error
 	}
 
 	if conditions.Where != nil {

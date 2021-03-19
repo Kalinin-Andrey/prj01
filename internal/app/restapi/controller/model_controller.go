@@ -1,9 +1,9 @@
 package controller
 
 import (
+	"carizza/pkg/ozzo_routing"
 	"carizza/pkg/selection_condition"
-
-	ozzo_handler "github.com/minipkg/go-app-common/ozzo_handler"
+	"github.com/pkg/errors"
 
 	"carizza/internal/pkg/apperror"
 
@@ -37,7 +37,7 @@ func RegisterModelHandlers(r *routing.RouteGroup, service model.IService, logger
 
 // get method is for getting a one entity by ID
 func (c modelController) get(ctx *routing.Context) error {
-	id, err := ozzo_handler.ParseUintParam(ctx, "id")
+	id, err := ozzo_routing.ParseUintParam(ctx, "id")
 	if err != nil {
 		return errorshandler.BadRequest("ID is required to be uint")
 	}
@@ -57,20 +57,23 @@ func (c modelController) get(ctx *routing.Context) error {
 
 // list method is for a getting a list of all entities
 func (c modelController) list(ctx *routing.Context) error {
-	cond := selection_condition.SelectionCondition{
-		SortOrder: map[string]string{
-			"name": "asc",
-		},
-	}
 
-	if len(ctx.Request.URL.Query()) > 0 {
-		where := c.Service.NewEntity()
-		err := ozzo_handler.ParseQueryParams(ctx, where)
-		if err != nil {
-			c.Logger.With(ctx.Request.Context()).Info(err)
-			return errorshandler.BadRequest("")
-		}
-		cond.Where = where
+	/*where := c.Service.NewEntity()
+	err := ozzo_routing.ParseQueryParams(ctx, where)
+	if err != nil {
+		errors.Wrapf(apperror.ErrBadRequest, err.Error())
+	}
+	cond := selection_condition.SelectionCondition{
+		Where: where,
+	}*/
+
+	st := c.Service.NewEntity()
+	where, err := ozzo_routing.ParseQueryParamsIntoSlice(ctx, st)
+	if err != nil {
+		errors.Wrapf(apperror.ErrBadRequest, err.Error())
+	}
+	cond := selection_condition.SelectionCondition{
+		Where: where,
 	}
 
 	items, err := c.Service.Query(ctx.Request.Context(), cond)
@@ -95,7 +98,7 @@ func (c modelController) listp(ctx *routing.Context) error {
 
 	if len(ctx.Request.URL.Query()) > 0 {
 		where := c.Service.NewEntity()
-		err := ozzo_handler.ParseQueryParams(ctx, where)
+		err := ozzo_routing.ParseQueryParams(ctx, where)
 		if err != nil {
 			c.Logger.With(ctx.Request.Context()).Info(err)
 			return errorshandler.BadRequest("")
