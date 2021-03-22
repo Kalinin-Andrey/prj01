@@ -65,7 +65,7 @@ type WhereConditions []WhereCondition
 
 func (s WhereCondition) Validate() error {
 	return validation.ValidateStruct(&s,
-		validation.Field(&s.Condition, validation.Each(validation.In(ConditionVariants...))),
+		validation.Field(&s.Condition, validation.In(ConditionVariants...)),
 		validation.Field(&s.Value, validation.When(s.Condition == ConditionBt, validation.Length(2, 2))),
 	)
 }

@@ -36,7 +36,7 @@ func (r AddressRepository) autoMigrate() {
 func (r AddressRepository) Get(ctx context.Context, id uint) (*address.Address, error) {
 	entity := &address.Address{}
 
-	err := r.dbWithDefaults().First(entity, id).Error
+	err := r.DB().First(entity, id).Error
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return entity, apperror.ErrNotFound
@@ -46,7 +46,7 @@ func (r AddressRepository) Get(ctx context.Context, id uint) (*address.Address, 
 }
 
 func (r AddressRepository) First(ctx context.Context, entity *address.Address) (*address.Address, error) {
-	err := r.dbWithDefaults().Where(entity).First(entity).Error
+	err := r.DB().Where(entity).First(entity).Error
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return entity, apperror.ErrNotFound
@@ -58,7 +58,7 @@ func (r AddressRepository) First(ctx context.Context, entity *address.Address) (
 // Query retrieves the album records with the specified offset and limit from the database.
 func (r AddressRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]address.Address, error) {
 	items := []address.Address{}
-	db := minipkg_gorm.Conditions(r.dbWithDefaults(), cond)
+	db := minipkg_gorm.Conditions(r.DB(), cond)
 	if db.Error != nil {
 		return nil, db.Error
 	}

@@ -58,7 +58,7 @@ func (r MaintenanceRepository) applyConditions(db *gorm.DB, conditions selection
 func (r MaintenanceRepository) Get(ctx context.Context, id uint) (*maintenance.Maintenance, error) {
 	entity := &maintenance.Maintenance{}
 
-	err := r.dbWithDefaults().First(entity, id).Error
+	err := r.DB().First(entity, id).Error
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return entity, apperror.ErrNotFound
@@ -68,7 +68,7 @@ func (r MaintenanceRepository) Get(ctx context.Context, id uint) (*maintenance.M
 }
 
 func (r MaintenanceRepository) First(ctx context.Context, entity *maintenance.Maintenance) (*maintenance.Maintenance, error) {
-	err := r.dbWithDefaults().Where(entity).First(entity).Error
+	err := r.DB().Where(entity).First(entity).Error
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return entity, apperror.ErrNotFound
@@ -80,7 +80,7 @@ func (r MaintenanceRepository) First(ctx context.Context, entity *maintenance.Ma
 // Query retrieves records with the specified offset and limit from the database.
 func (r MaintenanceRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]maintenance.Maintenance, error) {
 	items := []maintenance.Maintenance{}
-	db, err := r.applyConditions(r.dbWithDefaults(), cond)
+	db, err := r.applyConditions(r.DB(), cond)
 	if err != nil {
 		return nil, err
 	}

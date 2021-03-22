@@ -80,6 +80,6 @@ func (r *repository) SetDefaultConditions(defaultConditions selection_condition.
 	r.Conditions = defaultConditions
 }
 
-func (r repository) dbWithDefaults() *gorm.DB {
+func (r repository) DB() *gorm.DB {
 	return minipkg_gorm.Conditions(r.db.DB(), r.Conditions)
 }

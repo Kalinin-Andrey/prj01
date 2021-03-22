@@ -37,7 +37,7 @@ func (r UserRepository) autoMigrate() {
 func (r UserRepository) Get(ctx context.Context, id uint) (*user.User, error) {
 	entity := &user.User{}
 
-	err := r.dbWithDefaults().First(entity, id).Error
+	err := r.DB().First(entity, id).Error
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return entity, apperror.ErrNotFound
@@ -47,7 +47,7 @@ func (r UserRepository) Get(ctx context.Context, id uint) (*user.User, error) {
 }
 
 func (r UserRepository) First(ctx context.Context, entity *user.User) (*user.User, error) {
-	err := r.dbWithDefaults().Where(entity).First(entity).Error
+	err := r.DB().Where(entity).First(entity).Error
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return entity, apperror.ErrNotFound
@@ -60,7 +60,7 @@ func (r UserRepository) First(ctx context.Context, entity *user.User) (*user.Use
 func (r UserRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]user.User, error) {
 	items := []user.User{}
 
-	db := minipkg_gorm.Conditions(r.dbWithDefaults(), cond)
+	db := minipkg_gorm.Conditions(r.DB(), cond)
 	if db.Error != nil {
 		return nil, db.Error
 	}

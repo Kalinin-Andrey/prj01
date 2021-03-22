@@ -105,30 +105,47 @@ func WhereCondition(db *gorm.DB, condition selection_condition.WhereCondition) *
 		return db
 	}
 
+	if db.Value == nil {
+		db.AddError(errors.Errorf("Model must be specified"))
+		return db
+	}
+
+	field, ok := db.NewScope(db.Value).FieldByName(condition.Field)
+	if !ok {
+		db.AddError(errors.Errorf("Can not find a field %q", condition.Field))
+		return db
+	}
+
+	if field.DBName == "" {
+		db.AddError(errors.Errorf("DBName in model must be specified"))
+		return db
+	}
+	tableField := field.DBName
+
 	switch condition.Condition {
 	case selection_condition.ConditionEq:
-		db = db.Where(map[string]interface{}{condition.Field: condition.Value})
+		db = db.Where(map[string]interface{}{tableField: condition.Value})
 	case selection_condition.ConditionIn:
 		conds, ok := condition.Value.([]interface{})
 		if !ok {
 			db.AddError(errors.Errorf("Can not assign value condition to slice"))
 		}
 		//db = db.Where(map[string]interface{}{condition.Field: condition.Value})
-		db = db.Where(condition.Field+" IN ?", conds)
+		db = db.Where(tableField+" IN (?)", conds)
 	case selection_condition.ConditionBt:
 		conds, ok := condition.Value.([]interface{})
 		if !ok {
 			db.AddError(errors.Errorf("Can not assign value condition to slice"))
 		}
-		db = db.Where(condition.Field+" BETWEEN ? AND ?", conds[0], conds[1])
+		db = db.Where(tableField+" BETWEEN ? AND ?", conds[0], conds[1])
 	case selection_condition.ConditionGt:
-		db = db.Where(condition.Field+" > ?", condition.Value)
+		db = db.Where(tableField+" > ?", condition.Value)
 	case selection_condition.ConditionGte:
-		db = db.Where(condition.Field+" >= ?", condition.Value)
+		db = db.Where(tableField+" >= ?", condition.Value)
 	case selection_condition.ConditionLt:
-		db = db.Where(condition.Field+" < ?", condition.Value)
+		db = db.Where(tableField+" < ?", condition.Value)
 	case selection_condition.ConditionLte:
-		db = db.Where(condition.Field+" <= ?", condition.Value)
+		db = db.Where(tableField+" <= ?", condition.Value)
 	}
 	return db
 }
