@@ -130,7 +130,6 @@ func WhereCondition(db *gorm.DB, condition selection_condition.WhereCondition) *
 		if !ok {
 			db.AddError(errors.Errorf("Can not assign value condition to slice"))
 		}
-		//db = db.Where(map[string]interface{}{condition.Field: condition.Value})
 		db = db.Where(tableField+" IN (?)", conds)
 	case selection_condition.ConditionBt:
 		conds, ok := condition.Value.([]interface{})

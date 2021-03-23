@@ -82,8 +82,8 @@ func ParseQueryParamsIntoSlice(params map[string][]string, st interface{}) (Wher
 	}
 
 	stVal := reflect.ValueOf(st)
-	outPtrType := reflect.Indirect(stVal).Kind()
-	// outPtrType = stVal.Elem().Kind()	//	протестить..
+	//outPtrType := reflect.Indirect(stVal).Kind()	//	альтернативный вариант
+	outPtrType := stVal.Elem().Kind()
 	if outPtrType != reflect.Struct {
 		return nil, fmt.Errorf("Parameter st must be a pointer on a struct")
 	}
