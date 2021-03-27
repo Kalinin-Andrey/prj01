@@ -56,7 +56,7 @@ func (r GenerationRepository) First(ctx context.Context, entity *generation.Gene
 }
 
 // Query retrieves the album records with the specified offset and limit from the database.
-func (r GenerationRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]generation.Generation, error) {
+func (r GenerationRepository) Query(ctx context.Context, cond *selection_condition.SelectionCondition) ([]generation.Generation, error) {
 	items := []generation.Generation{}
 	db := minipkg_gorm.Conditions(r.DB(), cond)
 	if db.Error != nil {

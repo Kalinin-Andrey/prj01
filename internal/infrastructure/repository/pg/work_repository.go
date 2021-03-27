@@ -60,7 +60,7 @@ func (r WorkRepository) First(ctx context.Context, entity *work.Work) (*work.Wor
 }
 
 // Query retrieves the album records with the specified offset and limit from the database.
-func (r WorkRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]work.Work, error) {
+func (r WorkRepository) Query(ctx context.Context, cond *selection_condition.SelectionCondition) ([]work.Work, error) {
 	items := []work.Work{}
 	db := minipkg_gorm.Conditions(r.DB(), cond)
 	if db.Error != nil {

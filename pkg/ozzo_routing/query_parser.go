@@ -6,12 +6,12 @@ import (
 	"carizza/pkg/selection_condition"
 )
 
-func ParseQueryParamsIntoSlice(ctx *routing.Context, st interface{}) (selection_condition.WhereConditions, error) {
-	return selection_condition.ParseQueryParamsIntoSlice(ctx.Request.URL.Query(), st)
+func ParseQueryParams(ctx *routing.Context, st interface{}) (*selection_condition.SelectionCondition, error) {
+	return selection_condition.ParseQueryParams(ctx.Request.URL.Query(), st)
 }
 
-func ParseQueryParams(ctx *routing.Context, out interface{}) error {
-	return selection_condition.ParseQueryParams(ctx.Request.URL.Query(), out)
+func ParseQueryParamsIntoStruct(ctx *routing.Context, out interface{}) error {
+	return selection_condition.ParseQueryParamsIntoStruct(ctx.Request.URL.Query(), out)
 }
 
 func ParseUintParam(ctx *routing.Context, paramName string) (uint, error) {

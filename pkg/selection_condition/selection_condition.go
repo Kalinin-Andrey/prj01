@@ -74,24 +74,46 @@ func (s WhereConditions) Validate() error {
 	return validation.Validate([]WhereCondition(s))
 }
 
-func ParseQueryParamsIntoSlice(params map[string][]string, st interface{}) (WhereConditions, error) {
-	stType := reflect.TypeOf(st)
-
+func getTypeOfAStruct(st interface{}) (reflect.Type, error) {
+	stVal := reflect.ValueOf(st)
+	stType := stVal.Type()
 	if stType.Kind() != reflect.Ptr {
 		return nil, fmt.Errorf("Parameter st must be a pointer")
 	}
 
-	stVal := reflect.ValueOf(st)
-	//outPtrType := reflect.Indirect(stVal).Kind()	//	альтернативный вариант
-	outPtrType := stVal.Elem().Kind()
+	stValElem := stVal.Elem()
+
+	outPtrType := stValElem.Kind()
 	if outPtrType != reflect.Struct {
 		return nil, fmt.Errorf("Parameter st must be a pointer on a struct")
 	}
+	return stValElem.Type(), nil
+}
 
-	stValElem := stVal.Elem()
-	indexesByNames := structFieldIndexesByJsonName(stValElem.Type())
+func getFieldNameAndKind(structType reflect.Type, fieldIndex int) (fieldName string, fieldKind reflect.Kind) {
+	field := structType.Field(fieldIndex)
+	return field.Name, field.Type.Kind()
+}
 
-	conditions := make(WhereConditions, 0, len(params))
+func getFieldNameAndKindByName(structType reflect.Type, indexesByNames map[string]int, paramName string) (fieldName string, fieldKind reflect.Kind, ok bool) {
+	fieldIndex, ok := indexesByNames[paramName]
+	if !ok {
+		return "", fieldKind, false
+	}
+	fieldName, fieldKind = getFieldNameAndKind(structType, fieldIndex)
+	return fieldName, fieldKind, true
+}
+
+func ParseQueryParams(params map[string][]string, st interface{}) (*SelectionCondition, error) {
+	structType, err := getTypeOfAStruct(st)
+	if err != nil {
+		return nil, err
+	}
+
+	conditions := SelectionCondition{}
+	whereConditions := make(WhereConditions, 0, len(params))
+	indexesByNames := structFieldIndexesByJsonName(structType)
+
 	for key, vals := range params {
 		if len(vals) < 0 {
 			continue
@@ -102,27 +124,24 @@ func ParseQueryParamsIntoSlice(params map[string][]string, st interface{}) (Wher
 			return nil, err
 		}
 
-		fieldIndex, ok := indexesByNames[paramName]
+		fieldName, fieldKind, ok := getFieldNameAndKindByName(structType, indexesByNames, paramName)
 		if !ok {
 			continue
 		}
-
-		field := stValElem.Type().Field(fieldIndex)
-		fieldName := field.Name
-		fieldKind := field.Type.Kind()
 
 		value, err := string2valByCondition(vals[0], strCond, fieldKind)
 		if err != nil {
 			return nil, err
 		}
 
-		conditions = append(conditions, WhereCondition{
+		whereConditions = append(whereConditions, WhereCondition{
 			Field:     fieldName,
 			Condition: strCond,
 			Value:     value,
 		})
 	}
-	return conditions, nil
+	conditions.Where = whereConditions
+	return &conditions, nil
 }
 
 func string2valByCondition(strValue string, condition string, kind reflect.Kind) (value interface{}, err error) {
@@ -217,7 +236,7 @@ func splitParameterName(param string) (field string, condition string, err error
 	return field, condition, nil
 }
 
-func ParseQueryParams(params map[string][]string, out interface{}) error {
+func ParseQueryParamsIntoStruct(params map[string][]string, out interface{}) error {
 	v := make(map[string]string, len(params))
 
 	for key, vals := range params {
@@ -242,13 +261,13 @@ func ParseUintParam(param string) (uint, error) {
 }
 
 func strings2struct(data interface{}, out interface{}) error {
-	outType := reflect.TypeOf(out)
+	outVal := reflect.ValueOf(out)
+	outType := outVal.Type()
 
 	if outType.Kind() != reflect.Ptr {
 		return fmt.Errorf("Parameter out must be a pointer")
 	}
 
-	outVal := reflect.ValueOf(out)
 	outValElem := outVal.Elem()
 
 	if !outValElem.CanSet() {

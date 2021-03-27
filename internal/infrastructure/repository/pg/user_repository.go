@@ -57,7 +57,7 @@ func (r UserRepository) First(ctx context.Context, entity *user.User) (*user.Use
 }
 
 // Query retrieves the album records with the specified offset and limit from the database.
-func (r UserRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]user.User, error) {
+func (r UserRepository) Query(ctx context.Context, cond *selection_condition.SelectionCondition) ([]user.User, error) {
 	items := []user.User{}
 
 	db := minipkg_gorm.Conditions(r.DB(), cond)

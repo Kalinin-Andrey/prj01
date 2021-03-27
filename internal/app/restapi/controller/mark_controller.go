@@ -56,7 +56,7 @@ func (c markController) get(ctx *routing.Context) error {
 func (c markController) list(ctx *routing.Context) error {
 	e := c.Service.NewEntity()
 	e.TypeID = ctype.TypeIDCar
-	cond := selection_condition.SelectionCondition{
+	cond := &selection_condition.SelectionCondition{
 		Where: e,
 		SortOrder: map[string]string{
 			"name": selection_condition.SortOrderAsc,

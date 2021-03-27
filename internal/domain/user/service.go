@@ -9,8 +9,6 @@ import (
 	"github.com/minipkg/go-app-common/log"
 )
 
-const MaxLIstLimit = 1000
-
 // IService encapsulates usecase logic for user.
 type IService interface {
 	NewEntity() *User
@@ -41,8 +39,8 @@ func NewService(logger log.ILogger, repo Repository) IService {
 }
 
 // Defaults returns defaults params
-func (s service) defaultConditions() selection_condition.SelectionCondition {
-	return selection_condition.SelectionCondition{}
+func (s service) defaultConditions() *selection_condition.SelectionCondition {
+	return &selection_condition.SelectionCondition{}
 }
 
 func (s service) NewEntity() *User {

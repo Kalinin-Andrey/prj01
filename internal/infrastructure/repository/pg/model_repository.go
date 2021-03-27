@@ -54,7 +54,7 @@ func (r ModelRepository) First(ctx context.Context, entity *model.Model) (*model
 }
 
 // Query retrieves the album records with the specified offset and limit from the database.
-func (r ModelRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]model.Model, error) {
+func (r ModelRepository) Query(ctx context.Context, cond *selection_condition.SelectionCondition) ([]model.Model, error) {
 	items := []model.Model{}
 	db := minipkg_gorm.Conditions(r.DB().Model(&model.Model{}), cond)
 	if db.Error != nil {

@@ -54,7 +54,7 @@ func (r MarkRepository) First(ctx context.Context, entity *mark.Mark) (*mark.Mar
 }
 
 // Query retrieves the album records with the specified offset and limit from the database.
-func (r MarkRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]mark.Mark, error) {
+func (r MarkRepository) Query(ctx context.Context, cond *selection_condition.SelectionCondition) ([]mark.Mark, error) {
 	items := []mark.Mark{}
 	db := minipkg_gorm.Conditions(r.DB(), cond)
 	if db.Error != nil {

@@ -16,6 +16,7 @@ import (
 	"carizza/internal/domain/work"
 	minipkg_gorm "carizza/pkg/db/gorm"
 	"carizza/pkg/selection_condition"
+
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 
@@ -30,7 +31,7 @@ type IRepository interface{}
 type repository struct {
 	db         pg.IDB
 	logger     log.ILogger
-	Conditions selection_condition.SelectionCondition
+	Conditions *selection_condition.SelectionCondition
 }
 
 const DefaultLimit = 1000
@@ -76,7 +77,7 @@ func GetRepository(logger log.ILogger, dbase pg.IDB, entity string) (repo IRepos
 	return repo, err
 }
 
-func (r *repository) SetDefaultConditions(defaultConditions selection_condition.SelectionCondition) {
+func (r *repository) SetDefaultConditions(defaultConditions *selection_condition.SelectionCondition) {
 	r.Conditions = defaultConditions
 }
 

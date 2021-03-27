@@ -3,6 +3,7 @@ package controller
 import (
 	"carizza/pkg/ozzo_routing"
 	"carizza/pkg/selection_condition"
+
 	"github.com/pkg/errors"
 
 	"carizza/internal/pkg/apperror"
@@ -59,7 +60,7 @@ func (c modelController) get(ctx *routing.Context) error {
 func (c modelController) list(ctx *routing.Context) error {
 
 	/*where := c.Service.NewEntity()
-	err := ozzo_routing.ParseQueryParams(ctx, where)
+	err := ozzo_routing.ParseQueryParamsIntoStruct(ctx, where)
 	if err != nil {
 		errors.Wrapf(apperror.ErrBadRequest, err.Error())
 	}
@@ -68,12 +69,9 @@ func (c modelController) list(ctx *routing.Context) error {
 	}*/
 
 	st := c.Service.NewEntity()
-	where, err := ozzo_routing.ParseQueryParamsIntoSlice(ctx, st)
+	cond, err := ozzo_routing.ParseQueryParams(ctx, st)
 	if err != nil {
 		errors.Wrapf(apperror.ErrBadRequest, err.Error())
-	}
-	cond := selection_condition.SelectionCondition{
-		Where: where,
 	}
 
 	items, err := c.Service.Query(ctx.Request.Context(), cond)
@@ -90,7 +88,7 @@ func (c modelController) list(ctx *routing.Context) error {
 
 // list method is for a getting a list of all entities
 func (c modelController) listp(ctx *routing.Context) error {
-	cond := selection_condition.SelectionCondition{
+	cond := &selection_condition.SelectionCondition{
 		SortOrder: map[string]string{
 			"name": "asc",
 		},
@@ -98,7 +96,7 @@ func (c modelController) listp(ctx *routing.Context) error {
 
 	if len(ctx.Request.URL.Query()) > 0 {
 		where := c.Service.NewEntity()
-		err := ozzo_routing.ParseQueryParams(ctx, where)
+		err := ozzo_routing.ParseQueryParamsIntoStruct(ctx, where)
 		if err != nil {
 			c.Logger.With(ctx.Request.Context()).Info(err)
 			return errorshandler.BadRequest("")

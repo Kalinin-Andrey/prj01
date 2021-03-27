@@ -1,18 +1,19 @@
 package gorm
 
 import (
+	"reflect"
+	"strings"
+
 	"github.com/iancoleman/strcase"
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
-	"reflect"
-	"strings"
 
 	"carizza/pkg/selection_condition"
 )
 
 const DefaultLimit = 1000
 
-func Conditions(db *gorm.DB, conditions selection_condition.SelectionCondition) *gorm.DB {
+func Conditions(db *gorm.DB, conditions *selection_condition.SelectionCondition) *gorm.DB {
 	if err := conditions.Validate(); err != nil {
 		db.AddError(err)
 		return db

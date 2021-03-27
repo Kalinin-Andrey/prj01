@@ -58,7 +58,7 @@ func (c carController) get(ctx *routing.Context) error {
 
 // list method is for a getting a list of all entities
 func (c carController) list(ctx *routing.Context) error {
-	cond := selection_condition.SelectionCondition{
+	cond := &selection_condition.SelectionCondition{
 		SortOrder: map[string]string{
 			"name": "asc",
 		},

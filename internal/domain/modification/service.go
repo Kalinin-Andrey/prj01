@@ -9,13 +9,11 @@ import (
 	"github.com/minipkg/go-app-common/log"
 )
 
-const MaxLIstLimit = 1000
-
 // IService encapsulates usecase logic for user.
 type IService interface {
 	NewEntity() *Modification
 	Get(ctx context.Context, id uint) (*Modification, error)
-	Query(ctx context.Context, query selection_condition.SelectionCondition) ([]Modification, error)
+	Query(ctx context.Context, query *selection_condition.SelectionCondition) ([]Modification, error)
 }
 
 type service struct {
@@ -34,8 +32,8 @@ func NewService(logger log.ILogger, repo Repository) IService {
 }
 
 // Defaults returns defaults params
-func (s service) defaultConditions() selection_condition.SelectionCondition {
-	return selection_condition.SelectionCondition{}
+func (s service) defaultConditions() *selection_condition.SelectionCondition {
+	return &selection_condition.SelectionCondition{}
 }
 
 func (s service) NewEntity() *Modification {
@@ -52,7 +50,7 @@ func (s service) Get(ctx context.Context, id uint) (*Modification, error) {
 }
 
 // Query returns the items with the specified offset and limit.
-func (s service) Query(ctx context.Context, query selection_condition.SelectionCondition) ([]Modification, error) {
+func (s service) Query(ctx context.Context, query *selection_condition.SelectionCondition) ([]Modification, error) {
 	items, err := s.repository.Query(ctx, query)
 	if err != nil {
 		return nil, errors.Wrapf(err, "Can not find a list of Modification by query: %v", query)

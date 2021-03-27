@@ -56,7 +56,7 @@ func (r ClientRepository) First(ctx context.Context, entity *client.Client) (*cl
 }
 
 // Query retrieves the album records with the specified offset and limit from the database.
-func (r ClientRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]client.Client, error) {
+func (r ClientRepository) Query(ctx context.Context, cond *selection_condition.SelectionCondition) ([]client.Client, error) {
 	items := []client.Client{}
 	db := minipkg_gorm.Conditions(r.DB(), cond)
 	if db.Error != nil {

@@ -37,7 +37,7 @@ func (r MaintenanceRepository) autoMigrate() {
 	}
 }
 
-func (r MaintenanceRepository) applyConditions(db *gorm.DB, conditions selection_condition.SelectionCondition) (*gorm.DB, error) {
+func (r MaintenanceRepository) applyConditions(db *gorm.DB, conditions *selection_condition.SelectionCondition) (*gorm.DB, error) {
 	db = minipkg_gorm.Conditions(db, conditions)
 	if db.Error != nil {
 		return nil, db.Error
@@ -78,7 +78,7 @@ func (r MaintenanceRepository) First(ctx context.Context, entity *maintenance.Ma
 }
 
 // Query retrieves records with the specified offset and limit from the database.
-func (r MaintenanceRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]maintenance.Maintenance, error) {
+func (r MaintenanceRepository) Query(ctx context.Context, cond *selection_condition.SelectionCondition) ([]maintenance.Maintenance, error) {
 	items := []maintenance.Maintenance{}
 	db, err := r.applyConditions(r.DB(), cond)
 	if err != nil {

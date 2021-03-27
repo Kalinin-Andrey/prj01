@@ -56,7 +56,7 @@ func (r AddressRepository) First(ctx context.Context, entity *address.Address) (
 }
 
 // Query retrieves the album records with the specified offset and limit from the database.
-func (r AddressRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]address.Address, error) {
+func (r AddressRepository) Query(ctx context.Context, cond *selection_condition.SelectionCondition) ([]address.Address, error) {
 	items := []address.Address{}
 	db := minipkg_gorm.Conditions(r.DB(), cond)
 	if db.Error != nil {

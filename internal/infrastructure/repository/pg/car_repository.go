@@ -56,7 +56,7 @@ func (r CarRepository) First(ctx context.Context, entity *car.Car) (*car.Car, er
 }
 
 // Query retrieves the album records with the specified offset and limit from the database.
-func (r CarRepository) Query(ctx context.Context, cond selection_condition.SelectionCondition) ([]car.Car, error) {
+func (r CarRepository) Query(ctx context.Context, cond *selection_condition.SelectionCondition) ([]car.Car, error) {
 	items := []car.Car{}
 	db := minipkg_gorm.Conditions(r.DB(), cond)
 	if db.Error != nil {
