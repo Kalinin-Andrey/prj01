@@ -44,7 +44,7 @@ var ConditionVariants = []interface{}{
 
 type SelectionCondition struct {
 	Where     interface{}
-	SortOrder map[string]string
+	SortOrder []string
 	Limit     uint
 	Offset    uint
 }
@@ -72,6 +72,46 @@ func (s WhereCondition) Validate() error {
 
 func (s WhereConditions) Validate() error {
 	return validation.Validate([]WhereCondition(s))
+}
+
+func ParseQueryParams(params map[string][]string, st interface{}) (*SelectionCondition, error) {
+	structType, err := getTypeOfAStruct(st)
+	if err != nil {
+		return nil, err
+	}
+
+	conditions := SelectionCondition{}
+	whereConditions := make(WhereConditions, 0, len(params))
+	indexesByNames := structFieldIndexesByJsonName(structType)
+
+	for key, vals := range params {
+		if len(vals) < 0 {
+			continue
+		}
+
+		paramName, strCond, err := splitConditionParameterName(key)
+		if err != nil {
+			return nil, err
+		}
+
+		fieldName, fieldKind, ok := getFieldNameAndKindByName(structType, indexesByNames, paramName)
+		if !ok {
+			continue
+		}
+
+		value, err := string2valByCondition(vals[0], strCond, fieldKind)
+		if err != nil {
+			return nil, err
+		}
+
+		whereConditions = append(whereConditions, WhereCondition{
+			Field:     fieldName,
+			Condition: strCond,
+			Value:     value,
+		})
+	}
+	conditions.Where = whereConditions
+	return &conditions, nil
 }
 
 func getTypeOfAStruct(st interface{}) (reflect.Type, error) {
@@ -102,46 +142,6 @@ func getFieldNameAndKindByName(structType reflect.Type, indexesByNames map[strin
 	}
 	fieldName, fieldKind = getFieldNameAndKind(structType, fieldIndex)
 	return fieldName, fieldKind, true
-}
-
-func ParseQueryParams(params map[string][]string, st interface{}) (*SelectionCondition, error) {
-	structType, err := getTypeOfAStruct(st)
-	if err != nil {
-		return nil, err
-	}
-
-	conditions := SelectionCondition{}
-	whereConditions := make(WhereConditions, 0, len(params))
-	indexesByNames := structFieldIndexesByJsonName(structType)
-
-	for key, vals := range params {
-		if len(vals) < 0 {
-			continue
-		}
-
-		paramName, strCond, err := splitParameterName(key)
-		if err != nil {
-			return nil, err
-		}
-
-		fieldName, fieldKind, ok := getFieldNameAndKindByName(structType, indexesByNames, paramName)
-		if !ok {
-			continue
-		}
-
-		value, err := string2valByCondition(vals[0], strCond, fieldKind)
-		if err != nil {
-			return nil, err
-		}
-
-		whereConditions = append(whereConditions, WhereCondition{
-			Field:     fieldName,
-			Condition: strCond,
-			Value:     value,
-		})
-	}
-	conditions.Where = whereConditions
-	return &conditions, nil
 }
 
 func string2valByCondition(strValue string, condition string, kind reflect.Kind) (value interface{}, err error) {
@@ -216,7 +216,15 @@ func string2val(strValue string, kind reflect.Kind) (value interface{}, err erro
 	return value, err
 }
 
-func splitParameterName(param string) (field string, condition string, err error) {
+func splitConditionParameterName(param string) (field string, condition string, err error) {
+	return splitParameterName(param, ConditionVariants)
+}
+
+func splitSortOrderParameterName(param string) (field string, sortOrder string, err error) {
+	return splitParameterName(param, SortOrderVariants)
+}
+
+func splitParameterName(param string, variants []interface{}) (field string, condition string, err error) {
 	if !strings.Contains(param, ConditionSeparator) {
 		return param, DefaultCondition, nil
 	}
@@ -228,7 +236,7 @@ func splitParameterName(param string) (field string, condition string, err error
 
 	field = s[0]
 	condition = s[1]
-	err = validation.Validate(condition, validation.In(ConditionVariants...))
+	err = validation.Validate(condition, validation.In(variants...))
 	if err != nil {
 		return "", "", err
 	}
