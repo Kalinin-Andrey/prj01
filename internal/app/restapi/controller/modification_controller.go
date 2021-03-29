@@ -58,9 +58,9 @@ func (c modificationController) get(ctx *routing.Context) error {
 // list method is for a getting a list of all entities
 func (c modificationController) list(ctx *routing.Context) error {
 	cond := &selection_condition.SelectionCondition{
-		SortOrder: map[string]string{
+		SortOrder: []map[string]string{{
 			"name": "asc",
-		},
+		}},
 	}
 
 	serieId, err := ozzo_handler.ParseUintParam(ctx, "serieId")

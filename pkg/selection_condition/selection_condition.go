@@ -13,8 +13,9 @@ import (
 )
 
 const (
-	SortOrderAsc  = "asc"
-	SortOrderDesc = "desc"
+	SortOrderParamName = "sort-order"
+	SortOrderAsc       = "asc"
+	SortOrderDesc      = "desc"
 
 	ConditionSeparator = "__"
 	ValuesSeparator    = ","
@@ -27,7 +28,8 @@ const (
 	ConditionIn  = "in"
 	ConditionBt  = "bt"
 
-	DefaultCondition = ConditionEq
+	DefaultWhereCondition = ConditionEq
+	DefaultSortDirect     = SortOrderAsc
 )
 
 var SortOrderVariants = []interface{}{"", SortOrderAsc, SortOrderDesc}
@@ -44,15 +46,14 @@ var ConditionVariants = []interface{}{
 
 type SelectionCondition struct {
 	Where     interface{}
-	SortOrder []string
+	SortOrder []map[string]string
 	Limit     uint
 	Offset    uint
 }
 
 func (e SelectionCondition) Validate() error {
-	return validation.ValidateStruct(&e,
-		validation.Field(&e.SortOrder, validation.Each(validation.In(SortOrderVariants...))),
-	)
+	return validation.ValidateStruct(&e) //validation.Field(&e.SortOrder, validation.Each(validation.In(SortOrderVariants...))),
+
 }
 
 type WhereCondition struct {
@@ -74,8 +75,8 @@ func (s WhereConditions) Validate() error {
 	return validation.Validate([]WhereCondition(s))
 }
 
-func ParseQueryParams(params map[string][]string, st interface{}) (*SelectionCondition, error) {
-	structType, err := getTypeOfAStruct(st)
+func ParseQueryParams(params map[string][]string, struc interface{}) (*SelectionCondition, error) {
+	structType, err := getTypeOfAStruct(struc)
 	if err != nil {
 		return nil, err
 	}
@@ -89,43 +90,86 @@ func ParseQueryParams(params map[string][]string, st interface{}) (*SelectionCon
 			continue
 		}
 
-		paramName, strCond, err := splitConditionParameterName(key)
+		sortOrderConditions, ok, err := parseSortOrderParam(structType, indexesByNames, key, vals)
 		if err != nil {
 			return nil, err
 		}
-
-		fieldName, fieldKind, ok := getFieldNameAndKindByName(structType, indexesByNames, paramName)
-		if !ok {
+		if ok {
+			conditions.SortOrder = sortOrderConditions
 			continue
 		}
 
-		value, err := string2valByCondition(vals[0], strCond, fieldKind)
+		whereCondition, ok, err := parseWhereParam(structType, indexesByNames, key, vals)
 		if err != nil {
 			return nil, err
 		}
-
-		whereConditions = append(whereConditions, WhereCondition{
-			Field:     fieldName,
-			Condition: strCond,
-			Value:     value,
-		})
+		if !ok {
+			continue
+		}
+		whereConditions = append(whereConditions, *whereCondition)
 	}
 	conditions.Where = whereConditions
 	return &conditions, nil
 }
 
-func getTypeOfAStruct(st interface{}) (reflect.Type, error) {
-	stVal := reflect.ValueOf(st)
+func parseWhereParam(structType reflect.Type, indexesByNames map[string]int, key string, vals []string) (*WhereCondition, bool, error) {
+	paramName, strCond, err := splitConditionParameterName(key)
+	if err != nil {
+		return nil, false, err
+	}
+
+	fieldName, fieldKind, ok := getFieldNameAndKindByName(structType, indexesByNames, paramName)
+	if !ok {
+		return nil, false, nil
+	}
+
+	value, err := string2valByCondition(vals[0], strCond, fieldKind)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return &WhereCondition{
+		Field:     fieldName,
+		Condition: strCond,
+		Value:     value,
+	}, true, nil
+}
+
+func parseSortOrderParam(structType reflect.Type, indexesByNames map[string]int, key string, vals []string) ([]map[string]string, bool, error) {
+	if key != SortOrderParamName {
+		return nil, false, nil
+	}
+	params := strings.Split(vals[0], ",")
+	sortOrderParams := make([]map[string]string, 0, len(params))
+
+	for _, param := range params {
+		paramName, sortDirect, err := splitSortOrderParameterName(param)
+		if err != nil {
+			return nil, false, err
+		}
+
+		fieldName, _, ok := getFieldNameAndKindByName(structType, indexesByNames, paramName)
+		if !ok {
+			continue
+		}
+		sortOrderParams = append(sortOrderParams, map[string]string{fieldName: sortDirect})
+	}
+
+	return sortOrderParams, true, nil
+}
+
+func getTypeOfAStruct(struc interface{}) (reflect.Type, error) {
+	stVal := reflect.ValueOf(struc)
 	stType := stVal.Type()
 	if stType.Kind() != reflect.Ptr {
-		return nil, fmt.Errorf("Parameter st must be a pointer")
+		return nil, fmt.Errorf("Parameter struc must be a pointer")
 	}
 
 	stValElem := stVal.Elem()
 
 	outPtrType := stValElem.Kind()
 	if outPtrType != reflect.Struct {
-		return nil, fmt.Errorf("Parameter st must be a pointer on a struct")
+		return nil, fmt.Errorf("Parameter struc must be a pointer on a struct")
 	}
 	return stValElem.Type(), nil
 }
@@ -217,16 +261,16 @@ func string2val(strValue string, kind reflect.Kind) (value interface{}, err erro
 }
 
 func splitConditionParameterName(param string) (field string, condition string, err error) {
-	return splitParameterName(param, ConditionVariants)
+	return splitParameterName(param, DefaultWhereCondition, ConditionVariants)
 }
 
 func splitSortOrderParameterName(param string) (field string, sortOrder string, err error) {
-	return splitParameterName(param, SortOrderVariants)
+	return splitParameterName(param, DefaultSortDirect, SortOrderVariants)
 }
 
-func splitParameterName(param string, variants []interface{}) (field string, condition string, err error) {
+func splitParameterName(param string, defaultCondition string, variants []interface{}) (field string, condition string, err error) {
 	if !strings.Contains(param, ConditionSeparator) {
-		return param, DefaultCondition, nil
+		return param, defaultCondition, nil
 	}
 
 	s := strings.Split(param, ConditionSeparator)
@@ -391,12 +435,12 @@ func strings2struct(data interface{}, out interface{}) error {
 	return nil
 }
 
-func structFieldIndexesByJsonName(s reflect.Type) map[string]int {
-	numField := s.NumField()
+func structFieldIndexesByJsonName(struc reflect.Type) map[string]int {
+	numField := struc.NumField()
 	res := make(map[string]int, numField)
 
 	for i := 0; i < numField; i++ {
-		field := s.Field(i)
+		field := struc.Field(i)
 		name := field.Tag.Get("json")
 		if name == "" {
 			name = field.Name

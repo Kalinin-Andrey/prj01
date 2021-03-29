@@ -27,17 +27,32 @@ func Conditions(db *gorm.DB, conditions *selection_condition.SelectionCondition)
 	return db
 }
 
-func SortOrder(db *gorm.DB, order map[string]string) *gorm.DB {
-	if order == nil {
+func SortOrder(db *gorm.DB, orders []map[string]string) *gorm.DB {
+	if orders == nil {
 		return db
 	}
-	m := keysToSnakeCaseStr(order)
-	s := strings.Builder{}
 
-	for k, v := range m {
-		s.WriteString(k + " " + v + ", ")
+	for _, order := range orders {
+		s := strings.Builder{}
+
+		for k, v := range order {
+			field, ok := db.NewScope(db.Value).FieldByName(k)
+			if !ok {
+				db.AddError(errors.Errorf("Can not find a field %q", k))
+				return db
+			}
+
+			if field.DBName == "" {
+				db.AddError(errors.Errorf("DBName in model must be specified"))
+				return db
+			}
+			tableField := field.DBName
+
+			s.WriteString(tableField + " " + v + ", ")
+		}
+		db = db.Order(strings.Trim(s.String(), ", "))
 	}
-	return db.Order(strings.Trim(s.String(), ", "))
+	return db
 }
 
 func Offset(db *gorm.DB, value uint) *gorm.DB {

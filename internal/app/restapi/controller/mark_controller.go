@@ -58,9 +58,9 @@ func (c markController) list(ctx *routing.Context) error {
 	e.TypeID = ctype.TypeIDCar
 	cond := &selection_condition.SelectionCondition{
 		Where: e,
-		SortOrder: map[string]string{
+		SortOrder: []map[string]string{{
 			"name": selection_condition.SortOrderAsc,
-		},
+		}},
 	}
 	items, err := c.Service.Query(ctx.Request.Context(), cond)
 	if err != nil {

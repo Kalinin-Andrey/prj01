@@ -59,9 +59,9 @@ func (c supplyController) get(ctx *routing.Context) error {
 // list method is for a getting a list of all entities
 func (c supplyController) list(ctx *routing.Context) error {
 	cond := &selection_condition.SelectionCondition{
-		SortOrder: map[string]string{
+		SortOrder: []map[string]string{{
 			"name": "asc",
-		},
+		}},
 	}
 
 	workId, err := ozzo_handler.ParseUintParam(ctx, "workId")

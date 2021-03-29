@@ -89,9 +89,9 @@ func (c modelController) list(ctx *routing.Context) error {
 // list method is for a getting a list of all entities
 func (c modelController) listp(ctx *routing.Context) error {
 	cond := &selection_condition.SelectionCondition{
-		SortOrder: map[string]string{
+		SortOrder: []map[string]string{{
 			"name": "asc",
-		},
+		}},
 	}
 
 	if len(ctx.Request.URL.Query()) > 0 {

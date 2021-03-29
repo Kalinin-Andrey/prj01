@@ -66,9 +66,9 @@ func (c maintenanceController) get(ctx *routing.Context) error {
 // list method is for a getting a list of all entities
 func (c maintenanceController) list(ctx *routing.Context) error {
 	cond := &selection_condition.SelectionCondition{
-		SortOrder: map[string]string{
+		SortOrder: []map[string]string{{
 			"name": "asc",
-		},
+		}},
 	}
 
 	items, err := c.Service.Query(ctx.Request.Context(), cond)
