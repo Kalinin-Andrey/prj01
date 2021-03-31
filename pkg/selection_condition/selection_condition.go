@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	SortOrderParamName = "sort-order"
+	SortOrderParamName = "sort_order"
 	SortOrderAsc       = "asc"
 	SortOrderDesc      = "desc"
 

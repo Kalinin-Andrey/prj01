@@ -2,14 +2,13 @@ package controller
 
 import (
 	"carizza/pkg/ozzo_routing"
-	"carizza/pkg/selection_condition"
-
 	"github.com/pkg/errors"
 
 	"carizza/internal/pkg/apperror"
 
 	"github.com/minipkg/go-app-common/log"
 	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
+	"github.com/minipkg/go-app-common/pagination"
 
 	"carizza/internal/domain/model"
 
@@ -88,21 +87,29 @@ func (c modelController) list(ctx *routing.Context) error {
 
 // list method is for a getting a list of all entities
 func (c modelController) listp(ctx *routing.Context) error {
-	cond := &selection_condition.SelectionCondition{
-		SortOrder: []map[string]string{{
-			"name": "asc",
-		}},
+
+	struc := c.Service.NewEntity()
+	cond, err := ozzo_routing.ParseQueryParams(ctx, struc)
+	if err != nil {
+		errors.Wrapf(apperror.ErrBadRequest, err.Error())
 	}
 
-	if len(ctx.Request.URL.Query()) > 0 {
-		where := c.Service.NewEntity()
-		err := ozzo_routing.ParseQueryParamsIntoStruct(ctx, where)
-		if err != nil {
+	count, err := c.Service.Count(ctx.Request.Context(), cond)
+	if err != nil {
+		if err == apperror.ErrNotFound {
 			c.Logger.With(ctx.Request.Context()).Info(err)
-			return errorshandler.BadRequest("")
+			return errorshandler.NotFound("")
 		}
-		cond.Where = where
+		c.Logger.With(ctx.Request.Context()).Error(err)
+		return errorshandler.InternalServerError("")
 	}
+
+	pages := pagination.NewFromRequest(ctx.Request, int(count))
+
+	cond.Limit = uint(pages.Limit())
+	cond.Offset = uint(pages.Offset())
+
+	ctx.Response.Header().Add("pages", pages.BuildLinkHeader("/modelsp", pages.PerPage))
 
 	items, err := c.Service.Query(ctx.Request.Context(), cond)
 	if err != nil {
@@ -113,5 +120,7 @@ func (c modelController) listp(ctx *routing.Context) error {
 		c.Logger.With(ctx.Request.Context()).Error(err)
 		return errorshandler.InternalServerError("")
 	}
-	return ctx.Write(items)
+
+	pages.Items = items
+	return ctx.Write(pages)
 }

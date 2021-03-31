@@ -13,4 +13,5 @@ type Repository interface {
 	// Query returns the list of albums with the given offset and limit.
 	Query(ctx context.Context, cond *selection_condition.SelectionCondition) ([]Model, error)
 	First(ctx context.Context, entity *Model) (*Model, error)
+	Count(ctx context.Context, cond *selection_condition.SelectionCondition) (uint, error)
 }

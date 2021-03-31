@@ -69,3 +69,22 @@ func (r ModelRepository) Query(ctx context.Context, cond *selection_condition.Se
 	}
 	return items, err
 }
+
+func (r ModelRepository) Count(ctx context.Context, cond *selection_condition.SelectionCondition) (uint, error) {
+	var count uint
+	c := cond
+	c.Limit = 0
+	c.Offset = 0
+	db := minipkg_gorm.Conditions(r.DB().Model(&model.Model{}), cond)
+	if db.Error != nil {
+		return 0, db.Error
+	}
+
+	err := db.Count(&count).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return 0, apperror.ErrNotFound
+		}
+	}
+	return count, err
+}

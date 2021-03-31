@@ -14,6 +14,7 @@ type IService interface {
 	NewEntity() *Model
 	Get(ctx context.Context, id uint) (*Model, error)
 	Query(ctx context.Context, query *selection_condition.SelectionCondition) ([]Model, error)
+	Count(ctx context.Context, cond *selection_condition.SelectionCondition) (uint, error)
 }
 
 type service struct {
@@ -56,4 +57,12 @@ func (s service) Query(ctx context.Context, query *selection_condition.Selection
 		return nil, errors.Wrapf(err, "Can not find a list of Model by query: %v", query)
 	}
 	return items, nil
+}
+
+func (s service) Count(ctx context.Context, query *selection_condition.SelectionCondition) (uint, error) {
+	count, err := s.repository.Count(ctx, query)
+	if err != nil {
+		return 0, errors.Wrapf(err, "Can not find a list of Model by query: %v", query)
+	}
+	return count, nil
 }
