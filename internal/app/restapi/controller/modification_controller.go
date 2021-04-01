@@ -5,11 +5,11 @@ import (
 
 	"carizza/internal/pkg/apperror"
 
-	"github.com/minipkg/go-app-common/log"
-	ozzo_handler "github.com/minipkg/go-app-common/ozzo_handler"
-	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
+	"github.com/minipkg/log"
+	ozzo_routing "github.com/minipkg/ozzo_routing"
+	"github.com/minipkg/ozzo_routing/errorshandler"
 
-	"carizza/pkg/selection_condition"
+	"github.com/minipkg/selection_condition"
 
 	"carizza/internal/domain/modification"
 
@@ -37,7 +37,7 @@ func RegisterModificationHandlers(r *routing.RouteGroup, service modification.IS
 
 // get method is for getting a one entity by ID
 func (c modificationController) get(ctx *routing.Context) error {
-	id, err := ozzo_handler.ParseUintParam(ctx, "id")
+	id, err := ozzo_routing.ParseUintParam(ctx, "id")
 	if err != nil {
 		errorshandler.BadRequest("ID is required to be uint")
 	}
@@ -63,9 +63,9 @@ func (c modificationController) list(ctx *routing.Context) error {
 		}},
 	}
 
-	serieId, err := ozzo_handler.ParseUintParam(ctx, "serieId")
+	serieId, err := ozzo_routing.ParseUintParam(ctx, "serieId")
 	if errors.Is(err, apperror.ErrNotFound) {
-		serieId, err = ozzo_handler.ParseUintQueryParam(ctx, "serieId")
+		serieId, err = ozzo_routing.ParseUintQueryParam(ctx, "serieId")
 	}
 	if err == nil && serieId > 0 {
 		cond.Where = map[string]interface{}{

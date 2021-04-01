@@ -13,8 +13,8 @@ import (
 
 	"carizza/internal/domain/user"
 
-	"github.com/minipkg/go-app-common/log"
-	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
+	"github.com/minipkg/log"
+	"github.com/minipkg/ozzo_routing/errorshandler"
 )
 
 // Service encapsulates the authentication logic.

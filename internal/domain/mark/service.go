@@ -1,12 +1,12 @@
 package mark
 
 import (
-	"carizza/pkg/selection_condition"
 	"context"
+	"github.com/minipkg/selection_condition"
 
 	"github.com/pkg/errors"
 
-	"github.com/minipkg/go-app-common/log"
+	"github.com/minipkg/log"
 )
 
 // IService encapsulates usecase logic for user.

@@ -1,14 +1,14 @@
 package controller
 
 import (
-	"carizza/pkg/ozzo_routing"
+	"github.com/minipkg/ozzo_routing"
 	"github.com/pkg/errors"
 
 	"carizza/internal/pkg/apperror"
 
-	"github.com/minipkg/go-app-common/log"
-	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
-	"github.com/minipkg/go-app-common/pagination"
+	"github.com/minipkg/log"
+	"github.com/minipkg/ozzo_routing/errorshandler"
+	"github.com/minipkg/pagination"
 
 	"carizza/internal/domain/model"
 

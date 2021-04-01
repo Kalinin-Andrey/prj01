@@ -1,14 +1,14 @@
 package controller
 
 import (
-	"carizza/pkg/selection_condition"
 	"errors"
+	"github.com/minipkg/selection_condition"
 
 	"carizza/internal/pkg/apperror"
 
-	"github.com/minipkg/go-app-common/log"
-	ozzo_handler "github.com/minipkg/go-app-common/ozzo_handler"
-	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
+	"github.com/minipkg/log"
+	ozzo_routing "github.com/minipkg/ozzo_routing"
+	"github.com/minipkg/ozzo_routing/errorshandler"
 
 	"carizza/internal/domain/work"
 
@@ -37,7 +37,7 @@ func RegisterWorkHandlers(r *routing.RouteGroup, service work.IService, logger l
 
 // get method is for getting a one entity by ID
 func (c workController) get(ctx *routing.Context) error {
-	id, err := ozzo_handler.ParseUintParam(ctx, "id")
+	id, err := ozzo_routing.ParseUintParam(ctx, "id")
 	if err != nil {
 		return errorshandler.BadRequest("ID is required to be uint")
 	}
@@ -63,9 +63,9 @@ func (c workController) list(ctx *routing.Context) error {
 		}},
 	}
 
-	maintenanceId, err := ozzo_handler.ParseUintParam(ctx, "maintenanceId")
+	maintenanceId, err := ozzo_routing.ParseUintParam(ctx, "maintenanceId")
 	if errors.Is(err, apperror.ErrNotFound) {
-		maintenanceId, err = ozzo_handler.ParseUintQueryParam(ctx, "maintenanceId")
+		maintenanceId, err = ozzo_routing.ParseUintQueryParam(ctx, "maintenanceId")
 	}
 	if err == nil && maintenanceId > 0 {
 		cond.Where = map[string]interface{}{

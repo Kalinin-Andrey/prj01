@@ -7,8 +7,8 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 
-	"github.com/minipkg/go-app-common/log"
-	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
+	"github.com/minipkg/log"
+	"github.com/minipkg/ozzo_routing/errorshandler"
 )
 
 type identity struct {

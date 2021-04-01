@@ -14,14 +14,13 @@ import (
 	"carizza/internal/domain/supply"
 	"carizza/internal/domain/user"
 	"carizza/internal/domain/work"
-	minipkg_gorm "carizza/pkg/db/gorm"
-	"carizza/pkg/selection_condition"
+	minipkg_gorm "github.com/minipkg/db/gorm"
+	"github.com/minipkg/selection_condition"
 
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 
-	"github.com/minipkg/go-app-common/db/pg"
-	"github.com/minipkg/go-app-common/log"
+	"github.com/minipkg/log"
 )
 
 // IRepository is an interface of repository
@@ -29,7 +28,7 @@ type IRepository interface{}
 
 // repository persists albums in database
 type repository struct {
-	db         pg.IDB
+	db         minipkg_gorm.IDB
 	logger     log.ILogger
 	Conditions *selection_condition.SelectionCondition
 }
@@ -37,7 +36,7 @@ type repository struct {
 const DefaultLimit = 1000
 
 // GetRepository return a repository
-func GetRepository(logger log.ILogger, dbase pg.IDB, entity string) (repo IRepository, err error) {
+func GetRepository(logger log.ILogger, dbase minipkg_gorm.IDB, entity string) (repo IRepository, err error) {
 	r := &repository{
 		db:     dbase,
 		logger: logger,

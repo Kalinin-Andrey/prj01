@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/minipkg/go-app-common/db/pg/mock"
+	"github.com/minipkg/db/gorm/mock"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
@@ -16,8 +16,8 @@ import (
 
 	"carizza/internal/pkg/config"
 
-	"github.com/minipkg/go-app-common/db/pg"
-	"github.com/minipkg/go-app-common/log"
+	"github.com/minipkg/db/gorm"
+	"github.com/minipkg/log"
 
 	"carizza/internal/domain/user"
 )

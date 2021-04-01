@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"github.com/minipkg/go-app-common/log"
+	"github.com/minipkg/log"
 )
 
 const ()

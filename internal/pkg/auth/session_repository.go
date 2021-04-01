@@ -2,8 +2,8 @@ package auth
 
 import (
 	"carizza/internal/pkg/session"
-	"carizza/pkg/selection_condition"
 	"context"
+	"github.com/minipkg/selection_condition"
 )
 
 // SessionRepository encapsulates the logic to access session from the data source.

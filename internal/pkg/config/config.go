@@ -3,9 +3,9 @@ package config
 import (
 	"flag"
 
-	"github.com/minipkg/go-app-common/db/pg"
-	"github.com/minipkg/go-app-common/db/redis"
-	"github.com/minipkg/go-app-common/log"
+	pg "github.com/minipkg/db/gorm"
+	"github.com/minipkg/db/redis"
+	"github.com/minipkg/log"
 
 	"github.com/pkg/errors"
 

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/minipkg/go-app-common/log"
+	"github.com/minipkg/log"
 
 	routing "github.com/go-ozzo/ozzo-routing/v2"
 )

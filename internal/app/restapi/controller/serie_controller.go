@@ -5,11 +5,11 @@ import (
 
 	"carizza/internal/pkg/apperror"
 
-	"github.com/minipkg/go-app-common/log"
-	ozzo_handler "github.com/minipkg/go-app-common/ozzo_handler"
-	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
+	"github.com/minipkg/log"
+	ozzo_routing "github.com/minipkg/ozzo_routing"
+	"github.com/minipkg/ozzo_routing/errorshandler"
 
-	"carizza/pkg/selection_condition"
+	"github.com/minipkg/selection_condition"
 
 	"carizza/internal/domain/serie"
 
@@ -37,7 +37,7 @@ func RegisterSerieHandlers(r *routing.RouteGroup, service serie.IService, logger
 
 // get method is for getting a one entity by ID
 func (c serieController) get(ctx *routing.Context) error {
-	id, err := ozzo_handler.ParseUintParam(ctx, "id")
+	id, err := ozzo_routing.ParseUintParam(ctx, "id")
 	if err != nil {
 		errorshandler.BadRequest("ID is required to be uint")
 	}
@@ -63,9 +63,9 @@ func (c serieController) list(ctx *routing.Context) error {
 		}},
 	}
 
-	generationId, err := ozzo_handler.ParseUintParam(ctx, "generationId")
+	generationId, err := ozzo_routing.ParseUintParam(ctx, "generationId")
 	if errors.Is(err, apperror.ErrNotFound) {
-		generationId, err = ozzo_handler.ParseUintQueryParam(ctx, "generationId")
+		generationId, err = ozzo_routing.ParseUintQueryParam(ctx, "generationId")
 	}
 	if err == nil && generationId > 0 {
 		cond.Where = map[string]interface{}{

@@ -1,9 +1,9 @@
 package redis
 
 import (
-	"carizza/pkg/selection_condition"
+	"github.com/minipkg/selection_condition"
 
-	"github.com/minipkg/go-app-common/db/redis"
+	"github.com/minipkg/db/redis"
 )
 
 // IRepository is an interface of repository

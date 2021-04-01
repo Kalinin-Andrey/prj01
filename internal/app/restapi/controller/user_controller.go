@@ -4,9 +4,9 @@ import (
 	"carizza/internal/domain/user"
 	"carizza/internal/pkg/apperror"
 
-	"github.com/minipkg/go-app-common/log"
-	ozzo_handler "github.com/minipkg/go-app-common/ozzo_handler"
-	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
+	"github.com/minipkg/log"
+	ozzo_routing "github.com/minipkg/ozzo_routing"
+	"github.com/minipkg/ozzo_routing/errorshandler"
 
 	routing "github.com/go-ozzo/ozzo-routing/v2"
 )
@@ -30,7 +30,7 @@ func RegisterUserHandlers(r *routing.RouteGroup, service user.IService, logger l
 
 // get method is for a getting a one enmtity by ID
 func (c userController) get(ctx *routing.Context) error {
-	id, err := ozzo_handler.ParseUintParam(ctx, "id")
+	id, err := ozzo_routing.ParseUintParam(ctx, "id")
 	if err != nil {
 		return errorshandler.BadRequest("ID is required to be uint")
 	}

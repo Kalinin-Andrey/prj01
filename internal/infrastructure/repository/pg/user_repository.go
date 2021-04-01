@@ -1,9 +1,9 @@
 package pg
 
 import (
-	minipkg_gorm "carizza/pkg/db/gorm"
-	"carizza/pkg/selection_condition"
 	"context"
+	minipkg_gorm "github.com/minipkg/db/gorm"
+	"github.com/minipkg/selection_condition"
 
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"

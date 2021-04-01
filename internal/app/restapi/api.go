@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/minipkg/go-app-common/accesslog"
+	"github.com/minipkg/log/accesslog"
 
 	"github.com/go-ozzo/ozzo-routing/v2/content"
 
@@ -17,8 +17,8 @@ import (
 
 	"carizza/internal/pkg/config"
 
-	pkgcontent "github.com/minipkg/go-app-common/ozzo_handler"
-	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
+	"github.com/minipkg/ozzo_routing"
+	"github.com/minipkg/ozzo_routing/errorshandler"
 
 	commonApp "carizza/internal/app"
 	"carizza/internal/app/restapi/controller"
@@ -76,7 +76,7 @@ func (app *App) buildHandler() *routing.Router {
 	api := router.Group("/api")
 	api.Use(
 		content.TypeNegotiator(content.JSON),
-		pkgcontent.SetHeader("Content-Type", "application/json; charset=UTF-8"),
+		ozzo_routing.SetHeader("Content-Type", "application/json; charset=UTF-8"),
 	)
 
 	authMiddleware := auth.Middleware(app.Logger, app.Auth.Service)

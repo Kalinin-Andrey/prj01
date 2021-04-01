@@ -21,10 +21,10 @@ import (
 	"carizza/internal/pkg/config"
 	"carizza/internal/pkg/jwt"
 
-	"github.com/minipkg/go-app-common/db/pg"
-	"github.com/minipkg/go-app-common/db/redis"
-	"github.com/minipkg/go-app-common/db/redis/cache"
-	"github.com/minipkg/go-app-common/log"
+	pg "github.com/minipkg/db/gorm"
+	"github.com/minipkg/db/redis"
+	"github.com/minipkg/db/redis/cache"
+	"github.com/minipkg/log"
 
 	"carizza/internal/domain/ctype"
 	"carizza/internal/domain/model"

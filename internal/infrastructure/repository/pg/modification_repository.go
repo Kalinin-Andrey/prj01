@@ -6,8 +6,8 @@ import (
 	"github.com/jinzhu/gorm"
 
 	"carizza/internal/pkg/apperror"
-	minipkg_gorm "carizza/pkg/db/gorm"
-	"carizza/pkg/selection_condition"
+	minipkg_gorm "github.com/minipkg/db/gorm"
+	"github.com/minipkg/selection_condition"
 
 	"carizza/internal/domain/modification"
 )

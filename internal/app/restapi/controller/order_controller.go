@@ -2,11 +2,11 @@ package controller
 
 import (
 	"carizza/internal/pkg/apperror"
-	"carizza/pkg/selection_condition"
+	"github.com/minipkg/selection_condition"
 
-	"github.com/minipkg/go-app-common/log"
-	ozzo_handler "github.com/minipkg/go-app-common/ozzo_handler"
-	"github.com/minipkg/go-app-common/ozzo_handler/errorshandler"
+	"github.com/minipkg/log"
+	ozzo_routing "github.com/minipkg/ozzo_routing"
+	"github.com/minipkg/ozzo_routing/errorshandler"
 
 	"carizza/internal/domain/order"
 
@@ -33,7 +33,7 @@ func RegisterOrderHandlers(r *routing.RouteGroup, service order.IService, logger
 
 // get method is for getting a one entity by ID
 func (c orderController) get(ctx *routing.Context) error {
-	id, err := ozzo_handler.ParseUintParam(ctx, "id")
+	id, err := ozzo_routing.ParseUintParam(ctx, "id")
 	if err != nil {
 		errorshandler.BadRequest("ID is required to be uint")
 	}

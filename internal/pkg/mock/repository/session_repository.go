@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"carizza/pkg/selection_condition"
 	"context"
+	"github.com/minipkg/selection_condition"
 
 	"github.com/stretchr/testify/mock"
 

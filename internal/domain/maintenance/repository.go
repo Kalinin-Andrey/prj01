@@ -1,8 +1,8 @@
 package maintenance
 
 import (
-	"carizza/pkg/selection_condition"
 	"context"
+	"github.com/minipkg/selection_condition"
 )
 
 // Repository encapsulates the logic to access albums from the data source.
