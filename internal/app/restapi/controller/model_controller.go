@@ -96,10 +96,6 @@ func (c modelController) listp(ctx *routing.Context) error {
 
 	count, err := c.Service.Count(ctx.Request.Context(), cond)
 	if err != nil {
-		if err == apperror.ErrNotFound {
-			c.Logger.With(ctx.Request.Context()).Info(err)
-			return errorshandler.NotFound("")
-		}
 		c.Logger.With(ctx.Request.Context()).Error(err)
 		return errorshandler.InternalServerError("")
 	}
