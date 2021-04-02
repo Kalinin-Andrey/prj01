@@ -22,12 +22,12 @@ require (
 	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a
 	github.com/jinzhu/gorm v1.9.16
 	github.com/mattn/go-sqlite3 v2.0.1+incompatible // indirect
-	github.com/minipkg/db v0.0.0-20210401165824-1a5e3dec229b
+	github.com/minipkg/db v0.0.2
 	github.com/minipkg/go-app-common v0.0.0-20210319172844-0ac9ed031c8d // indirect
 	github.com/minipkg/log v0.0.0-20210401163336-53d77a21a670
 	github.com/minipkg/ozzo_routing v0.0.1
 	github.com/minipkg/pagination v0.0.0-20210401162640-c2a831d2cca4
-	github.com/minipkg/selection_condition v0.0.1
+	github.com/minipkg/selection_condition v0.0.2
 	github.com/pkg/errors v0.9.1
 	github.com/qiangxue/go-rest-api v1.0.1 // indirect
 	github.com/spf13/cobra v1.1.1
