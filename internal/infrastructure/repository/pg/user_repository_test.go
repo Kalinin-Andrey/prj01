@@ -16,7 +16,7 @@ import (
 
 	"carizza/internal/pkg/config"
 
-	"github.com/minipkg/db/gorm"
+	pg "github.com/minipkg/db/gorm"
 	"github.com/minipkg/log"
 
 	"carizza/internal/domain/user"
