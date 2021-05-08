@@ -10,18 +10,18 @@ import (
 	"github.com/minipkg/db/gorm/mock"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	pg "github.com/minipkg/db/gorm"
+	"github.com/minipkg/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
 	"carizza/internal/pkg/config"
 
-	"github.com/minipkg/log"
-
 	"carizza/internal/domain/user"
 )
 
-const pkgName = "pg"
+const pkgName = "gorm"
 
 type UserRepositoryTestSuite struct {
 	//	for all tests
@@ -61,7 +61,7 @@ func (s *UserRepositoryTestSuite) SetupTest() {
 	require := require.New(s.T())
 	s.ctx = context.Background()
 
-	pgDB, PgMock, err = mock.New(s.cfg.DB.Identity, s.logger)
+	pgDB, PgMock, err = mock.New(s.logger, s.cfg.DB.Identity)
 	require.NoError(err)
 	s.mock = *PgMock
 
