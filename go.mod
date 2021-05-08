@@ -20,7 +20,7 @@ require (
 	github.com/minipkg/log v0.0.1
 	github.com/minipkg/ozzo_routing v0.0.1
 	github.com/minipkg/pagination v0.0.0-20210401162640-c2a831d2cca4
-	github.com/minipkg/selection_condition v0.0.2
+	github.com/minipkg/selection_condition v0.0.3
 	github.com/pkg/errors v0.9.1
 	github.com/qiangxue/go-rest-api v1.0.1 // indirect
 	github.com/spf13/cobra v1.1.1
