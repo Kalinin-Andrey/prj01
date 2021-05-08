@@ -14,18 +14,21 @@ db:
   identity:
     dialect:        "postgres"
     dsn:            "host=db port=5432 dbname=identity user=postgres password=1gjcnuhtc1! sslmode=disable"
-    islogmode:      True
     isautomigrate:  True
+    log:
+      loglevel:     4
   carcatalog:
     dialect:        "postgres"
     dsn:            "host=db port=5432 dbname=car_catalog user=postgres password=1gjcnuhtc1! sslmode=disable"
-    islogmode:      True
     isautomigrate:  True
+    log:
+      loglevel:     4
   maintenance:
     dialect:        "postgres"
     dsn:            "host=db port=5432 dbname=maintenance user=postgres password=1gjcnuhtc1! sslmode=disable"
-    islogmode:      True
     isautomigrate:  True
+    log:
+      loglevel:     4
   redis:
     addrs:
       - "redis:6379"

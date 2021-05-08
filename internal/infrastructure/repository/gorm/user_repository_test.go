@@ -1,4 +1,4 @@
-package pg
+package gorm
 
 import (
 	"context"
@@ -16,7 +16,6 @@ import (
 
 	"carizza/internal/pkg/config"
 
-	"github.com/minipkg/db/gorm"
 	"github.com/minipkg/log"
 
 	"carizza/internal/domain/user"

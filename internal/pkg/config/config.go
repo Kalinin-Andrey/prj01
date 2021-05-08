@@ -3,7 +3,7 @@ package config
 import (
 	"flag"
 
-	pg "github.com/minipkg/db/gorm"
+	minipkg_gorm "github.com/minipkg/db/gorm"
 	"github.com/minipkg/db/redis"
 	"github.com/minipkg/log"
 
@@ -28,9 +28,9 @@ type Configuration struct {
 }
 
 type DB struct {
-	Identity    pg.Config
-	CarCatalog  pg.Config
-	Maintenance pg.Config
+	Identity    minipkg_gorm.Config
+	CarCatalog  minipkg_gorm.Config
+	Maintenance minipkg_gorm.Config
 	Redis       redis.Config
 }
 
@@ -93,11 +93,13 @@ func Get4UnitTest(logAppPostfix string) *Configuration {
 			Encoding: "json",
 		},
 		DB: DB{
-			Identity: pg.Config{
+			Identity: minipkg_gorm.Config{
 				Dialect:       "postgres",
 				DSN:           "host=localhost port=5401 dbname=postgres user=postgres password=postgres sslmode=disable",
-				IsLogMode:     true,
 				IsAutoMigrate: true,
+				Log: minipkg_gorm.LogConfig{
+					LogLevel: 4,
+				},
 			},
 			Redis: redis.Config{},
 		},

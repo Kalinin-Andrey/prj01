@@ -1,9 +1,10 @@
-package pg
+package gorm
 
 import (
 	"context"
+	"errors"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 
 	minipkg_gorm "github.com/minipkg/db/gorm"
 	"github.com/minipkg/selection_condition"
@@ -47,7 +48,7 @@ func (r OrderRepository) Get(ctx context.Context, id uint) (*order.Order, error)
 
 	err := r.DB().First(entity, id).Error
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return entity, apperror.ErrNotFound
 		}
 	}
@@ -58,7 +59,7 @@ func (r OrderRepository) Get(ctx context.Context, id uint) (*order.Order, error)
 func (r OrderRepository) First(ctx context.Context, entity *order.Order) (*order.Order, error) {
 	err := r.DB().Where(entity).First(entity).Error
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return entity, apperror.ErrNotFound
 		}
 	}

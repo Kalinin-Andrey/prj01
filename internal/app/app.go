@@ -29,7 +29,7 @@ import (
 	"carizza/internal/domain/ctype"
 	"carizza/internal/domain/model"
 	"carizza/internal/domain/user"
-	pgrep "carizza/internal/infrastructure/repository/pg"
+	pgrep "carizza/internal/infrastructure/repository/gorm"
 	redisrep "carizza/internal/infrastructure/repository/redis"
 )
 
@@ -151,17 +151,17 @@ func New(cfg config.Configuration) *App {
 		golog.Fatal(err)
 	}
 
-	IdentityDB, err := pg.New(cfg.DB.Identity, logger)
+	IdentityDB, err := pg.New(logger, cfg.DB.Identity)
 	if err != nil {
 		golog.Fatal(err)
 	}
 
-	CarCatalogDB, err := pg.New(cfg.DB.CarCatalog, logger)
+	CarCatalogDB, err := pg.New(logger, cfg.DB.CarCatalog)
 	if err != nil {
 		golog.Fatal(err)
 	}
 
-	MaintenanceDB, err := pg.New(cfg.DB.Maintenance, logger)
+	MaintenanceDB, err := pg.New(logger, cfg.DB.Maintenance)
 	if err != nil {
 		golog.Fatal(err)
 	}
@@ -311,9 +311,9 @@ func (app *App) getPgRepo(dbase pg.IDB, entityName string) (repo pgrep.IReposito
 
 func (app *App) Stop() error {
 	errRedis := app.Redis.Close()
-	errPg01 := app.IdentityDB.DB().Close()
-	errPg02 := app.CarCatalogDB.DB().Close()
-	errPg03 := app.MaintenanceDB.DB().Close()
+	errPg01 := app.IdentityDB.Close()
+	errPg02 := app.CarCatalogDB.Close()
+	errPg03 := app.MaintenanceDB.Close()
 
 	switch {
 	case errPg01 != nil || errPg02 != nil || errPg03 != nil:

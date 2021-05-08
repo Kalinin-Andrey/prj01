@@ -1,11 +1,13 @@
-package pg
+package gorm
 
 import (
 	"context"
+	"errors"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 
 	"carizza/internal/pkg/apperror"
+
 	minipkg_gorm "github.com/minipkg/db/gorm"
 	"github.com/minipkg/selection_condition"
 
@@ -36,7 +38,7 @@ func (r ModificationRepository) Get(ctx context.Context, id uint) (*modification
 
 	err := r.DB().First(entity, id).Error
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return entity, apperror.ErrNotFound
 		}
 	}
@@ -46,7 +48,7 @@ func (r ModificationRepository) Get(ctx context.Context, id uint) (*modification
 func (r ModificationRepository) First(ctx context.Context, entity *modification.Modification) (*modification.Modification, error) {
 	err := r.DB().Where(entity).First(entity).Error
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return entity, apperror.ErrNotFound
 		}
 	}

@@ -1,11 +1,13 @@
-package pg
+package gorm
 
 import (
 	"context"
+	"errors"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 
 	"carizza/internal/pkg/apperror"
+
 	minipkg_gorm "github.com/minipkg/db/gorm"
 	"github.com/minipkg/selection_condition"
 
@@ -38,7 +40,7 @@ func (r CarRepository) Get(ctx context.Context, id uint) (*car.Car, error) {
 
 	err := r.DB().First(entity, id).Error
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return entity, apperror.ErrNotFound
 		}
 	}
@@ -48,7 +50,7 @@ func (r CarRepository) Get(ctx context.Context, id uint) (*car.Car, error) {
 func (r CarRepository) First(ctx context.Context, entity *car.Car) (*car.Car, error) {
 	err := r.DB().Where(entity).First(entity).Error
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return entity, apperror.ErrNotFound
 		}
 	}

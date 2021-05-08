@@ -1,9 +1,10 @@
-package pg
+package gorm
 
 import (
 	"context"
+	"errors"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 
 	minipkg_gorm "github.com/minipkg/db/gorm"
 	"github.com/minipkg/selection_condition"
@@ -36,7 +37,7 @@ func (r MarkRepository) Get(ctx context.Context, id uint) (*mark.Mark, error) {
 
 	err := r.DB().First(entity, id).Error
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return entity, apperror.ErrNotFound
 		}
 	}
@@ -46,7 +47,7 @@ func (r MarkRepository) Get(ctx context.Context, id uint) (*mark.Mark, error) {
 func (r MarkRepository) First(ctx context.Context, entity *mark.Mark) (*mark.Mark, error) {
 	err := r.DB().Where(entity).First(entity).Error
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return entity, apperror.ErrNotFound
 		}
 	}
@@ -61,7 +62,9 @@ func (r MarkRepository) Query(ctx context.Context, cond *selection_condition.Sel
 		return nil, db.Error
 	}
 
-	err := db.Find(&items).Error
+	tx := db.Find(&items)
+	err := tx.Error
+	//err := db.Find(&items).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return items, apperror.ErrNotFound

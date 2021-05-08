@@ -2,6 +2,7 @@ package controller
 
 import (
 	"carizza/internal/pkg/apperror"
+
 	"github.com/minipkg/selection_condition"
 
 	"github.com/minipkg/log"
@@ -59,7 +60,7 @@ func (c markController) list(ctx *routing.Context) error {
 	cond := &selection_condition.SelectionCondition{
 		Where: e,
 		SortOrder: []map[string]string{{
-			"name": selection_condition.SortOrderAsc,
+			"Name": selection_condition.SortOrderAsc,
 		}},
 	}
 	items, err := c.Service.Query(ctx.Request.Context(), cond)

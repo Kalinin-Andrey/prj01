@@ -1,9 +1,10 @@
-package pg
+package gorm
 
 import (
 	"context"
+	"errors"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 
 	minipkg_gorm "github.com/minipkg/db/gorm"
 	"github.com/minipkg/selection_condition"
@@ -36,7 +37,7 @@ func (r ModelRepository) Get(ctx context.Context, id uint) (*model.Model, error)
 
 	err := r.DB().First(entity, id).Error
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return entity, apperror.ErrNotFound
 		}
 	}
@@ -46,7 +47,7 @@ func (r ModelRepository) Get(ctx context.Context, id uint) (*model.Model, error)
 func (r ModelRepository) First(ctx context.Context, entity *model.Model) (*model.Model, error) {
 	err := r.DB().Where(entity).First(entity).Error
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return entity, apperror.ErrNotFound
 		}
 	}
@@ -61,7 +62,9 @@ func (r ModelRepository) Query(ctx context.Context, cond *selection_condition.Se
 		return nil, db.Error
 	}
 
-	err := db.Find(&items).Error
+	tx := db.Find(&items)
+	err := tx.Error
+	//err := db.Find(&items).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return items, apperror.ErrNotFound
@@ -71,7 +74,7 @@ func (r ModelRepository) Query(ctx context.Context, cond *selection_condition.Se
 }
 
 func (r ModelRepository) Count(ctx context.Context, cond *selection_condition.SelectionCondition) (uint, error) {
-	var count uint
+	var count int64
 	c := cond
 	c.Limit = 0
 	c.Offset = 0
@@ -86,5 +89,5 @@ func (r ModelRepository) Count(ctx context.Context, cond *selection_condition.Se
 			return 0, apperror.ErrNotFound
 		}
 	}
-	return count, err
+	return uint(count), err
 }
