@@ -160,5 +160,5 @@ func (r *repository) SetDefaultConditions(defaultConditions *selection_condition
 }
 
 func (r *repository) DB() *gorm.DB {
-	return r.db.DB()
+	return minipkg_gorm.Conditions(r.db.DB(), r.Conditions)
 }
