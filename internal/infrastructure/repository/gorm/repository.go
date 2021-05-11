@@ -28,8 +28,6 @@ import (
 // IRepository is an interface of repository
 type IRepository interface {
 	DB() *gorm.DB
-	//SetModel(model interface{})
-	//GetModel() interface{}
 }
 
 // repository persists albums in database
@@ -39,16 +37,6 @@ type repository struct {
 	Conditions *selection_condition.SelectionCondition
 	model      interface{}
 }
-
-const DefaultLimit = 1000
-
-//func (r *repository) SetModel(model interface{}) {
-//	r.model = model
-//}
-//
-//func (r *repository) GetModel() interface{} {
-//	return r.model
-//}
 
 // GetRepository return a repository
 func GetRepository(logger log.ILogger, dbase minipkg_gorm.IDB, entity string) (repo IRepository, err error) {
