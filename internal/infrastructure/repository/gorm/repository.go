@@ -43,47 +43,48 @@ func GetRepository(logger log.ILogger, dbase minipkg_gorm.IDB, entity string) (r
 	r := &repository{
 		logger: logger,
 	}
+	ctx := context.Background()
 
 	switch entity {
 	case user.EntityName:
 		r.model = user.New()
 
-		if r.db, err = dbase.WithContext(context.Background()).Model(r.model); err != nil {
+		if r.db, err = dbase.ModelWithContext(ctx, r.model); err != nil {
 			return nil, err
 		}
 		repo, err = NewUserRepository(r)
 	case mark.EntityName:
 		r.model = mark.New()
 
-		if r.db, err = dbase.WithContext(context.Background()).Model(r.model); err != nil {
+		if r.db, err = dbase.ModelWithContext(ctx, r.model); err != nil {
 			return nil, err
 		}
 		repo, err = NewMarkRepository(r)
 	case model.EntityName:
 		r.model = model.New()
 
-		if r.db, err = dbase.WithContext(context.Background()).Model(r.model); err != nil {
+		if r.db, err = dbase.ModelWithContext(ctx, r.model); err != nil {
 			return nil, err
 		}
 		repo, err = NewModelRepository(r)
 	case generation.EntityName:
 		r.model = generation.New()
 
-		if r.db, err = dbase.WithContext(context.Background()).Model(r.model); err != nil {
+		if r.db, err = dbase.ModelWithContext(ctx, r.model); err != nil {
 			return nil, err
 		}
 		repo, err = NewGenerationRepository(r)
 	case serie.EntityName:
 		r.model = serie.New()
 
-		if r.db, err = dbase.WithContext(context.Background()).Model(r.model); err != nil {
+		if r.db, err = dbase.ModelWithContext(ctx, r.model); err != nil {
 			return nil, err
 		}
 		repo, err = NewSerieRepository(r)
 	case modification.EntityName:
 		r.model = modification.New()
 
-		if r.db, err = dbase.WithContext(context.Background()).Model(r.model); err != nil {
+		if r.db, err = dbase.ModelWithContext(ctx, r.model); err != nil {
 			return nil, err
 		}
 		repo, err = NewModificationRepository(r)
@@ -91,49 +92,49 @@ func GetRepository(logger log.ILogger, dbase minipkg_gorm.IDB, entity string) (r
 	case maintenance.EntityName:
 		r.model = maintenance.New()
 
-		if r.db, err = dbase.WithContext(context.Background()).Model(r.model); err != nil {
+		if r.db, err = dbase.ModelWithContext(ctx, r.model); err != nil {
 			return nil, err
 		}
 		repo, err = NewMaintenanceRepository(r)
 	case work.EntityName:
 		r.model = work.New()
 
-		if r.db, err = dbase.WithContext(context.Background()).Model(r.model); err != nil {
+		if r.db, err = dbase.ModelWithContext(ctx, r.model); err != nil {
 			return nil, err
 		}
 		repo, err = NewWorkRepository(r)
 	case supply.EntityName:
 		r.model = supply.New()
 
-		if r.db, err = dbase.WithContext(context.Background()).Model(r.model); err != nil {
+		if r.db, err = dbase.ModelWithContext(ctx, r.model); err != nil {
 			return nil, err
 		}
 		repo, err = NewSupplyRepository(r)
 	case order.EntityName:
 		r.model = order.New()
 
-		if r.db, err = dbase.WithContext(context.Background()).Model(r.model); err != nil {
+		if r.db, err = dbase.ModelWithContext(ctx, r.model); err != nil {
 			return nil, err
 		}
 		repo, err = NewOrderRepository(r)
 	case car.EntityName:
 		r.model = car.New()
 
-		if r.db, err = dbase.WithContext(context.Background()).Model(r.model); err != nil {
+		if r.db, err = dbase.ModelWithContext(ctx, r.model); err != nil {
 			return nil, err
 		}
 		repo, err = NewCarRepository(r)
 	case address.EntityName:
 		r.model = address.New()
 
-		if r.db, err = dbase.WithContext(context.Background()).Model(r.model); err != nil {
+		if r.db, err = dbase.ModelWithContext(ctx, r.model); err != nil {
 			return nil, err
 		}
 		repo, err = NewAddressRepository(r)
 	case client.EntityName:
 		r.model = client.New()
 
-		if r.db, err = dbase.WithContext(context.Background()).Model(r.model); err != nil {
+		if r.db, err = dbase.ModelWithContext(ctx, r.model); err != nil {
 			return nil, err
 		}
 		repo, err = NewClientRepository(r)

@@ -16,7 +16,7 @@ require (
 	github.com/golang/protobuf v1.4.3
 	github.com/gomodule/redigo v2.0.0+incompatible // indirect
 	github.com/mattn/go-sqlite3 v2.0.1+incompatible // indirect
-	github.com/minipkg/db v0.0.9
+	github.com/minipkg/db v0.0.10
 	github.com/minipkg/log v0.0.1
 	github.com/minipkg/ozzo_routing v0.0.1
 	github.com/minipkg/pagination v0.0.0-20210401162640-c2a831d2cca4
